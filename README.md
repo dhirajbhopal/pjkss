@@ -31,3 +31,6 @@ In this tutorial, we will learn how to create Sign Up or Registration Form in Dj
 # git push -u origin main
 
 
+# Render Setting
+# Build Command = "pip install -r requirements.txt"
+# Start Command = "gunicorn django_user.wsgi"
