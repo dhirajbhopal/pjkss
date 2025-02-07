@@ -1,0 +1,52 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Profile{% endblock title %}
+{% block content %} 
+
+ {% if user.is_authenticated %}
+      <br>
+      <div style="overflow-x:auto;">
+       <div class="container p-1">
+        <div class="row d-flex justify-content-center align-items-center">
+        <div class="col-lg-5 col-xl-7">
+        <div class="card text-black" style="border-radius: 25px;">
+          <div class="card-body p-md-1">
+            <div class="row justify-content-center">
+              <div class="col-md-5 col-lg-5 col-xl-7 order-2 order-lg-1 p-3">
+                <form action="{% url 'profileupdate' user.id %}" method="POST">
+                 {% csrf_token %}
+                <span class=" rounded-3 border-1 mb-4" style="font-size:20px; color:green; font-weight:bolder;">Update Profile</span>
+            
+                  <div class="d-flex flex-row align-items-center mb-1">
+                    
+                      <label class="form-label" for="form3Example1c" style="color:green;">First Name</label> <label class="form-label" for="form3Example1c" style="color:red;">*</label>
+                      {{form.first_name}}  &#160 {{user.first_name}}<br>
+                  </div>
+                  <div class="d-flex flex-row align-items-center mb-1">
+                      <label class="form-label" for="form3Example1c" style="color:green;">Last Name</label> <label class="form-label" for="form3Example1c" style="color:red;">*</label>
+                       {{form.last_name}} &#160 {{user.last_name}}<br>
+                  </div>
+                  <div class="d-flex flex-row align-items-center mb-1">
+                      <label class="form-label" for="form3Example1c"style="color:green;">Email Id</label><label class="form-label" for="form3Example1c" style="color:red;">*&#160&#160&#160&#160</label><input id="myInput" type="email" disabled value="{{user.email}}">
+                       <br>
+                  </div>
+                 <div class="d-flex justify-content-left"> 
+                  <button class="btn btn-outline-danger m-2">Update Now</button>
+                </div>
+                </form>
+              </div>
+              <div class="col-md-10 col-lg-7 col-xl-5 d-flex align-items-center order-1 order-lg-2">
+                <img src="{% static 'images/cybromlogo.webp' %}" class="img-fluid rounded-4" alt="Sample image" style="width: 200px;">
+              </div>
+       </div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+ {% endif %}
+{% endblock content %}
+{% block mainbody %} {% endblock %}

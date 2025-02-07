@@ -1,0 +1,233 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Result View{% endblock title %}
+{% block forgot %}  {% endblock %}
+{% block content %} 
+<script type="text/javascript" src="{% static 'jquery.js' %}"></script>
+
+<style type="text/css">
+  @media print {
+    .pagebreak {
+        clear: both;
+        page-break-after: always;
+    }
+}
+</style>
+<div style="overflow-x:auto;">
+<table align="center">
+  <tr>
+    <td>
+<div class="container align-item-center pagebreak">
+  <br>
+  <form action='webresult' method="POST" name="f1" onsubmit="return validation();">
+      {% csrf_token %}
+<div class="form-outline flex-fill mb-2">
+                      <label class="form-label" for="form3Example1c" style="color:green;">Roll No</label><label class="form-label" for="form3Example1c" style="color:red;">*</label>
+                      <input type="text" name="rollno" class="form-control">
+                    </div>
+                      <div class="form-outline flex-fill mt-2 mb-2">
+                      <label class="form-label" for="form3Example1c" style="color:green;">Session</label><label class="form-label" for="form3Example1c" style="color:red;">*</label><br>
+                      <select name="session" class="btn btn-success btn-outline-warning">
+                     <option selected>Session</option>
+                     <option>2023-2027</option>
+                     </select>
+                     <select name="semester" class="btn btn-success btn-outline-warning">
+                     <option selected>Semester</option>
+                     <option>1</option>
+                     <option>2</option>
+                     <option>3</option>
+                     <option>4</option>
+                     <option>5</option>
+                     <option>6</option>
+                     <option>7</option>
+                     <option>8</option>
+                     </select>
+                     </div>
+<button class="btn btn-info btn-outline-danger" style="color:black; font-size:15px; margin-left: 20px;">View Result</button>
+<a onclick="window.print()" class="btn btn-outline-success m-3">Print</a>
+</form>
+</div>
+</td>
+</tr>
+</table>
+</div>
+
+<script type="text/javascript">
+function validation() 
+  { 
+    var rollno=document.f1.rollno.value;
+    var sem=document.f1.semester.value;
+    var ses=document.f1.session.value;
+
+
+    if(rollno=="")
+    {
+      alert("Please Enter Your Roll NO");
+      return false;
+    }
+    
+    if(ses=="Session")
+    {
+      alert("Please Sellect Session");
+      return false;
+    }
+
+     if(isNaN(sem))
+    {
+      alert("Please select Semester");
+      return false;
+    }
+}
+  </script>  
+  {% for i in marks %}
+<div  class="pagebreak" align="center" id="printableArea">
+  <style type="text/css">
+#myborder
+{
+border: solid 1px red;
+}
+
+.mytop
+{
+border: solid 1px black;
+padding-left: 5px;
+}
+
+#myborder2
+{
+border: solid 1px red;
+word-break: break-all;
+width:355px;
+}
+</style>
+<div style="overflow-x:auto;">
+  <table  style="border: solid 2px black;">
+    <tr>
+      <td align="center" style="padding:5px;">
+<table width="100%" >
+<tr><td colspan="2" class="mytop"><img src="{% static 'images/cybromlogo.webp' %}" height="50px;">Cybrom Technology</td></tr>
+{% for i in details2 %}
+<tr><td  class="mytop">NAME:-</td>
+<td  class="mytop">{{i.name}} {{i.lastname}}</td></tr>
+<tr><td  class="mytop">FATHER'S NAME:-</td>
+<td  class="mytop">{{i.fathername}} {{i.fatherlastname}}</td></tr>
+{% endfor %}
+<tr><td class="mytop">ROLL NUMBER:-</td>
+<td class="mytop">{{i.rollno}}</td></tr>
+<tr><td  class="mytop">BRANCH:- {{i.branch}}</td>
+<td  class="mytop">{{i.branch}}</td></tr>
+<tr><td  class="mytop">SEMESTER:- {{i.semester}}</td>
+<td  class="mytop">STATUS:- {{i.status}}</td></tr>
+<tr><td colspan="2" class="mytop">SCHOOL:- {{i.school}}</td></tr>
+<tr> <td></td></tr>
+</table>
+
+<table width="100%">
+<td id="myborder" rowspan="2" align="center">CODE</td>
+<td id="myborder2" rowspan="2" align="center">Subject</td>
+<td id="myborder" colspan="4" align="center">MARKS OBTAINED</td>
+<td id="myborder" align="center" rowspan="2">POSITIONAL<br>GRADE</td>
+<td class="myblankright" rowspan="11"></td>
+  </tr>
+<tr align="center">
+<td id="myborder">TH</td>
+<td id="myborder">&#160PR&#160</td>
+<td id="myborder">&#160TOTAL&#160</td>
+<td id="myborder" align="center">TOTAL IN WORDS</td>
+  </tr>                  
+                        <tr align="center">  
+                        <td id="myborder">&#160{{i.subjectcode1}}&#160</td>
+                        <td id="myborde">{{i.subject1}}</td>
+                        <td id="myborder">0{{i.marks1}}</td>
+                        <td id="myborder">0{{i.prac1}}</td>
+                        <td id="myborder">0{{totaltp.t1}}</td>
+                        <td id="myborder">{{totaltp.word1}}</td>
+                        <td id="myborder"><span id="grade">{{grades.grade}}</span></td>
+                        </tr>
+                        <tr align="center">  
+                        <td id="myborder">{{i.subjectcode2}}</td>
+                        <td id="myborder">{{i.subject2}}</td>
+                        <td id="myborder">0{{i.marks2}}</td>
+                        <td id="myborder">0{{i.prac2}}</td>
+                        <td id="myborder">0{{totaltp.t2}}</td>
+                        <td id="myborder">{{totaltp.word2}}</td>
+                        <td id="myborder">{{grades.grade2}}</td>
+                        </tr>
+                        <tr align="center">  
+                        <td id="myborder">{{i.subjectcode3}}</td>
+                        <td id="myborder">{{i.subject2}}</td>
+                        <td id="myborder">0{{i.marks3}}</td>
+                        <td id="myborder">0{{i.prac3}}</td>
+                        <td id="myborder">0{{totaltp.t3}}</td>
+                        <td id="myborder">{{totaltp.word3}}</td>
+                        <td id="myborder">{{grades.grade3}}</td>
+                        </tr>
+                        <tr  align="center">  
+                        <td id="myborder">{{i.subjectcode4}}</td>
+                        <td id="myborder">{{i.subject4}}</td>
+                        <td id="myborder">0{{i.marks4}}</td>
+                        <td id="myborder">0{{i.prac4}}</td>
+                        <td id="myborder">0{{totaltp.t4}}</td>
+                        <td id="myborder">{{totaltp.word4}}</td>
+                        <td id="myborder">{{grades.grade4}}</td>
+                        </tr>
+                        <tr  align="center">  
+                        <td id="myborder">{{i.subjectcode5}}</td>
+                        <td id="myborder">{{i.subject5}}</td>
+                        <td id="myborder">0{{i.marks5}}</td>
+                        <td id="myborder">0{{i.prac5}}</td>
+                        <td id="myborder">0{{totaltp.t5}}</td>
+                        <td id="myborder">{{totaltp.word5}}</td>
+                        <td id="myborder">{{grades.grade5}}</td>
+                        </tr>
+                         <tr> <td> </td></tr>
+                        <tr><td> </td></tr>
+                        <tr>
+                          <td align="center" id="myborder">CGPA</td>
+                          <td align="left" id="myborder">&#160 &#160 &#160 {{totaltp.CGPA}}</td>
+                          <td  id="myborder" style="font-weight: bolder;" align="center">&#160TOTAL&#160</td>
+                          <td colspan="2" align="center" id="myborder" style=" font-weight: bolder;">{{totaltp.subtotal}}</td>
+                          <td  align="center" id="myborder" style="font-weight: bolder;">RESULT</td>
+                          <td align="center" id="myborder" style="color:black; font-weight: bolder; color:red;">{{grades.result}}</td>
+                        </tr>
+                      </table>
+                      <br>
+                      <table>
+                        <tr>
+                          <td colspan="0" style="width: 70%;">Result Date:- {{i.resultdate|date:'d-M-Y'}}</td>
+                        </tr>
+                          <tr>
+                        <td colspan="0">Session:- {{i.sessionyear}}</td>
+                        <td colspan="0" align="right" style="align-items: right; padding-top:20px; padding-bottom: 35px;">Authorized Seal and Signature &#160 &#160</td>
+                      </tr>
+                         </table>
+                         </tr>
+                       </td>
+                         </table> 
+                         </div> 
+                         <a href="javascript:void(0);" class="btn btn-outline-danger m-3" onclick="printPageArea('printableArea')">Print</a>
+                       </div>
+                       <br>
+                  
+
+                  <script type="text/javascript">
+                    
+                    function printPageArea(areaID){
+    var printContent = document.getElementById(areaID).innerHTML;
+    var originalContent = document.body.innerHTML;
+    document.body.innerHTML = printContent;
+    window.print();
+    document.body.innerHTML = originalContent;
+}
+                  </script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://fbktnsetnet.000webhostapp.com/wp-content/uploads/2018/04/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.4.1/jspdf.debug.js"></script>
+
+{% endfor %}             
+ 
+                      
+{% endblock %}
+ {% block mainbody %} {% endblock %}

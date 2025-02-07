@@ -1,0 +1,317 @@
+{% block default %}
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <title> {% block title %} PATEL JAN KALYAN SEVA SAMITI {% endblock %}</title>
+  <link rel="icon" href="{% static 'images/cybromlogo.webp' %}" type="image/icon type">
+   <script type="text/javascript" src="{% static 'jquery.js' %}"></script>
+   <script type="text/javascript" src="{% static 'webcam.js' %}"></script>
+   <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="{% static 'myowncss.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="//cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<!--<meta http-equiv="refresh" content="180">-->
+<style>
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.topnav {
+  overflow: hidden;
+  background-color: #333;
+  margin-top: 2px;
+}
+
+.navbartop {
+  position: sticky;
+  top:0;
+  overflow: hidden;
+ 
+}
+
+
+.topnav-right {
+  float: right;
+}
+
+.topnav a {
+  float: left;
+  display: block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.topnav a.active {
+  background-color: #04AA6D;
+  color: white;
+}
+
+.topnav .icon {
+  display: none;
+}
+
+@media screen and (max-width: 600px) {
+  .topnav a:not(:first-child) {display: none;}
+  .topnav a.icon {
+    float: right;
+    display: block;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .topnav.responsive {position: relative;}
+  .topnav.responsive .icon {
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+  .topnav.responsive a {
+    float: none;
+    display: block;
+    text-align: left;
+  }
+}
+</style>
+
+<style>
+.flex-container {
+  display: flex;
+  flex-wrap: nowrap;
+  background-color: orange;
+}
+
+.flex-container > div {
+  margin: 1px;
+  text-align: center;
+  line-height: 40px;
+  font-size: 30px;
+}
+</style>
+</head>
+  <body background="{% static 'images/bgs.jpg' %}" 
+  style="background-repeat:no-repeat;background-size:cover;">
+  <div id="page-container">
+   <div id="content-wrap">
+  <div class="container-fluid m-0 p-0" class="target">
+
+     <!------header Part ----->
+     <div class="flex-container navbartop">
+  <div><a href="/"><img src=""><img src="{% static 'images/PATEL_LOGO.png' %}" height="150px"></a></div>
+  <div><span style="color: white; font-size: 30px; font-weight: bolder; text-align: center; margin: 20px;">PATEL JAN KALYAN SEVA SAMITI</span><br>
+    <span style="color: white; font-size: 30px; font-weight: bolder; text-align: center; margin: 20px;">पटेल जन कल्याण सेवा समिति</span><br>
+     <span style="color: white; font-size: 15px; font-weight: bolder; text-align: center;">Patel Asmarak, GT Road Bus Stand, Mohanbigha, Dehri On Sone, Rohtas Bihar (821307)</span><br>
+     <!---<span style="color: white; font-size: 15px; font-weight: bolder; text-align: center;">पटेल अस्मारक, जीटी रोड बस स्टैंड, मोहनबीघा, डेहरी ऑन सोन, रोहतास बिहार (821307)</span>---->
+     </div>
+   </div>
+{% endblock %}
+      <!---------End of Header Part----->
+
+<div class="topnav" id="myTopnav">
+  <a href="/" class="active"><i class="fa fa-home faicon" aria-hidden="true"></i> Home</a>
+  <a href="{% url 'contact' %}"><i class="fa fa-phone faicon" aria-hidden="true"></i> Contact</a>
+  <a href="{% url 'course' %}"><i class="fa fa-book" aria-hidden="true"></i> Courses</a>
+  <a href="{% url 'about' %}"><i class="fa fa-info-circle faicon" aria-hidden="true"></i>About</a>
+  <a style="color: red; margin-left: 20px;"> {{msg}}</a>
+  <div class="topnav-right">
+  </div>
+  <!-------Start Admin Login---->
+  {% if request.user.is_authenticated %}
+     <span style="float: right; color:red; padding-top: 15px;  padding-right: 20px;" type="button"data-bs-toggle="dropdown" aria-expanded="false" > <img src="{{user.image.url}}" style="border-radius:20px;" height="25px"> </span>
+     <span style="float: right; color: white; padding-top: 15px;"> {{user.role}}&#160 </span>
+    <span style="float: right; color: white; padding-top: 15px;"> {{user.first_name}} {{user.last_name}} :&#160</span>
+     <ul class="dropdown-menu border-0 text-center rounded rounded-3" style="background-color: rgba(254, 185, 185,0.93);">
+      <table>
+    <tr> 
+    <td><a class="dropdown-item rounded rounded-3 badge-danger" style="color:black; font-size:20px;" href="{% url 'logout' %}">
+      <img src="{% static 'menuimages/logout.png' %}" height="50px"></a></td>
+    <td><a class="dropdown-item rounded rounded-3 badge-danger" style="color:black; font-size:20px;" href="{% url 'change_password' %}">
+      <img src="{% static 'menuimages/changepass.png' %}" height="50px"></a></td>
+  </tr>
+  <tr>
+    <td><a href="{% url 'profile' %}" class="dropdown-item rounded rounded-3 badge-danger" style="color:black; font-size:20px;">
+      <img src="{% static 'menuimages/editprofile.png' %}" height="50px"></a></a></td>
+    <td ><a href="{% url 'imageview' %}" class="dropdown-item rounded rounded-3 badge-danger" style="color:black; font-size:20px;">
+      <img src="{% static 'menuimages/updateimage.png' %}" height="50px"></a></td>
+    </tr>
+      
+    <!------- Start Studnet Login----> 
+     {% if user.role == "Student" %}
+     <tr>
+    <td><form action="viewresult" method="POST">
+      {% csrf_token %}
+       <input type="hidden" name="email" value="{{user.email}}">
+       <button class="dropdown-item rounded rounded-3 badge-danger" style="color:black; font-size:20px;">Marksheet</button>
+        </form></td>
+         <td>
+        <form action="studentfeecard" method="GET">
+      {% csrf_token %}
+       <input type="hidden" name="rollno" value="{{user.rollno}}">
+       <button class="dropdown-item rounded rounded-3 badge-danger" style="color:black; font-size:20px;">Fee Card</button>
+        </form>
+         </td>
+         <tr>
+     {% endif %}
+       <!------- End Student Login---->
+
+       <!------- Start Admin Login---->
+ {% if user.role == "Admin" %}
+ <tr>
+    <td><a class="dropdown-item rounded rounded-3 badge-danger" style="color:black; font-size:20px;" href="{% url 'addstu' %}">
+    <img src="{% static 'menuimages/addstu.png' %}" height="50px"></a></td>
+    <td><a class="dropdown-item rounded rounded-3 badge-danger" style="color:black; font-size:20px;" href="{% url 'showstu' %}">
+      <img src="{% static 'menuimages/showstu.png' %}" height="50px"></a></td>
+  </tr>
+  <tr>
+    <td><a class="dropdown-item rounded rounded-3 badge-danger" style="color:black; font-size:20px;" href="#">
+      <img src="{% static 'menuimages/showfac.png' %}" height="50px"></a></td>
+      <td><a class="dropdown-item rounded rounded-3 badge-danger" style="color:black; font-size:20px;" href="{% url 'showmarks' %}">
+      <img src="{% static 'menuimages/showfacs.png' %}" height="50px">Marks</a></td> </tr>
+      <tr>
+      <td><a class="dropdown-item rounded rounded-3 badge-danger" style="color:black; font-size:20px;" href="{% url 'addmarks' %}">
+      <img src="{% static 'menuimages/showfacs.png' %}" height="50px">AddMarks</a></td>
+      <td><a class="dropdown-item rounded rounded-3 badge-danger" style="color:black; font-size:20px;" href="feeupload">
+      <img src="{% static 'menuimages/showfacs.png' %}" height="50px">Fee Detail</a></td>
+
+  </tr>
+  {% endif %}
+      <!-------End Admin Login---->
+
+       <!------- Start Faculty Login---->
+
+      {% if user.role == "Faculty" %}
+ <tr>
+    <td><a class="dropdown-item rounded rounded-3 badge-danger" style="color:black; font-size:20px;" href="#">Show Attendance</a></td>
+    <td>1</td>
+   </tr>
+      {% endif %}
+      <!------- End Faculty Login---->
+       </table>
+       {% else %}
+    <span style="float: right;"> <a href="{% url 'login' %}">Login</a></span>
+    <span style="float: right;"> <a href="{% url 'signup' %}">Signup</a></span>
+  </a>
+    {% endif %}
+     <!-------End of all Login---->
+
+<a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+</div>
+{% block about %} {% endblock %} 
+{% block course %} {% endblock %}
+{% block contact %} {% endblock %}
+    <!------End of Menu Part---->
+{% block content %} {% endblock content %}
+
+{% block sms %}
+<table align="center">
+  {% if messages %}
+    {% for message in messages %}
+    <tr>
+      <td id="demo"style="color: red; margin-left:50px;"></td>
+        <td style="color: red; margin-left:10px;">{{message}}</td>
+      </tr>
+    {% endfor %}
+{% endif %}
+</table>
+{% endblock %}
+{% block mainbody %}
+<!---------Content Part---->
+<div class="container-fluid">
+  <div class="row gy-5">
+    <div class="col-6 p-2">
+      <div class="p-1 rounded-2 text-center"> 
+        <h1 style="color: red;">News Update </h1>
+         <hr style="border-width:5px; size: 20px; color:yellow;">
+        <marquee direction="up" scrollamount="3" onmouseover="this.stop();"onmouseout="this.start();">
+         <ol>
+            <li style="color:green; font-size: 20px;">1st Semester Result will decler on 05-Oct-22 at 11:30AM <a href="viewresultweb" 
+              style="color: red;"> View Result</a> </li><br>
+            <li style="color:green; font-size: 20px;">3rd Semester Result will decler on 06-Oct-22 at 11:30PM </li>
+            <li style="color:green; font-size: 20px;">5th Semester Result will decler on 07-Oct-22 at 11:30AM</li>
+            <li style="color:green; font-size: 20px;">7th Semester Result will decler on 08-Oct-22 at 11:30AM</li>
+            <li style="color:red; font-size: 20px;"> New Addimission is Going On</li>
+            <li style="color:red; font-size: 20px;">Schollership form last date is 10-Dec-22</li>
+            <li style="color:green; font-size: 20px;">New Addimission is Going On</li>
+    </ol>
+  </marquee>  
+ </div>
+        
+        
+          </div>
+    <div class="col-6 p-2">
+      <div class="p-1">
+        <h1 style="color:green;"> Founder’s Message </h1>
+        <hr style="border-width:5px; size: 20px; color:red;">
+        <img src="{% static 'images/modnarayanfounder.jpeg' %}" class="rounded-4 p-1" align="left" height="200px" style="padding:0px; margin-left:0px;">
+        
+  <div style="padding:10px;"> Education is a social process. Education is growth. Education is not preparation for life, but education is life itself.“In this era of globalisation, the utmost urge is pace. Absolute knowledge of management and corporate wisdom is indeed the most effective phenomenon for development, which requires actual capitalisation of knowledge for taking decisions in time. The ethos of Indian culture and the pedagogy of enlightening wisdom belong to certain directive approaches which require zeal to create an ideal professional who can contribute to the society in totality. We, at Acropolis, are developing such professionals who will serve the society and work towards its development and towards environmental support, with an attitude of creating surplus in the field of education. I take this opportunity to emphasise that Acropolis will surely contribute in the development of such professionals who will carry the flag of the nation at the world’s highest Aero.”
+Ashish Sojatia
+Group Chairman
+</div>
+</div>
+        </div>
+        <div class="p-1 text-center">
+        <h1 style="color: red;">Gallery</h1>
+        <hr style="border-width:5px; size: 20px; color:yellow;">
+        <a href="{% static 'images/31jan_BrahmanBhoj/1.jpg' %}" target="_blank"><img src="{% static 'images/31jan_BrahmanBhoj/1.jpg' %}" height="170px;" width="280px" class="rounded-4 p-1"></a>
+        <a href="{% static 'images/31jan_BrahmanBhoj/2.jpg' %}" target="_blank"><img src="{% static 'images/31jan_BrahmanBhoj/2.jpg' %}" height="170px;" width="280px" class="rounded-4 p-1"></a>
+        <a href="{% static 'images/31jan_BrahmanBhoj/3.jpg' %}" target="_blank"><img src="{% static 'images/31jan_BrahmanBhoj/3.jpg' %}" height="170px;" width="280px"class="rounded-4 p-1"></a>
+        <a href="{% static 'images/31jan_BrahmanBhoj/4.jpg' %}" target="_blank"><img src="{% static 'images/31jan_BrahmanBhoj/4.jpg' %}" height="170px;" width="280px"class="rounded-4 p-1"></a>
+        <a href="{% static 'images/31jan_BrahmanBhoj/5.jpg' %}" target="_blank"><img src="{% static 'images/31jan_BrahmanBhoj/5.jpg' %}" height="170px;" width="280px"class="rounded-4 p-1"></a>
+        <a href="{% static 'images/31jan_BrahmanBhoj/6.jpg' %}" target="_blank"><img src="{% static 'images/31jan_BrahmanBhoj/6.jpg' %}" height="170px;" width="280px"class="rounded-4 p-1"></a>
+        <a href="{% static 'images/31jan_BrahmanBhoj/7.jpg' %}" target="_blank"><img src="{% static 'images/31jan_BrahmanBhoj/7.jpg' %}" height="170px;" width="280px"class="rounded-4 p-1"></a>
+        <a href="{% static 'images/31jan_BrahmanBhoj/8.jpg' %}" target="_blank"><img src="{% static 'images/31jan_BrahmanBhoj/8.jpg' %}" height="170px;" width="280px"class="rounded-4 p-1"></a>
+        <a href="{% static 'images/31jan_BrahmanBhoj/9.jpg' %}" target="_blank"><img src="{% static 'images/31jan_BrahmanBhoj/9.jpg' %}" height="170px;" width="280px"class="rounded-4 p-1"></a>
+        <a href="{% static 'images/31jan_BrahmanBhoj/10.jpg' %}" target="_blank"><img src="{% static 'images/31jan_BrahmanBhoj/10.jpg' %}" height="170px;" width="280px"class="rounded-4 p-1"></a>
+        <a href="{% static 'images/31jan_BrahmanBhoj/11.jpg' %}" target="_blank"><img src="{% static 'images/31jan_BrahmanBhoj/11.jpg' %}" height="170px;" width="280px"class="rounded-4 p-1"></a>
+        <a href="{% static 'images/31jan_BrahmanBhoj/12.jpg' %}" target="_blank"><img src="{% static 'images/31jan_BrahmanBhoj/12.jpg' %}" height="170px;" width="280px"class="rounded-4 p-1"></a>
+        <a href="{% static 'images/31jan_BrahmanBhoj/13.jpg' %}" target="_blank"><img src="{% static 'images/31jan_BrahmanBhoj/13.jpg' %}" height="170px;" width="280px"class="rounded-4 p-1"></a>
+        <a href="{% static 'images/31jan_BrahmanBhoj/14.jpg' %}" target="_blank"><img src="{% static 'images/31jan_BrahmanBhoj/14.jpg' %}" height="170px;" width="280px"class="rounded-4 p-1"></a>
+        <a href="{% static 'images/31jan_BrahmanBhoj/15.jpg' %}" target="_blank"><img src="{% static 'images/31jan_BrahmanBhoj/15.jpg' %}" height="170px;" width="280px"class="rounded-4 p-1"></a>
+        <a href="{% static 'images/31jan_BrahmanBhoj/16.jpg' %}" target="_blank"><img src="{% static 'images/31jan_BrahmanBhoj/16.jpg' %}" height="170px;" width="280px"class="rounded-4 p-1"></a>
+        <a href="{% static 'images/31jan_BrahmanBhoj/17.jpg' %}" target="_blank"><img src="{% static 'images/31jan_BrahmanBhoj/17.jpg' %}" height="170px;" width="280px"class="rounded-4 p-1"></a>
+        <a href="{% static 'images/31jan_BrahmanBhoj/18.jpg' %}" target="_blank"><img src="{% static 'images/31jan_BrahmanBhoj/18.jpg' %}" height="170px;" width="280px"class="rounded-4 p-1"></a>
+        <a href="{% static 'images/31jan_BrahmanBhoj/19.jpg' %}" target="_blank"><img src="{% static 'images/31jan_BrahmanBhoj/19.jpg' %}" height="170px;" width="280px"class="rounded-4 p-1"></a>
+        <a href="{% static 'images/31jan_BrahmanBhoj/20.jpg' %}" target="_blank"><img src="{% static 'images/31jan_BrahmanBhoj/20.jpg' %}" height="170px;" width="280px"class="rounded-4 p-1"></a>
+        </div>
+          </div>
+</div>
+  {% endblock %}
+
+ {% block register %} {% endblock %}
+<!---------End of Content Part---->
+{% block footer %} 
+<div class=" footer container-fluid bg-warning text-center text-danger">  Designed by Dhiraj Patel &#169 COPYRIGHT RESERVED 2025 </div>
+ </body>
+ </html>
+{% endblock %}

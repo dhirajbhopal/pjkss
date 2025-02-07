@@ -1,0 +1,139 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Update Image {% endblock title %}
+{% block content %} 
+{% load static %}
+{% if user.is_authenticated %}
+    <!-- Normalize CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+    <!-- Cropper CSS -->
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/cropper/2.3.4/cropper.min.css'>
+    <!-- Style CSS -->
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+  <!-- Demo CSS (No need to include it into your project) -->
+ <script type="text/javascript">
+  function validationimg() 
+  {
+    var image=document.f11.image.value;
+    
+    if (image=="")
+    {
+      alert("Please Choose Image");
+      return false;
+    }
+  }
+</script>
+      
+ <main class="page">
+     <!-- Start DEMO HTML (Use the following code into your project)-->
+  <!-- input file -->
+
+  <!-- leftbox -->
+  <div class="box-2">
+    <div class="result"></div>
+  </div>
+  <!--rightbox-->
+  <div class="box-2 img-result hide">
+    
+    <!-- result of crop -->
+    <img class="cropped" src="" alt="">
+
+  </div>
+  <!-- input file -->
+  <div class="box">
+    <div class="options hide">
+      <input  type="hidden" class="img-w" value="300" min="100" max="1200" />
+    </div>
+   
+  <form name='f11' action="imageupdate" method="POST" enctype="multipart/form-data">
+    {% csrf_token %} 
+ <div class="card" style="width: 18rem; border-radius: 30px;">
+  <div class="card-body">
+    <input type="hidden"  value={{user.email}} name="email">
+   <img src="{{user.image.url}}" class="card-img-top" style="height: 200px; width: 200px; border-radius: 10px;"><br>
+    <span style="color:green;"> Email:-</span> <span style="color:red;">{{user.email}}  </span>
+    <input type="file" id="file-input" accept="image/*" name="image">
+  
+    <!-- save btn -->
+   
+ <button class="btn download hide">Save</button>
+  </form>
+   <button class="btn save hide">Crop</button>
+    <!-- download btn -->
+    
+  </div>
+     <!-- END EDMO HTML (Happy Coding!)-->
+
+ </main>
+ 
+ {% else %}
+ <h1> You are not logged in</h1>
+    {% endif %}
+  </div>
+  
+<!-- Image Cropper JS -->
+<script src='https://cdnjs.cloudflare.com/ajax/libs/cropperjs/0.8.1/cropper.min.js'></script>
+<script>
+  
+  let result = document.querySelector('.result'),
+img_result = document.querySelector('.img-result'),
+img_w = document.querySelector('.img-w'),
+img_h = document.querySelector('.img-h'),
+options = document.querySelector('.options'),
+save = document.querySelector('.save'),
+cropped = document.querySelector('.cropped'),
+dwn = document.querySelector('.download'),
+upload = document.querySelector('#file-input'),
+cropper = '';
+
+// on change show image with crop options
+upload.addEventListener('change', e => {
+  if (e.target.files.length) {
+    // start file reader
+    const reader = new FileReader();
+    reader.onload = e => {
+      if (e.target.result) {
+        // create new image
+        let img = document.createElement('img');
+        img.id = 'image';
+        img.src = e.target.result;
+        // clean result before
+        result.innerHTML = '';
+        // append new image
+        result.appendChild(img);
+        // show save btn and options
+        save.classList.remove('hide');
+        options.classList.remove('hide');
+        // init cropper
+        cropper = new Cropper(img);
+      }
+    };
+    reader.readAsDataURL(e.target.files[0]);
+  }
+});
+
+// save on click
+save.addEventListener('click', e => {
+  e.preventDefault();
+  // get result to data uri
+  let imgSrc = cropper.getCroppedCanvas({
+    width: img_w.value // input value
+  }).toDataURL();
+  // remove hide class of img
+  cropped.classList.remove('hide');
+  img_result.classList.remove('hide');
+  // show image cropped
+  cropped.src = imgSrc;
+  dwn.classList.remove('hide');
+  dwn.download = 'imagename.png';
+  dwn.setAttribute('href', imgSrc);
+});
+</script>
+
+
+{% endblock %}
+
+{% block mainbody %} {% endblock %}
+
+<!---------MY end------>

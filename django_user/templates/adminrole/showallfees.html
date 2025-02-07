@@ -1,0 +1,213 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}All Fee{% endblock title %}
+{% block forgot %}  {% endblock %}
+{% block content %} 
+{% if request.user.is_authenticated %}
+{% if user.role == "Admin" %}
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script type="text/javascript" src="{% static 'jquery.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="//cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js"></script>
+  <form action='searchfee' method="POST" name="f1" onsubmit="return validation();">
+      {% csrf_token %}
+  <span style="margin:20px;"> Roll No </span> <input type="text" name="rollno" style="margin:10px;">
+<select name="session" class="btn btn-success btn-outline-warning" style="margin:10px;">
+  <option id="sel" style="margin:10px;" selected>Session</option>
+  <option>2023-2024</option>
+  <option>2022-2023</option>
+  </select>
+  <span>
+<button  class="btn btn-info btn-outline-danger" style="color:black; font-size:15px;">Search</button>
+</form>
+<button class="btn btn-warning btn-outline-success" style="color:black; font-size:15px;"> <a style="text-decoration: none; color: auto;" href="showfee">Show All</a></button>
+<a href="addfees"  class="btn btn-danger btn-outline-success" style="color:black; font-size:15px;">Add Fee</a>
+</span>
+</div>
+
+<script type="text/javascript">
+function validation() 
+  { 
+    var rollno=document.f1.rollno.value;
+    var sem=document.f1.session.value;
+
+    if(rollno=="")
+      {
+      alert("Please Enter Roll No");
+      return false;
+    }
+    if(sem=="Session")
+    {
+      alert("Please select Session");
+      return false;
+    }
+}
+  </script>
+<style>
+.showmarks {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+  border: 3px solid green;
+}
+
+.td1 {
+  text-align: center;
+  padding: 1px;
+  border: 1px solid red;"
+}
+
+#dwnldBtn{
+            background-color: green; 
+            color: #fff; 
+            padding: 10px; 
+            border: none;
+            border-radius: 5px; 
+            margin: 2rem 0;
+            cursor: pointer;
+        }
+
+</style>
+<style>
+* {
+  box-sizing: border-box;
+}
+
+#myInputroll {
+  background-image: url("{% static 'images/searchicon.png' %}");
+  background-position: 10px 10px;
+  background-repeat: no-repeat;
+  width: 20%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+  margin-left: 20px;
+  border-radius: 10px;
+}
+#myInputmonth {
+  background-image: url("{% static 'images/searchicon.png' %}");
+  background-position: 10px 10px;
+  background-repeat: no-repeat;
+  width: 20%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+  margin-left: 20px;
+  border-radius: 10px;
+}
+
+#myTable {
+  border-collapse: collapse;
+  width: 100%;
+  border: 1px solid red;
+  font-size: 18px;
+}
+
+#myTable th, #myTable td {
+  text-align: center;
+  padding: 5px;
+  border: 1px solid red;
+}
+
+#myTable tr {
+  border-bottom: 1px solid #ddd;
+}
+
+#myTable tr.header, #myTable tr:hover {
+  background-color:green;
+}
+</style>
+
+
+<script type="text/javascript">
+  $(document).ready(function () {
+            $('#dwnldBtn').on('click', function () {
+                $("#myTable").table2excel({
+                    filename: "Student_Fee_Detail.xls"
+                });
+            });
+        });
+</script>
+
+</style>
+<div style="overflow-x:auto;">
+<input type="text" id="myInputroll" onkeyup="myFunctionroll()" placeholder="Search Roll No...." title="Type in a name">
+<input type="text" id="myInputmonth" onkeyup="myFunctionmonth()" placeholder="Search Month...." title="Type in a name">
+<table class="showmarks" id="myTable" class="table-bordered container-fluid" align="center">
+      <tr class="td1" border="1px" align="center" style="background-color:black; color:white;"> 
+                      <th>Roll No</th>
+                      <th>Session</th>
+                      <th>Month</th>
+                      <th>Pending Amount</th>
+                      <th>Late Fine</th>
+                      <th>Paid Amount</th>
+                      <th>Paid Date</th>
+                    </tr>
+                      {% for i in fees %}
+                      <tr class="td1" border="2" align="center">
+                      <td>{{i.rollno}}</td>
+                      <td>{{i.sessionyear}}</td>  
+                       <td>{{i.month}}</td>
+                        <td>{{i.pendingamount}}</td>
+                        <td>{{i.latefine}}</td>
+                        <td>{{i.paidamount}}</td>
+                        <td>{{i.paiddate|date:'d-M-Y'}}</td>
+                      </tr>
+                     {% endfor %}
+                    </table> 
+                    </div>
+                    <button id="dwnldBtn">Download Excel Sheet</button> 
+
+
+<script>
+function myFunctionroll() {
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInputroll");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[0];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }       
+  }
+}
+</script>
+
+<script>
+function myFunctionmonth() {
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInputmonth");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[2];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }       
+  }
+}
+</script>
+
+{% else %}
+<h1> You Do Not Have permission to access this page</h1>
+{% endif %}
+ {% else %}
+ <h1> You are not logged in</h1>
+    {% endif %} 
+{% endblock %}
+ {% block mainbody %} {% endblock %}

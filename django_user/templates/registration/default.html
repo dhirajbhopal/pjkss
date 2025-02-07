@@ -1,0 +1,358 @@
+{% load static %}
+{% block default %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title> {% block title %} Home {% endblock %}</title>
+  <link rel="icon" href="{% static 'images/cybromlogo.webp' %}" type="image/icon type">
+   <script type="text/javascript" src="{% static 'jquery.js' %}"></script>
+   <script type="text/javascript" src="{% static 'webcam.js' %}"></script>
+   <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="{% static 'myowncss.css' %}">
+  <link rel="icon" href="images/.png" type="image/icon type">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+ <script type="text/javascript" src="/site/js/jquery-1.10.2.min.js"></script>
+
+  <script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+</head>
+
+<style type="text/css">
+
+#page-container {
+  position: relative;
+  min-height: 100vh;
+}
+
+#content-wrap {
+  padding-bottom:0    /* Footer height */
+}
+
+#msg
+{
+   pointer-events: none;
+}
+
+#footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 2.6rem;            /* Footer height */
+}
+</style>
+<body>
+  <div id="page-container">
+   <div id="content-wrap">
+  <div class="container-fluid m-0 p-0">
+     <!------header Part ----->
+     <div class="container-fluid bg-info">
+     <img src="{% static 'images/cybromlogo.webp' %}" height="90px">
+     <span style="color: white; font-size: 50px; font-weight: bolder; text-align: center; padding-left:50px;">Cybrom Technology Pvt. Ltd.</span>
+   </div>
+ {% endblock %}
+      <!---------End of Header Part----->
+  <div class="topnav" id="myTopnav">
+  {% block menu1 %}
+  <a href="/" class="active"><i class="fa fa-home faicon" aria-hidden="true"></i> Home</a>
+  <a href="contact"><i class="fa fa-phone faicon" aria-hidden="true"></i> Contact</a>
+  <a href="study"><i class="fa fa-book" aria-hidden="true"></i> Courses</a>
+  <a href="info"><i class="fa fa-info-circle faicon" aria-hidden="true"></i> Info</a>
+  {% for msg in messages %}  
+    <span id="Error" style="color:red; padding-left: 30%; size:20px;">{{msg}}</span>
+    <i class="fa fa-exclamation-triangle" style="color:yellow; margin-top: 18px;" aria-hidden="true"></i> 
+              {% endfor %}
+               <!-------Start Admin Login---->
+    {% for i in adm2 %}
+    <span style="float: right;"> <a href="#"><img class="rounded-2 m-0 p-0" id="admimg" src="{{i.image}}" height="23px"></a></span>
+    <span style="float: right;" type="button"  data-bs-toggle="dropdown" aria-expanded="false"> <a id="loginname" href="#">{{i.name}} Admin </a></span>
+      <ul class="dropdown-menu border-0 text-center rounded rounded-3" style="background-color:#bac7e0">
+   <li><a class="dropdown-item rounded rounded-3 badge-danger" style="color:black; font-size:20px;" href="/admpass?email={{i.email}}">Change Password</a></li>
+      <li><a class="dropdown-item rounded rounded-3 badge-danger" style="color:black; font-size:20px;" href="/uploadadmimg?email={{i.email}}">Update Image</a></li>
+          <li><a class="dropdown-item rounded rounded-3 badge-danger" style="color:black; font-size:20px;" href="logout_view">Logout</a></li>
+        </ul></span>
+        <span style="float: right;"><a href="#" onClick="window.location.reload(true)">Refresh</a></span> 
+        {% endfor %} 
+         <!-------End Admin Login---->
+
+          <!------- Start Faculty Login---->
+           {% for i in fac2 %} 
+    <span style="float: right;"> <a href="#"><img class="rounded-2 m-0 p-0" id="facprofilebtn" src="{{i.image}}" height="23px"></a></span>
+
+    <span style="float: right;" type="button"  data-bs-toggle="dropdown" aria-expanded="false"> <a href="#">{{i.name}} Faculty</a></span>
+      <ul class="dropdown-menu border-0 text-center rounded rounded-3" style="background-color:#bac7e0">
+      <li><a class="dropdown-item badge-warning rounded rounded-3" id="sturesultbtn" style="color:black; font-size:20px;" href="#">Result</a></li>
+    <li><a class="dropdown-item rounded rounded-3 badge-danger" style="color:black; font-size:20px;" href="#">Attednace</a></li>
+   <li><a class="dropdown-item rounded rounded-3 badge-danger" style="color:black; font-size:20px;" href="/facpass?email={{i.email}}">Change Password</a></li>
+      <li><a class="dropdown-item rounded rounded-3 badge-danger" style="color:black; font-size:20px;" href="/uploadfacimg?email={{i.email}}">Update Image</a></li>
+          <li><a class="dropdown-item rounded rounded-3 badge-danger" style="color:black; font-size:20px;" href="logout_view">Logout</a></li>
+        </ul></span>
+        <span style="float: right;"><a href="#" onClick="window.location.reload(true)">Refresh</a></span>     
+        {% endfor %}  
+           <!-------End Faculty Login---->
+
+           <!------- Start Studnet Login---->
+            {% for i in rec2 %} 
+    <span style="float: right;"> <a href="#"><img class="rounded-2 m-0 p-0" id="stuimg" src="{{i.image}}" height="23px"></a></span>
+
+    <span style="float: right;" type="button"  data-bs-toggle="dropdown" aria-expanded="false"> <a href="#">{{i.name}} Student</a></span>
+      <ul class="dropdown-menu border-0 text-center rounded rounded-3" style="background-color:#bac7e0">
+      <li><a class="dropdown-item badge-warning rounded rounded-3" id="sturesultbtn" style="color:black; font-size:20px;" href="#">Result</a></li>
+    <li><a class="dropdown-item rounded rounded-3 badge-danger" style="color:black; font-size:20px;" href="#">Fill Exam Form</a></li>
+   <li><a class="dropdown-item rounded rounded-3 badge-danger" style="color:black; font-size:20px;" href="/stupass?email={{i.email}}">Change Password</a></li>
+   <li><a class="dropdown-item rounded rounded-3 badge-danger" style="color:black; font-size:20px;" href="/imgupdate?email={{i.email}}">Update Image</a></li>
+   <li><a class="dropdown-item rounded rounded-3 badge-danger" style="color:black; font-size:20px;" href="logout_view">Logout</a></li></ul></span>
+        <span style="float: right;"><a href="#" onClick="window.location.reload(true)">Refresh</a></span>     
+        {% endfor %}  
+           <!------- End Student Login---->
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()"><i class="fa fa-bars"></i></a>
+  {% endblock %}
+  {% block stumenu %}{% endblock %}
+  {% block facmenu %} {% endblock %}
+  {% block adminmenu %} {% endblock %}
+</div>     
+{% block about %} {% endblock %}
+{% block changepass %} {% endblock %}
+ {% block course %} {% endblock %}
+ {% block contact %} {% endblock %}
+ {% block updatestuinadm %} {% endblock %}
+ {% block facprofile %} {% endblock %}
+{% block modfac %} {% endblock %}
+ {% block modifyres %} {% endblock %}
+ {% block modifystu %} {% endblock %} 
+ {% block facbody %} {% endblock %}
+{% block adminbody %} {% endblock %}
+{% block stubody %} {% endblock %}
+{% block modifyadm %} {% endblock %}
+{% block mess %} {% endblock %}
+    <!------End of Menu Part---->
+<style>
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.topnav {
+  overflow: hidden;
+  background-color: #333;
+}
+
+.topnav a {
+  float: left;
+  display: block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.topnav a:hover {
+  background-color:none;
+  color:red;
+}
+
+.topnav a.active {
+  background-color: #04AA6D;
+  color: white;
+}
+
+.topnav .icon {
+  display: none;
+}
+
+@media screen and (max-width: 600px) {
+  .topnav a:not(:first-child) {display: none;}
+  .topnav a.icon {
+    float: right;
+    display: block;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .topnav.responsive {position: relative;}
+  .topnav.responsive .icon {
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+  .topnav.responsive a {
+    float: none;
+    display: block;
+    text-align: left;
+  }
+}
+</style>
+
+{% block content %}
+<!---------Content Part---->
+<div class="container-fluid">
+  <div class="row gy-5">
+    <div class="col-6 p-2">
+      <div class="p-3 border bg-light border-danger rounded-2 text-center"> 
+        <h1 style="color: red;">News Update </h1>
+         <hr style="border-width:5px; size: 20px; color:yellow;">
+        <marquee direction="up" scrollamount="3">  
+            <ol>
+              <li style="color:green; font-size: 20px;">1st Semester Result will decler on 05-Oct-22 at 11:30AM</li><br>
+            <li style="color:green; font-size: 20px;">3rd Semester Result will decler on 06-Oct-22 at 11:30PM </li><br>
+            <li style="color:green; font-size: 20px;">5th Semester Result will decler on 07-Oct-22 at 11:30AM</li><br>
+            <li style="color:green; font-size: 20px;">7th Semester Result will decler on 08-Oct-22 at 11:30AM</li><br>
+            <li style="color:red; font-size: 20px;"> New Addimission is Going On</li><br>
+            <li style="color:red; font-size: 20px;">Schollership form last date is 10-Dec-22</li><br>
+            <li style="color:green; font-size: 20px;">New Addimission is Going On</li><br>
+          </marquee>
+          </ol>
+        </div>
+        <div class="p-2 border bg-light border-danger mt-1 rounded-2 text-center">
+        <h1 style="color: red;">Gallery</h1>
+        <img src="{% static 'images/cybrom22.png' %}" height="150px;" width="300px" class="rounded-4 p-1">
+        <img src="{% static 'images/cybrom33.jpeg' %}" height="150px;" width="300px" class="rounded-4 p-1">
+        <img src="{% static 'images/cybrom4.jpeg' %}" height="150px;" width="300px"class="rounded-4 p-1">
+        <img src="{% static 'images/cybrom5.jpeg' %}" height="150px;" width="300px"class="rounded-4 p-1">
+         <img src="{% static 'images/cybrom6.jpeg' %}" height="150px;" width="300px"class="rounded-4 p-1">
+          <img src="{% static 'images/aitr6.png' %}" height="150px;" width="300px"class="rounded-4 p-1">
+        </div>
+          </div>
+
+    <div class="col-6 p-2">
+      <div class="p-3 border bg-light border-danger rounded-2">
+        <h1 style="color:green;"> Chairman’s Message </h1>
+        <hr style="border-width:5px; size: 20px; color:red;">
+        <img src="{% static 'images/prashantsir.jpeg' %}" class="rounded-4 p-1" align="left" height="200px" style="padding:10px; margin-left:20px;">
+        
+  <div style="padding:10px;"> Education is a social process. Education is growth. Education is not preparation for life, but education is life itself.“In this era of globalisation, the utmost urge is pace. Absolute knowledge of management and corporate wisdom is indeed the most effective phenomenon for development, which requires actual capitalisation of knowledge for taking decisions in time. The ethos of Indian culture and the pedagogy of enlightening wisdom belong to certain directive approaches which require zeal to create an ideal professional who can contribute to the society in totality. We, at Acropolis, are developing such professionals who will serve the society and work towards its development and towards environmental support, with an attitude of creating surplus in the field of education. I take this opportunity to emphasise that Acropolis will surely contribute in the development of such professionals who will carry the flag of the nation at the world’s highest Aero.”
+Ashish Sojatia
+Group Chairman
+
+
+<!----------Login Start-------->
+<script type="text/javascript">
+  function valid()
+  {
+  
+    var emailid=document.f2.emailid.value;
+    var password=document.f2.password.value;
+    //var role=document.f2.role.value;
+
+    if(emailid=="")
+    {
+      alert("Please enter Email-ID");
+      document.f2.emailid.focus();
+      return false;
+    }
+  
+    if (password=="")
+    {
+      alert("Please enter Password");
+      document.f2.password.focus();
+      return false;
+    }
+  }
+</script>
+ <script type="text/javascript">
+    $(document).ready(function(){
+     $("#div1").hide();
+     $("#btn").click(function(){
+      $("#div1").toggle(2000);
+     });
+    });
+  </script>
+
+<script>
+
+  {% for msg in messages %}
+    var myname = '{{msg}}'
+  {% endfor %}
+$(document).ready(function(){
+  $(document).ready(function(){
+     if(myname =='Successfully Logged in')
+     {
+      $("#divlogin").hide();
+      $("#Error").css("color", "green");
+   }
+   else
+   {
+      $("#divlogin").show();
+   }
+    });
+});
+</script>
+</script>
+      <br>
+      <div id="divlogin" class="p-3 border bg-light border-0 rounded-2">
+       <div class="container p-1">
+        <div class="row d-flex justify-content-center align-items-center">
+        <div class="col-lg-12 col-xl-12">
+        <div class="card text-black" style="border-radius: 25px;">
+          <div class="card-body p-md-1">
+            <div class="row justify-content-center">
+              <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
+                <button id="btn" class="btn btn-outline-success rounded-5 border-0 mb-4" style="font-size:30px; margin-top: 10px; margin-left: 10px;">
+                Login Here!</button>
+                <form id="div1" name="f2" action="login" method="POST" onsubmit="return valid();" class="mx-1 mx-md-4">
+                  {% csrf_token %}
+                  <div class="d-flex flex-row align-items-center mb-1">
+                    <div class="form-outline flex-fill mb-1">
+                      <input type="email" name="emailid" class="form-control">
+                      <label class="form-label" for="form3Example1c" style="color:green;">Enter Emial-id</label> <label class="form-label" for="form3Example1c" style="color:red;">*</label>
+                    </div>
+                  </div>
+
+                  <div class="d-flex flex-row align-items-center mb-1">
+                    <div class="form-outline flex-fill mb-0">
+                      <input type="password" name="password" class="form-control">
+                      <label class="form-label" for="form3Example1c"style="color:green;">Enter  Password</label><label class="form-label" for="form3Example1c" style="color:red;">*</label>
+                    </div>
+                  </div>
+                 <div class="d-flex justify-content-end"> 
+                  <input class="btn btn-outline-danger" type="submit" value="Login">
+                </div>
+                </form>
+                <a href="signup"> <button id="btn" style="font-size:20px; color:orange; background: none; border: none;">New User! Click Here 
+                </button></a>
+                <a href="resetpasstemp"> <button id="btn" style="font-size:20px; background: none; border: none; color:red;">Forgot Password !
+                </button></a>
+                <br>
+              {% for msg in messages %}
+              <span style="color:red; padding-left: 5px;">{{msg}}</span>
+              {% endfor %}
+              </div>
+              <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
+                <img src="{% static 'images/cybromlogo.webp' %}" class="img-fluid rounded-4" alt="Sample image">
+              </div>
+            </div>
+            </div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+<!----------Login End-------->
+
+
+
+ {% block register %} {% endblock %}
+<!---------End of Content Part---->
+{% block footer %}
+<footer id="footer" class="container-fluid w-0 p-0">
+  <br><br>
+<div class="container-fluid bg-warning text-center text-danger">  Designed by Dhiraj Patel &#169 COPYRIGHT RESERVED 2022 </div>
+   </footer>
+ </body>
+ </html>
+{% endblock %}
+
+

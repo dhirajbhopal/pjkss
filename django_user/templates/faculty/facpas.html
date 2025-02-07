@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+ {% block menu1 %}
+        <li class="nav-item active">
+          <a class="nav-link active" aria-current="page" href="javascript:history.back()"><i class="fa fa-arrow-left" aria-hidden="true" style="color:red;"></i> Back</a>
+        </li>
+        {% endblock %}
+{% block content %} {% endblock %}
+{% block contact %} {% endblock %}
+{% block course %} {% endblock %}
+{% block title %} Change Password {% endblock %}
+{% block changepass %} 
+<script type="text/javascript">
+  function validationfac() 
+  {
+    var password1=document.f11.password1.value;
+    var password=document.f11.password.value; 
+    
+    if (password1=="")
+    {
+      alert("Please enter Password");
+      document.f11.password1.focus();
+      return false;
+    }
+
+    if (password=="")
+    {
+      alert("Please Re-enter Password");
+      document.f11.password.focus();
+      return false;
+    }
+
+    if(password1!=password)
+    {
+      alert("Password does not match");
+      document.f11.password1.value="";
+      document.f11.password.value="";
+      document.f11.password1.focus();
+      return false;
+    } 
+  }
+</script>
+<div class="container-fluid w-50" style=" padding-top: 10px;">
+  {% for i in cpass %}
+  <form name="f11" action="/facpass?email={{i.email}}" method="POST" onsubmit="return validationfac();">
+    {% csrf_token %}            
+    <div class="row d-flex justify-content-center align-items-center">
+        <div class="card text-black" style="border-radius: 25px; background-color:#858755;">
+            <p class="text-center h1 fw-bold" style="color:white;">Change Password</p>
+                <table style="background-color:#465152; border-radius:20px;margin-bottom: 10px;">
+                    <tr>
+                      <td class="profile">Email id</td>
+                      <td class="profile">:-</td>
+                      <td class="profiledata"> 
+                      <input type="text" readonly="readonly" style="color:red; font-size: 20px;" value={{i.email}} class="form-control">
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="profile">Password</td>
+                      <td class="profile">:-</td>
+                      <td class="profiledata"> 
+                      <input type="password" name="password1" style="color: green; font-size: 20px;"class="form-control" placeholder="Enter Password">
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="profile">Confirm Password</td>
+                      <td class="profile">:-</td>
+                      <td class="profiledata"> 
+                      <input type="password" name="password" style="color: green; font-size: 20px;" class="form-control" placeholder="Re-Enter Password">
+                      </td>
+                    </tr>
+                    </tr>
+                    <tr>
+                      <td colspan="3" align="center">
+                      <input  class="btn btn-success btn-outline-warning mb-2"
+                       style="color:white;" type="submit" name="" Value="Update"></td>
+                    </tr> 
+                  </table>
+                    </div>
+                  </div>
+              </form>   
+            </div>
+          </div>
+{% endfor %}
+{% endblock %}
+

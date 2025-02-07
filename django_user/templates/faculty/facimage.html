@@ -1,0 +1,196 @@
+{% extends 'base.html' %}
+ {% block menu1 %}
+        <li class="nav-item active">
+          <a class="nav-link active" aria-current="page" href="javascript:history.back()"><i class="fa fa-arrow-left" aria-hidden="true" style="color:red;"></i> Back</a>
+        </li>
+        {% endblock %}
+{% block content %} {% endblock %}
+{% block contact %} {% endblock %}
+{% block course %} {% endblock %}
+{% load static %}
+{% block title %} Password{% endblock %}
+ 
+{% block changepass %}
+ <script type="text/javascript" src="{% static 'jquery.js' %}"></script>
+  <script type="text/javascript">
+    $(document).ready(function(){ 
+    $("#table1").hide(10);
+    $("#start-camera").click(function(){
+     $("#table1").show(10);  
+     });
+    });
+  </script>
+
+<script type="text/javascript">
+  function validationfac() 
+  {
+    var image=document.f11.image.value;
+    
+    if (image=="")
+    {
+      alert("Please Choose Image");
+      return false;
+    }
+  }
+</script>
+
+
+   {% for i in img %}
+  <form name="f11" action="/uploadfacimg?email={{i.email}}" method="POST" enctype="multipart/form-data" onsubmit="return validationfac();">
+ {% csrf_token %}          
+ <div class="container-fluid" style="padding-left: 50px; width: 750px; padding-top:10px;">
+ <div class="col-8 p-1">
+    <div class="row d-flex justify-content-center align-items-left">
+        <div class="card text-black " style="border-radius: 25px; background-color:#858755;">
+          <div class="card-body p-md-1">
+            <div class="row justify-content-center">
+              <p class="text-center h1 fw-bold mb-1 mx-1 mx-md-1 mt-1 pb-2" style="color:white;">Upload Image</p>
+                   <table class="table" id="table1">
+                     <tr>
+                      <td><video id="video" autoplay></video></td>
+                      <td><canvas id="canvas" width="230" height="200"></canvas></td>
+                      <td align="center"><input type="button" class="btn btn-outline-danger" value="Click Photo" id="click-photo"></td>
+                    </tr>
+                   </table>
+                  <table style="background-color:#465152; border-radius: 20px;"> 
+                    <tr>
+                      <td class="profile">Name</td>
+                      <td class="profile">:-</td>
+                      <td class="profiledata" colspan="2"> 
+                      <input type="text" name="name" value={{i.name}} readonly="readonly" style="color: red; font-size: 20px; width: 300px;"  class="form-control">
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="profile">Email</td>
+                      <td class="profile">:-</td>
+                      <td class="profiledata" colspan="2"> 
+                      <input type="text" name="emailid" readonly="readonly" value={{i.email}} style="color: red; font-size: 20px; width: 300px;" class="form-control">
+                      </td>
+                    <tr>
+                      <td class="profile">Image</td>
+                      <td class="profile">:-</td>
+                      <td><input class="form-control"style="width:300px;" id="imgurl" name="image" type="file" accept="image/*"></td>
+                    </tr>
+                    <tr>
+                      <td class="profile"></td>
+                      <td class="profile"></td>
+                      <td class="profiledata" colspan="2"> 
+                      <input type="button" class="btn btn-outline-success" id="start-camera" value="Start Web Camera">
+                        <input type="submit" class="btn btn-outline-warning" value="Upload"></td>
+                      </form>
+                      {% endfor %}
+                      </tr>
+                  </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+</nav>
+</div>
+<br><br><br><br><br>
+
+<style type="text/css">
+
+button {
+    width: 120px;
+    padding: 10px;
+    display: block;
+    margin: 5px auto;
+    border: 2px solid #111111;
+    cursor: pointer;
+    background-color: white;
+}
+
+#start-camera {
+    margin-top: 5px;
+    border-radius: 10px;
+    background-color: ;
+}
+
+#video {
+    display: none;
+    margin: 2px;
+   
+    height:200px; 
+    border: 5px solid red;
+}
+
+#click-photo {
+    display: none;
+}
+
+#dataurl-container {
+    display: none;
+}
+
+#canvas {
+    display: block;
+    margin: 2px;
+    border: 5px solid green;
+    height:200px;
+}
+
+#dataurl-header {
+    text-align: center;
+    font-size: 15px;
+}
+
+#dataurl {
+    display: block;
+    height: 100px;
+    width: 320px;
+    margin: 10px auto;
+    resize: none;
+    outline: none;
+    border: 1px solid #111111;
+    padding: 5px;
+    font-size: 13px;
+    box-sizing: border-box;
+}
+
+</style>
+<script>
+
+let camera_button = document.querySelector("#start-camera");
+let video = document.querySelector("#video");
+let click_button = document.querySelector("#click-photo");
+let canvas = document.querySelector("#canvas");
+let dataurl = document.querySelector("#dataurl");
+let dataurl_container = document.querySelector("#dataurl-container");
+
+camera_button.addEventListener('click', async function() {
+    let stream = null;
+
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+    }
+    catch(error) {
+      alert(error.message);
+      return;
+    }
+
+    video.srcObject = stream;
+
+    video.style.display = 'block';
+    camera_button.style.display = 'none';
+    click_button.style.display = 'block';
+});
+
+click_button.addEventListener('click', function() {
+    canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+    let image_data_url = canvas.toDataURL('image/jpeg');
+   // document.getElementById('imgurl').value=canvas;
+    
+    dataurl.value = image_data_url;
+    dataurl_container.style.display = 'block';
+});
+
+</script>
+
+{% endblock %}
+

@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Students Details new{% endblock title %}
+{% block forgot %}  {% endblock %}
+{% block content %} 
+{% if request.user.is_authenticated %}
+{% if user.role == "Admin" %}
+  
+              <p class="text-center h1 fw-bold mb-1 mx-1 mx-md-1 mt-1 pb-2" style="color:green;">Students Details</p>    
+              <div style="overflow-x:auto;">            
+                  <table class="table" style=" border: 2px solid;">
+                    <tr style="background-color:black;">
+                      <td class="profile">Email ID-</td>
+                      <td class="profile">Roll Number</td>
+                      <td class="profile">First Name</td>
+                      <td class="profile">Last Name</td>
+                      <td class="profile">Father First Name</td>
+                      <td class="profile">Father Last Name</td>
+                      <td class="profile">Mobile Number</td>
+                      <td class="profile">Date Of Birth</td>
+                      <td class="profile">Date Of Addmission</td>
+                      <td class="profile">Gender</td>
+                      <td class="profile">Action</td>
+                    </tr>
+                    {% for i in studetail %}
+                    <tr>
+                      <td class="profiledata">{{i.email}}</td>
+                      <td class="profiledata">{{i.rollno}}</td>
+                      <td class="profiledata"> {{i.name}}</td>
+                      <td class="profiledata">{{i.lastname}}</td>
+                      <td class="profiledata">{{i.fathername}}</td>
+                      <td class="profiledata">{{i.fatherlastname}}</td>
+                      <td class="profiledata">{{i.mobileno}}</td>
+                      <td class="profiledata">{{i.dob}}</td>
+                      <td class="profiledata">{{i.doa}}</td>
+                      <td class="profiledata">{{i.gender}}</td>
+                      <td class="profiledata">
+                       <form action="modstu" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="ids" value="{{i.id}}">
+                         <input type="hidden" name="role" value="{{user.role}}">
+                        <input  class="btn btn-success btn-outline-warning "
+                       style="color:white;" type="submit" Value="Edit">
+                     </form></td>
+                    </tr>
+                    {% endfor %}           
+                  </table>
+                </div>
+{% else %}
+<h1> You Do Not Have permission to access this page</h1>
+{% endif %}
+ {% else %}
+ <h1> You are not logged in</h1>
+    {% endif %}            
+              
+
+{% endblock %}
+{% block mainbody %} {% endblock %}

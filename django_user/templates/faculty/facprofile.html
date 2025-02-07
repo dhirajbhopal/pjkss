@@ -1,0 +1,85 @@
+{% extends 'default.html' %}
+{% load static %}
+ {% block title %} {% for i in fac2 %} Faculty {{i.name}} {% endfor %} {% endblock %}
+ {% block content %} {% endblock %}
+  {% block menu1 %} {% endblock %}
+ {% block facmenu %}
+{% include 'hidden.html' %}
+  <a href="#" class="active" id="home"><i class="fa fa-home faicon" aria-hidden="true"></i> Home</a>
+  <a href="#" id="btncontact"><i class="fa fa-phone faicon" aria-hidden="true"></i> Contact</a>
+  <a href="#" id="btncourse"><i class="fa fa-book" aria-hidden="true"></i> Courses</a>
+  <a href="#" id="btninfo"><i class="fa fa-info-circle faicon" aria-hidden="true"></i> Info</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()"><i class="fa fa-bars"></i></a>
+   {% for i in fac2 %} 
+    <span style="float: right;"> <a href="#"><img class="rounded-2 m-0 p-0" id="facprofilebtn" src="{{i.image}}" height="23px"></a></span>
+
+    <span style="float: right;" type="button"  data-bs-toggle="dropdown" aria-expanded="false"> <a href="#">{{i.name}} Faculty</a></span>
+      <ul class="dropdown-menu border-0 text-center rounded rounded-3" style="background-color:#bac7e0">
+      <li><a class="dropdown-item badge-warning rounded rounded-3" id="sturesultbtn" style="color:black; font-size:20px;" href="#">Result</a></li>
+    <li><a class="dropdown-item rounded rounded-3 badge-danger" style="color:black; font-size:20px;" href="#">Attednace</a></li>
+   <li><a class="dropdown-item rounded rounded-3 badge-danger" style="color:black; font-size:20px;" href="/facpass?email={{i.email}}">Change Password</a></li>
+      <li><a class="dropdown-item rounded rounded-3 badge-danger" style="color:black; font-size:20px;" href="/uploadfacimg?email={{i.email}}">Update Image</a></li>
+          <li><a class="dropdown-item rounded rounded-3 badge-danger" style="color:black; font-size:20px;" href="logout_view">Logout</a></li>
+        </ul></span>
+        <span style="float: right;"><a href="#" onClick="window.location.reload(true)">Refresh</a></span>     
+        {% endfor %}  
+   {% endblock %}
+     {% block facbody %}
+    <!-- My Search Bar -->
+  {% for i in fac2 %}
+ <div class="container-fluid ml-5" id="facprofile" style="padding-left:2px; width: 700px; padding-top: 5px">
+ <div class="col-8 p-1">
+    <div class="row d-flex justify-content-center align-items-left">
+        <div class="card text-black " style="border-radius: 25px; background-color:#858755;">
+              <p class="text-center h1 fw-bold mb-1 mx-1 mx-md-1 mt-1 pb-2" style="color:white;">Your Profile</p>
+                
+                  <table class="table" style="background-color:#465152; border-radius:20px;">
+                    <tr>
+                      <td class="profile" style="width:300px">Name</td>
+                      <td class="profile">:-</td>
+                      <td class="profiledata"> {{i.name}}</td>
+                    </tr>
+                    <tr>
+                      <td class="profile" style="width:300px">Email ID:-</td>
+                      <td class="profile">:-</td>
+                      <td class="profiledata">{{i.email}}</td>
+                    </tr>
+                    <tr>
+                      <td class="profile">Mobile Number</td>
+                      <td class="profile">:-</td>
+                      <td class="profiledata">{{i.mobileno}}</td>
+                    </tr>
+                    <tr>
+                      <td class="profile">Subject</td>
+                      <td class="profile">:-</td>
+                      <td class="profiledata">{{i.subject}}</td>
+                    </tr>
+                    <tr>
+                      <td class="profile">Iamge</td>
+                      <td class="profile">:-</td>
+                       <td class="profiledata"> <img style="border-radius: 10px; margin-bottom: 10px;" width="80px" src={{i.image}}> </td>
+                    </tr>
+                    <tr>
+                      <td colspan="3" align="center">
+                      <a href="/modfac?email={{i.email}}"> <input  class="btn btn-success btn-outline-warning"
+                       style="color:white;" type="submit" name="" Value="Update"> </a></td>
+                    </tr>
+                  </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+                {% endfor %}
+                 <div id="course">
+                 {% include 'admcourse.html' %}
+               </div>
+               <div id="contact">
+                 {% include 'admcontact.html' %}
+               </div>
+               <div id="info">
+                {% include 'admininfo.html' %}
+               </div> 
+<marquee behavior="alternate" scrollamount="10" style="color:red;">
+   <h1>Welcome to Faculty Profile </h1></marquee>
+ {% endblock %}    
+

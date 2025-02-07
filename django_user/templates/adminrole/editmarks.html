@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Marks{% endblock title %}
+{% block forgot %}  {% endblock %}
+{% block content %} 
+{% if request.user.is_authenticated %}
+{% if user.role == "Admin" %}
+<style>
+#showmarks {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+  border: 3px solid green;
+}
+
+#td1 {
+  text-align: center;
+  padding: 1px;
+  border: 1px solid red;"
+}
+
+input
+{
+  text-align: center; border:none;
+  background-color: transparent;
+}
+
+</style>
+Back
+<div style="overflow-x:auto;">
+<table id="showmarks" class="table-bordered container-fluid" align="center">
+       <tr id="td1" border="1px" align="center" style="background-color:black; color:white;">
+                      <th>Roll Number</th>
+                      <th>Branch</th>
+                      <th>Semester</th>
+                      <th>Subject A</th>
+                      <th>Subject Code A</th>
+                      <th>Marks A</th>
+                      <th>P Marks A</th>
+                      <th>Result Date</th>
+                    </tr>
+                    {% for i in pdfs %}
+                      <tr id="td1" border="2" align="center">
+                        <form action="editmark" method="POST">
+                          {% csrf_token %}
+                          <input type="hidden" name="ids" value="{{i.id}}">
+                        <td><input  disabled type="text" name="rollno" value="{{i.rollno}}"></td>
+                        <td> <input  type="text" name="branch" value="{{i.branch}}"></td>
+                        <td> <input type="text" name="semester" value="{{i.semester}}" style="width: 50px;"></td>
+                        <td><input type="text" name="subject1" value="{{i.subject1}}"></td>
+                        <td><input type="text" name="subjectcode1" value="{{i.subjectcode1}}"></td>
+                        <td> <input type="text" name="mark1" value="{{i.marks1}}" style="width: 50px;"></td>
+                        <td> <input type="text" name="prac1" value="{{i.prac1}}"></td>
+                        <td> <input type="date" name="resultdate" value="{{i.resultdate|date:'Y-m-d'}}"></td>
+                      </tr>
+                      <tr>
+                        <td colspan="8" style="padding-bottom: 5px;"> </td>
+                      </tr>
+                      {% endfor %}
+                    <tr id="td1" border="1px" align="center" style="background-color:black; color:white;">
+                      <th>Subject B</th>
+                      <th>Subject Code B</th>
+                      <th>Marks B</th>
+                      <th>P Marks B</th>
+                      <th>Subject C</th>
+                      <th>Subject Code C</th>
+                      <th>Marks C</th>
+                      <th>P Marks C</th>
+                    </tr>
+                    {% for i in pdfs %}
+                      <tr id="td1" border="2" align="center">
+                        <td><input type="text" name="subject2" value="{{i.subject2}}"></td>
+                        <td><input type="text" name="subjectcode2" value="{{i.subjectcode2}}"></td>
+                        <td> <input type="text" name="mark2" value="{{i.marks2}}" style="width: 50px;"></td>
+                        <td> <input type="text" name="prac2" value="{{i.prac2}}"></td>
+                        <td><input type="text" name="subject3" value="{{i.subject3}}"></td>
+                        <td><input type="text" name="subjectcode3" value="{{i.subjectcode3}}" style="width: 65px;"></td>
+                        <td> <input type="text" name="mark3" value="{{i.marks3}}" style="width: 50px;"></td>
+                        <td> <input type="text" name="prac3" value="{{i.prac3}}"></td>
+                        <tr>
+                        <td colspan="8" style="padding-bottom: 5px;"> </td>
+                      </tr>
+                         {% endfor %}
+                    <tr id="td1" border="1px" align="center" style="background-color:black; color:white;">
+                      <th>Subject D</th>
+                      <th>Subject Code D</th>
+                      <th>Marks D</th>
+                      <th>P Marks D</th>
+                      <th>Subject E</th>
+                      <th>Subject Code E</th>
+                      <th>Marks E</th>
+                      <th>P Marks E</th>
+                    </tr>
+                    <tr id="td1">
+                        {% for i in pdfs %}
+                        <td><input type="text" name="subject4" value="{{i.subject4}}"></td>
+                        <td><input type="text" name="subjectcode4" value="{{i.subjectcode4}}"></td>
+                        <td> <input type="text" name="mark4" value="{{i.marks4}}" style="width: 50px;"></td>
+                        <td> <input type="text" name="prac4" value="{{i.prac4}}"></td>
+                        <td><input type="text" name="subject5" value="{{i.subject5}}"></td>
+                        <td><input type="text" name="subjectcode5" value="{{i.subjectcode5}}" style="width: 65px;"></td>
+                        <td> <input type="text" name="mark5" value="{{i.marks5}}" style="width: 50px;"></td>
+                        <td> <input type="text" name="prac5" value="{{i.prac5}}"></td>
+                        <tr>
+                        <td colspan="8" style="padding-bottom: 5px;"> </td>
+                      </tr>
+                      <tr>
+                        <td border="1px" id="td1" align="center" style="background-color:black; color:white;">Staus</td>
+                        <td border="1px" id="td1" align="center" style="background-color:black; color:white;">Session</td>
+                        <td rowspan="2" id="td1" align="center"><button class="btn btn-success btn-outline-warning">Update</button></td>
+                        <td  colspan="6" rowspan="2"></td>
+                      </tr>
+                      <tr>
+                        <td id="td1"><input type="text" name="status" disabled value="{{i.status}}"></td>
+                        <td id="td1"><input type="text" name="status" disabled value="{{i.sessionyear}}"></td>
+
+                        
+                     </tr>
+                       </form>
+                    {% endfor %}  
+                    </table>    
+                        </div> 
+                        {% else %}
+<h1> You Do Not Have permission to access this page</h1>
+{% endif %}
+ {% else %}
+ <h1> You are not logged in</h1>
+    {% endif %}          
+               {% endblock %}
+               {% block mainbody %} {% endblock %}

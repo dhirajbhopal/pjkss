@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Fee{% endblock title %}
+{% block forgot %}  {% endblock %}
+{% block content %} 
+{% if request.user.is_authenticated %}
+{% if user.role == "Admin" %}
+<script type="text/javascript" src="{% static 'jquery.js' %}"></script>
+  <form action='searchfee' method="POST" name="f1" onsubmit="return validation();">
+      {% csrf_token %}
+  <span style="margin:20px;"> Roll No </span> <input type="text" name="rollno" style="margin:10px;">
+<select name="session" class="btn btn-success btn-outline-warning" style="margin:10px;">
+  <option style="margin:10px;" selected>Session</option>
+  <option>2023-2024</option>
+  <option>2022-2023</option>
+  </select>
+<button  class="btn btn-info btn-outline-danger" style="color:black; font-size:15px;">Search</button>
+<a href="showfee"  class="btn btn-warning btn-outline-success" style="color:black; font-size:15px;">Show All</a>
+<a href="addfees"  class="btn btn-danger btn-outline-success" style="color:black; font-size:15px;">Add Fee</a>
+</form>
+
+<script type="text/javascript">
+function validation() 
+  { 
+    var rollno=document.f1.rollno.value;
+    var sem=document.f1.session.value;
+
+    if(rollno=="")
+      {
+      alert("Please Enter Roll No");
+      return false;
+    }
+
+     if(sem=="Session")
+    {
+      alert("Please select Session");
+      return false;
+    }
+}
+  </script>
+{% block sms %} {% endblock %}
+  {% if messages %}
+    {% for message in messages %}
+        <span style="color: red; margin-left: 20px;"><i class="fa fa-exclamation-triangle" aria-hidden="true" style='font-size:30px;color:red;margin-top: 10px;"'></i>{{message}}</span>
+    {% endfor %}
+{% endif %}
+
+                
+                    <div class="form-outline flex-fill mb-2 w-25 p-2" align="center">
+                       <form action="feesupload" method="post" enctype="multipart/form-data">
+                      {% csrf_token %}
+                      <label class="form-label" for="form3Example1c" style="color:green;">Select File</label><label class="form-label" for="form3Example1c"  style="color:red;">*  &#160  &#160  &#160   &#160  &#160  &#160  &#160  &#160  &#160  &#160  &#160  &#160  &#160  &#160  &#160  &#160  &#160  &#160  &#160</label>
+                    <input type="file" name="myfile" required accept="Student_Fee_Format.xlsx" class="form-control w-75">     
+                    </div>
+                    <div class="form-outline flex-fill w-25" align="center">
+                      <input class="btn bg-danger rounded rounded-4 mb-1" style="color:white; font-size:15px;" type="submit" value="Upload">
+                      <a  style="color:green; font-size:15px; margin:20px;" href = "{% static 'sample_format_excel/Student_Fee_Format.xlsx' %}" download = "file_name">Sample<i class="fa fa-download" aria-hidden="true"></i> </a>
+                  </div>
+                    </form>
+                  
+{% else %}
+<h1> You Do Not Have permission to access this page</h1>
+{% endif %}
+ {% else %}
+ <h1> You are not logged in</h1>
+    {% endif %} 
+               {% endblock %}
+               {% block mainbody %} {% endblock %}

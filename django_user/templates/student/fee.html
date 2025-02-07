@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Fee View{% endblock title %}
+{% block forgot %}  {% endblock %}
+{% block content %} 
+{% if request.user.is_authenticated %}
+{% if user.role == "Student" %}
+<script type="text/javascript" src="{% static 'jquery.js' %}"></script>
+
+<div align="center">
+<form action='feedetail' method="POST" name="f1" onsubmit="return validation();">
+      {% csrf_token %}
+  <input type="hidden" name="rollno"  value="{{user.rollno}}">
+<select name="session" class="btn btn-success btn-outline-warning" style="margin:10px;">
+  <option style="margin:10px;" selected>Session</option>
+  <option>2023-2024</option>
+  <option>2022-2023</option>
+  </select>
+  <select name="month" class="btn btn-success btn-outline-warning" style="margin:10px;">
+  <option style="margin:10px;" selected>Month</option>
+  <option>January</option>
+  <option>February</option>
+  <option>March</option>
+  <option>April</option>
+  <option>May</option>
+  <option>June</option>
+  <option>July</option>
+  <option>August</option>
+  <option>September</option>
+  <option>October</option>
+  <option>November</option>
+  <option>December</option>
+  </select>
+  <span>
+<button id="demo" class="btn btn-info btn-outline-danger" style="color:black; font-size:15px;">Search</button>
+</form>
+</span>
+<span>
+<form action="studentshowallfee" method="POST">
+	{% csrf_token %}
+	<input type="hidden" name="roll" value="{{user.rollno}}">
+<button class="btn btn-info btn-outline-danger" style="color:black; font-size:15px;">Show All</button>
+</form>
+</span>
+</div>
+
+<script type="text/javascript">
+function validation() 
+  { 
+    var sem=document.f1.session.value;
+    var month=document.f1.month.value;
+
+    if(sem=="Session")
+    {
+      alert("Please select Session");
+      return false;
+    }
+    if(month=="Month")
+    {
+      alert("Please select Month");
+      return false;
+    }
+}
+  </script>
+
+<style type="text/css">
+	
+   #toprow
+	{
+		border: solid 1px black;
+		text-align:left;
+		padding-left: 10px;
+	}
+
+	#row
+	{
+		border: solid 1px black;
+		text-align: center;
+		padding-left: 5px;
+		padding-right: 5px;
+	}
+	#top
+	{
+		margin-top: 20px;
+	}
+</style>
+{% for i in feedetail %}
+<table id="top" border="1" align="center">
+	{% for i in details %}
+	<tr id="row">
+		<td id="toprow" colspan="3" align="left">Name:- {{i.name}} {{i.lastname}}</td>
+		<td id="toprow" colspan="3" align="left">Roll NO:- {{i.rollno}}</td>
+	</tr>
+	{% endfor %}
+	{% for i in feedetail %}
+	<tr id="row">
+	   <td id="toprow" colspan="3" align="left">Class:- {{i.semester}}</td>
+		<td id="toprow" colspan="3" align="left">Session:- {{i.sessionyear}}</td>
+	</tr>
+	{% endfor %}
+
+<tr id="row"> 
+<td id="row">Month</td>
+<td id="row">Pending Amount</td>
+<td id="row">Late Fine</td>
+<td id="row">Paid Amount</td>
+<td id="row"> Paid Date</td>
+</tr>
+<tr id="row">
+	<td id="row">{{i.month}}</td>
+	<td id="row">{{i.pendingamount}}</td>
+	<td id="row">{{i.latefine}}</td>
+	<td id="row">{{i.paidamount}}</td>
+	<td id="row">{{i.paiddate|date:'d-M-Y'}}</td>
+</tr>
+ </table>       
+    {% endfor %}
+{% else %}
+<h1> You Do Not Have permission to access this page</h1>
+{% endif %}
+ {% else %}
+ <h1> You are not logged in</h1>
+    {% endif %} 
+{% endblock %}
+ {% block mainbody %} {% endblock %}

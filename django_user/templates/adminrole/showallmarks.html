@@ -1,0 +1,267 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Marks All{% endblock title %}
+{% block forgot %}  {% endblock %}
+{% block content %}
+{% if request.user.is_authenticated %}
+{% if user.role == "Admin" %}
+
+<script type="text/javascript" src="{% static 'jquery.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="//cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js"></script>
+  <form action='search' method="POST" name="f1" onsubmit="return validation();">
+      {% csrf_token %}
+  <span style="margin:20px;"> Roll No </span> <input type="text" name="rollno" style="margin:10px;">
+<select name="sem" class="btn btn-success btn-outline-warning" style="margin:10px;">
+  <option id="sel" style="margin:10px;" selected>Semester</option>
+  <option>1</option>
+  <option>2</option>
+  <option>3</option>
+  <option>4</option>
+  <option>5</option>
+  <option>6</option>
+  <option>7</option>
+  <option>8</option>
+  </select>
+<span><button id="demo" class="btn btn-info btn-outline-danger" style="color:black; font-size:15px;">Search</button>
+</form>
+<button class="btn btn-warning isDisabled" disabled style="color:black; font-size:15px;"><a style="text-decoration: none; color: auto;" href="showmarks">Show All</a></button></span>
+</div>
+
+<script type="text/javascript">
+function validation() 
+  { 
+    var rollno=document.f1.rollno.value;
+    var sem=document.f1.sem.value;
+
+    if(rollno=="")
+      {
+      alert("Please Enter Roll No");
+      return false;
+    }
+
+     if(isNaN(sem))
+    {
+      alert("Please select Semester");
+      return false;
+    }
+}
+  </script>
+
+<style>
+.showmarks {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+  border: 3px solid green;
+}
+
+.td1 {
+  text-align: center;
+  padding: 1px;
+  border: 1px solid red;"
+}
+
+#dwnldBtn{
+            background-color: green; 
+            color: #fff; 
+            padding: 10px; 
+            border: none;
+            border-radius: 5px; 
+            margin: 2rem 0;
+            cursor: pointer;
+        }
+
+</style>
+<style>
+* {
+  box-sizing: border-box;
+}
+
+#myInputroll {
+  background-image: url("{% static 'images/searchicon.png' %}");
+  background-position: 10px 10px;
+  background-repeat: no-repeat;
+  width: 20%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+  margin-left: 20px;
+  border-radius: 10px;
+}
+#myInputmonth {
+  background-image: url("{% static 'images/searchicon.png' %}");
+  background-position: 10px 10px;
+  background-repeat: no-repeat;
+  width: 20%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+  margin-left: 20px;
+  border-radius: 10px;
+}
+
+#myTable {
+  border-collapse: collapse;
+  width: 100%;
+  border: 1px solid red;
+  font-size: 15px;
+}
+
+#myTable th, #myTable td {
+  text-align: center;
+  padding: 5px;
+  border: 1px solid red;
+}
+
+#myTable tr {
+  border: 1px solid red;
+}
+
+#myTable tr.header, #myTable tr:hover {
+  background-color:green;
+}
+</style>
+
+
+<script type="text/javascript">
+  $(document).ready(function () {
+            $('#dwnldBtn').on('click', function () {
+                $("#myTable").table2excel({
+                    filename: "Student_Marks_Detail.xls"
+                });
+            });
+        });
+</script>
+<div style="overflow-x:auto;">
+  {% if messages %}
+    {% for message in messages %}
+    <tr>
+      <td id="demo"style="color: red; margin-left:50px;"></td>
+        <td style="color: red; margin-left:50px;">{{message}}</td>
+      </tr>
+    {% endfor %}
+{% endif %}
+<input type="text" id="myInputroll" onkeyup="myFunctionroll()" placeholder="Search Roll No...." title="Type in a name">
+<input type="text" id="myInputmonth" onkeyup="myFunctionmonth()" placeholder="Search Semester...." title="Type in a name">
+<table class="showmarks" id="myTable" class="table-bordered container-fluid" align="center">
+      <tr class="td1" border="1px" align="center" style="background-color:black; color:white;">
+                      <th> Roll Number</th>
+                      <th>Branch</th>
+                      <th>Semester</th>
+                      <th>Subject A</th>
+                      <th>Subject Code A</th>
+                      <th>Marks A</th>
+                      <th>P Marks A</th>
+                      <th>Subject B</th>
+                      <th>Subject Code B</th>
+                      <th>Marks B</th>
+                      <th>P Marks B</th>
+                      <th>Subject C</th>
+                      <th>Subject Code C</th>
+                      <th>Marks C</th>
+                      <th>P Marks C</th>
+                      <th>Subject D</th>
+                      <th>Subject Code D</th>
+                      <th>Marks D</th>
+                      <th>P Marks D</th>
+                      <th>Subject E</th>
+                      <th>Subject Code E</th>
+                      <th>Marks E</th>
+                      <th>P Marks E</th>
+                      <th>Result Date</th>
+                      <th>Status</th>
+                      <th>Session</th>
+                      <th>Action</th>
+                    </tr>
+                      {% for i in marks %}
+                      <tr class="td1" border="2" align="center">  
+                        <td>{{i.rollno}}</td>
+                        <td>{{i.branch}}</td>
+                        <td> {{i.semester}}</td>
+                        <td> {{i.subject1}}</td>
+                        <td> {{i.subjectcode1}}</td>
+                        <td> {{i.marks1}}</td>
+                        <td> {{i.prac1}}</td>
+                        <td> {{i.subject2}}</td>
+                        <td> {{i.subjectcode2}}</td>
+                        <td> {{i.marks2}}</td>
+                        <td> {{i.prac2}}</td>
+                        <td> {{i.subject3}}</td>
+                        <td> {{i.subjectcode3}}</td>
+                        <td> {{i.marks3}}</td>
+                        <td> {{i.prac3}}</td>
+                        <td> {{i.subject4}}</td>
+                        <td> {{i.subjectcode4}}</td>
+                        <td> {{i.marks4}}</td>
+                        <td> {{i.prac4}}</td>
+                        <td> {{i.subject5}}</td>
+                        <td> {{i.subjectcode5}}</td>
+                        <td> {{i.marks5}}</td>
+                        <td> {{i.prac5}}</td>
+                        <td> {{i.resultdate|date:'d-M-Y'}}</td>
+                        <td> {{i.status}}</td>
+                        <td> {{i.sessionyear}}</td>
+                        <td> <form action="editmark" method="GET">
+                          {% csrf_token %}
+                          <input type="hidden" name="ids" value="{{i.id}}">
+                    <button class="btn btn-success btn-outline-warning ">Edit</button>
+                   </form></td>
+                      </tr>
+                     {% endfor %}
+                    </table>  
+                    </div>  
+                    <button id="dwnldBtn">Download Excel Sheet</button> 
+<script>
+function myFunctionroll() {
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInputroll");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[0];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }       
+  }
+}
+</script>
+
+<script>
+function myFunctionmonth() {
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInputmonth");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[2];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }       
+  }
+}
+</script>
+
+
+{% else %}
+<h1> You Do Not Have permission to access this page</h1>
+{% endif %}
+ {% else %}
+ <h1> You are not logged in</h1>
+    {% endif %}
+               {% endblock %}
+               {% block mainbody %} {% endblock %}

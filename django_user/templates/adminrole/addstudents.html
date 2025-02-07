@@ -1,0 +1,292 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Update Students{% endblock title %}
+{% block forgot %}  {% endblock %}
+{% block content %} 
+{% if request.user.is_authenticated %}
+
+{% if user.role == "Admin" %}
+<script type="text/javascript">
+ function validation() 
+  {
+    var name=document.f1.name.value;
+    var name1=document.f1.name1.value;
+    var father=document.f1.father.value;
+    var father1=document.f1.father1.value;
+    var emailid1=document.f1.emailid1.value;
+    var emailid=document.f1.emailid.value; 
+    var mobileno=document.f1.mobileno.value;
+    var dob=document.f1.dob.value;
+    var doa=document.f1.doa.value;
+    var add=document.f1.add.value;
+    var rollno=document.f1.rollno.value;
+    var gender=document.f1.gender.value;
+
+  if (name=="")
+  {
+    alert("Please enter your First Name");
+    document.f1.name.focus();
+    return false;
+  }
+  if(!/^[a-zA-Z]*$/g.test(document.f1.name.value))
+    {
+      alert("Enter Alphabet Only");
+      document.f1.name.value="";
+      document.f1.name.focus();
+      return false;
+    }
+  if (name1=="")
+  {
+    alert("Please enter your Last Name");
+    document.f1.name1.focus();
+    return false;
+  }
+  if(!/^[a-zA-Z]*$/g.test(document.f1.name1.value))
+    {
+      alert("Enter Alphabet Only");
+      document.f1.name1.value="";
+      document.f1.name1.focus();
+      return false;
+    }
+
+ if (father=="")
+  {
+    alert("Please enter your Father First Name");
+    document.f1.father.focus();
+    return false;
+  }
+
+  if(!/^[a-zA-Z]*$/g.test(document.f1.father.value))
+    {
+      alert("Enter Alphabet Only");
+      document.f1.father.value="";
+      document.f1.father.focus();
+      return false;
+    }
+
+  if (father1=="")
+  {
+    alert("Please enter your Father Last Name");
+    document.f1.father1.focus();
+    return false;
+  }
+
+  if(!/^[a-zA-Z]*$/g.test(document.f1.father1.value))
+    {
+      alert("Enter Alphabet Only");
+      document.f1.father1.value="";
+      document.f1.father1.focus();
+      return false;
+    }
+
+
+      if(emailid1=="")
+    {
+      alert("Please enter Email-ID");
+      document.f1.emailid1.focus();
+      return false;
+    }
+  
+
+    if(emailid=="")
+    {
+      alert("Please Re-enter Email-ID");
+      document.f1.emailid.focus();
+      return false;
+    }
+
+    if(emailid1!=emailid)
+    {
+      alert("Emaid does not match");
+      document.f1.emailid1.value="";
+      document.f1.emailid.value="";
+      document.f1.emailid1.focus();
+      return false;
+    }
+  
+
+    if (mobileno=="")
+  {
+    alert("Please enter your Mobile Number");
+    document.f1.mobileno.focus();
+    return false;
+  }
+
+    if(isNaN(mobileno))
+    {
+      alert("Enter Numeric value");
+      document.f1.mobileno.value="";
+      document.f1.mobileno.focus();
+      return false
+    }
+
+     if(mobileno.length!=10)
+     {
+      alert("Please enter Correct Mobile Number");
+      document.f1.mobileno.focus();
+       return false;
+     }
+      
+    if (add=="")
+     {
+    alert("Please enter Your Address");
+    document.f1.add.focus();
+    return false;
+     }
+
+    if (doa=="")
+     {
+    alert("Please enter your Date of Addmission");
+    document.f1.doa.focus();
+    return false;
+     }
+
+      if (dob=="")
+     {
+    alert("Please enter your Date of Birth");
+    document.f1.dob.focus();
+    return false;
+     } 
+
+     if (gender=="")
+
+     {
+    alert("Please select Your Gender");
+    return false;
+     }   
+     
+     if (rollno=="")
+
+     {
+    alert("Please enter rollno");
+    return false;
+     }   
+   }
+</script>
+
+<div class="container-fluid">
+  <div class="container p-1">
+    <div class="row d-flex justify-content-center align-items-center">
+      <div class="col-lg-12 col-xl-11">
+        <div class="card text-black" style="border-radius: 25px;">
+          <div class="card-body p-md-1">
+            <div class="row justify-content-center">
+              <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
+                <p class="text-center h1 fw-bold mb-1 mx-1 mx-md-1 mt-1 pb-2" style="color: red;">Add Students Details</p>
+                <form name="f1" action="addstudentsdata" method="POST" enctype="multipart/form-data" onsubmit="return validation();" class="mx-1 mx-md-4">
+                  {% csrf_token %}
+                 
+                  <div class="d-flex flex-row align-items-center mb-0">
+                    <div class="form-outline flex-fill mb-1">
+                      <label class="form-label" for="form3Example1c" style="color:green;">First Name</label><label class="form-label" for="form3Example1c" style="color:red;">*</label>
+                    <input type="text" name="name" class="form-control">  
+                    </div> &#160 &#160
+                    <div class="form-outline flex-fill mb-1">
+                      <label class="form-label" for="form3Example1c" style="color:green;">Last Name</label><label class="form-label" for="form3Example1c" style="color:red;">*</label>
+                      <input type="text" name="name1" class="form-control">
+                    </div>
+                  </div>
+                  <div class="d-flex flex-row align-items-center mb-0">
+                    <div class="form-outline flex-fill mb-1">
+                      <label class="form-label" for="form3Example1c" style="color:green;">Father First Name</label><label class="form-label" for="form3Example1c" style="color:red;">*</label>
+                      <input type="text" name="father"  class="form-control">
+                    </div> &#160 &#160
+                    <div class="form-outline flex-fill mb-1">
+                      <label class="form-label" for="form3Example1c" style="color:green;">Father Last Name</label><label class="form-label" for="form3Example1c" style="color:red;">*</label>
+                      <input type="text" name="father1"  class="form-control">
+                    </div>
+                  </div>
+
+                  <div class="d-flex flex-row align-items-center mb-0">
+                    <div class="form-outline flex-fill mb-1">
+                      <label class="form-label" for="form3Example1c" style="color:green;"> Email Id</label><label class="form-label" for="form3Example1c"  style="color:red;">*</label>
+                      <input type="email" name="emailid1"  class="form-control">
+                    </div>&#160 &#160
+                    <div class="form-outline flex-fill mb-1">
+                      <label class="form-label" for="form3Example1c" style="color:green;"> Confirm Email Id</label><label class="form-label"id="hide5" for="form3Example1c" style="color:red;">*</label>
+                      <input type="email" name="emailid"  class="form-control">
+                    </div>
+                    </div>
+
+                     <div class="d-flex flex-row align-items-center mb-0">
+                    <div class="form-outline flex-fill mb-1">
+                      <label class="form-label" for="form3Example1c" style="color:green;">Mobile No</label><label class="form-label" for="form3Example1c"  style="color:red;">*</label>
+                      <input type="text" name="mobileno"  class="form-control">
+                    </div>&#160 &#160
+                    <div class="form-outline flex-fill mb-1">
+                      <label class="form-label" for="form3Example1c" style="color:green;">Address</label><label class="form-label"id="hide5" for="form3Example1c" style="color:red;">*</label>
+                      <input type="text" name="add"  class="form-control">
+                      <input type="hidden" name="password" value="Student@123"  class="form-control">
+                    </div>
+                    </div>
+
+                  <div class="d-flex flex-row align-items-center mb-0">
+                    <div class="form-outline flex-fill mb-1">
+                      <label class="form-label" for="form3Example1c" style="color:green;">Date Of Addmission</label><label class="form-label" for="form3Example1c"  style="color:red;">*</label>
+                    <input type="date" name="doa" min='1980-01-01' max='2002-12-31' class="form-control">     
+                    </div>&#160 &#160
+                    <div class="form-outline flex-fill mb-1">
+                      <label class="form-label" for="form3Example1c" style="color:green;">Date Of Birth</label><label class="form-label"id="hide5" for="form3Example1c" style="color:red;">*</label>
+                      <input type="date" name="dob" min='1980-01-01' max='2002-12-31' class="form-control">
+                    </div>
+                    </div>
+                  <!-----Captcha------>  
+               
+                  <p style="color:red">{{msg}}</p>
+
+                  <div class="d-flex flex-row align-items-center mb-0">
+                    <div class="form-outline flex-fill mb-1">
+                      <label class="form-label" for="form3Example1c" style="color:green;">Roll No</label><label class="form-label"id="hide5" for="form3Example1c" style="color:red;">*</label>
+                      <input type="text" name="rollno" class="form-control">
+                    </div>
+                    <div class="form-outline flex-fill mb-2" style="margin-top: 25px;">
+                      &#160<input class="form-check-input" type="radio" name="gender" value="MALE">
+                      <label class="form-check-label" style="color:green;">
+                        <i class='fa fa-male' style="color:red;"></i> Male</label><br>
+                         &#160<input class="form-check-input" type="radio" name="gender" value="FEMALE">
+                      <label class="form-check-label"style="color:green;" >
+                         <i class="fa fa-female" aria-hidden="true" style="color:red;"></i> Female
+                         </label>
+                    </div>
+                    <div class="form-outline flex-fill">
+                      <input class="btn bg-danger rounded rounded-4 mb-1" style="color:white;margin-left:; font-size:25px;" type="submit" value="Add">
+                    </div>
+                  </div>
+                </form>
+                <br>
+                <p class="text-center h3 fw-bold mb-0 mx-0 mx-md-0 mt-0 pb-0" style="color:red;">Or</p>
+                <div class="d-flex flex-row align-items-center mb-0 p-1">
+                    <div class="form-outline flex-fill mb-1">
+                       <form action="uploadstu" method="post" enctype="multipart/form-data">
+                      {% csrf_token %}
+                      <label class="form-label" for="form3Example1c" style="color:green;">Select File</label><label class="form-label" for="form3Example1c"  style="color:red;">*</label>
+                    <input type="file" required name="myfile" accept="student_add_format.xlsx" class="form-control" style="width: 80%;">     
+                    </div>&#160 &#160
+                    <div class="form-outline flex-fill mb-1">
+                      <input class="btn bg-danger rounded rounded-4 mb-1" style="color:white; margin-top:25px; margin-right:50px; font-size:15px;" type="submit" value="Upload">
+                    </div>&#160 &#160
+                    <div class="form-outline flex-fill mb-1">
+                      <a  style="color:green; font-size:15px;" href = "{% static 'sample_format_excel/student_add_format.xlsx' %}" download = "file_name"> Sample<i class="fa fa-download" aria-hidden="true"></i> </a>
+                    </div>
+                    </div>
+                    </form>
+                    <br>
+              </div>
+              <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
+                <img src="{% static 'images/signup.jpeg' %}" class="img-fluid" alt="Sample image">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% else %}
+<h1> You Do Not Have permission to access this page</h1>
+{% endif %}
+ {% else %}
+ <h1> You are not logged in</h1>
+    {% endif %}
+  {% endblock %}
+  {% block mainbody %} {% endblock %}

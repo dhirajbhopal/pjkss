@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}AddFee{% endblock title %}
+{% block forgot %}  {% endblock %}
+{% block content %} 
+{% if request.user.is_authenticated %}
+{% if user.role == "Admin" %}
+<script type="text/javascript" src="{% static 'jquery.js' %}"></script>
+  <form action='searchfee' method="POST" name="f1" onsubmit="return validation();">
+      {% csrf_token %}
+  <span style="margin:20px;"> Roll No </span> <input type="text" name="rollno" style="margin:10px;">
+<select name="session" class="btn btn-success btn-outline-warning" style="margin:10px;">
+  <option id="sel" style="margin:10px;" selected>Session</option>
+  <option>2023-2024</option>
+  <option>2022-2023</option>
+  </select>
+<button id="demo" class="btn btn-info btn-outline-danger" style="color:black; font-size:15px;">Search</button>
+<a href="showfee" id="demo" class="btn btn-warning btn-outline-success" style="color:black; font-size:15px;">Show All</a>
+</form>
+
+</div>
+
+<script type="text/javascript">
+function validation() 
+  { 
+    var rollno=document.f1.rollno.value;
+    var sem=document.f1.session.value;
+
+    if(rollno=="")
+      {
+      alert("Please Enter Roll No");
+      return false;
+    }
+    if(sem=="Session")
+    {
+      alert("Please select Session");
+      return false;
+    }
+}
+  </script>
+
+<script type="text/javascript">
+function validationadd() 
+  { 
+    var rollno=document.f2.rollno.value;
+    var sessionyear=document.f2.sessionyear.value;
+    var month=document.f2.month.value;
+    var pendingamount=document.f2.pendingamount.value;
+    var latefine=document.f2.latefine.value;
+    var paidamount=document.f2.paidamount.value;
+    var paiddate=document.f2.paiddate.value;
+
+    if(rollno=="")
+      {
+      alert("Please Enter Roll No");
+      return false;
+    }
+    if(sessionyear=="Session")
+    {
+      alert("Please select Session");
+      return false;
+    }
+
+    if(month=="Month")
+    {
+      alert("Please select Month");
+      return false;
+    }
+
+    if(pendingamount=="")
+      {
+      alert("Please Enter Pending Amount");
+      return false;
+    }
+
+    if(latefine=="")
+      {
+      alert("Please Enter Late Fine");
+      return false;
+    }
+
+    if(paidamount=="")
+      {
+      alert("Please Enter Paid Amount");
+      return false;
+    }
+
+    if(paiddate=="")
+      {
+      alert("Please Enter Paid Date");
+      return false;
+    }
+}
+  </script>
+<style>
+#showmarks {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: %;
+  border: 3px solid green;
+}
+
+#td1 {
+  text-align: center;
+  padding: 1px;
+  border: 1px solid red;"
+}
+input
+}
+</style>
+<script type="text/javascript">
+    var a=document.getElementById("pendingamount1").value
+    var b=document.getElementById("latefine1").value
+    var c=a+b;
+  if (a!="") 
+  {
+  document.getElementById("demo").innerHTML = "Show Result";
+  document.getElementById("sel").innerHTML = "Selcect Semester";
+  }
+</script>
+<form name="f2" action="addfeesdata" method="POST" onsubmit="return validationadd();">
+ {% csrf_token %}
+ <div style="overflow-x:auto;">
+<table id="showmarks" class="table-bordered container-fluid" align="center">
+      <tr id="td1" border="1px" align="center" style="background-color:black; color:white;"> 
+                      <td>Roll No</td>
+                      <td>Session</td>
+                      <td>Month</td>
+                      <td>Pending Amount</td>
+                      <td>Late Fine</td>
+                      <td>Total Paid Amount</td>
+                      <td>Paid Date</td>
+                      <td>Action</td>
+                    </tr>
+                      <tr id="td1" border="2" align="center">
+                      <td><input type="text" name="rollno"></td>
+                      <td><select name="sessionyear" class="btn btn-success btn-outline-warning" style="margin:10px;">
+                      <option style="margin:10px;" selected>Session</option>
+                      <option>2023-2024</option>
+                      <option>2022-2023</option>
+                      </select></td>  
+                      <td><select name="month" class="btn btn-success btn-outline-warning" style="margin:10px;">
+                      <option style="margin:10px;" selected>Month</option>
+                      <option>January</option>
+                      <option>February</option>
+                      <option>March</option>
+                      <option>April</option>
+                      <option>May</option>
+                      <option>June</option>
+                      <option>July</option>
+                      <option>August</option>
+                      <option>September</option>
+                      <option>October</option>
+                      <option>November</option>
+                      <option>December</option>
+                      </select></td>
+                      <td><input type="number" id="pendingamount1" name="pendingamount"></td>
+                      <td><input type="number" id="latefine1" name="latefine"></td>
+                      <td><input type="number" name="paidamount" value={{c}}></td>
+                      <td><input type="date" name="paiddate"></td>
+                      <td><button class="btn btn-success btn-outline-warning">Submit</button></td>
+                      </tr>
+                    </table>  
+                    </div>           
+{% else %}
+<h1> You Do Not Have permission to access this page</h1>
+{% endif %}
+ {% else %}
+ <h1> You are not logged in</h1>
+    {% endif %} 
+{% endblock %}
+ {% block mainbody %} {% endblock %}

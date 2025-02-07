@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Marks{% endblock title %}
+{% block forgot %}  {% endblock %}
+{% block content %} 
+{% if request.user.is_authenticated %}
+{% if user.role == "Admin" %}
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+        div.scroll {
+            margin: 8px, 8px;
+            padding: 8px;
+            width:auto;
+            overflow-x: auto;
+            overflow-y: hidden;
+            white-space: nowrap;
+        }
+    </style>
+
+
+ <div class="scroll">
+  <style>
+#showmarks {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+  border: 3px solid green;
+}
+
+#td1 {
+  text-align: center;
+  padding: 1px;
+  border: 1px solid red;"
+}
+
+input
+{
+  text-align: center; border:none;
+  background-color: transparent;
+}
+
+</style>
+Back
+<div style="overflow-x:auto;">
+<table id="showmarks" class="table-bordered container-fluid" align="center">
+       <tr id="td1" border="1px" align="center" style="background-color:black; color:white;">
+                      <th>Roll Number</th>
+                      <th>Branch</th>
+                      <th>Semester</th>
+                      <th>Subject A</th>
+                      <th>Subject Code A</th>
+                      <th>Marks A</th>
+                      <th>P Marks A</th>
+                    </tr>
+                      <tr id="td1" border="2" align="center">
+                        <form name="f1" action="addmark" method="POST">
+                          {% csrf_token %}
+                        <td><input type="text" name="rollno"></td>
+                        <td><input type="text" name="branch"></td>
+                        <td><input type="text" name="semester"></td>
+                        <td><input type="text" name="subject1"></td>
+                        <td><input type="number" name="subjectcode1" ></td>
+                        <td><input type="number" name="mark1"></td>
+                        <td><input type="number" name="prac1"></td>
+                      </tr>
+                      <tr>
+                        <td colspan="8" style="padding-bottom: 5px;"> </td>
+                      </tr>
+                    <tr id="td1" border="1px" align="center" style="background-color:black; color:white;">
+                      <th>Subject B</th>
+                      <th>Subject Code B</th>
+                      <th>Marks B</th>
+                      <th>P Marks B</th>
+                      <th>Subject C</th>
+                      <th>Subject Code C</th>
+                      <th>Marks C</th>
+                     
+                    </tr>
+                      <tr id="td1" border="2" align="center">
+                        <td><input type="text" name="subject2" ></td>
+                        <td><input type="number" name="subjectcode2" ></td>
+                        <td> <input type="number" name="mark2"></td>
+                        <td> <input type="number" name="prac2"></td>
+                        <td><input type="text" name="subject3"></td>
+                        <td><input type="number" name="subjectcode3"></td>
+                        <td> <input type="number" name="mark3"></td>
+                        
+                        <tr>
+                        <td colspan="8" style="padding-bottom: 5px;"> </td>
+                      </tr>
+                    <tr id="td1" border="1px" align="center" style="background-color:black; color:white;">
+                       <th>P Marks C</th>
+                      <th>Subject D</th>
+                      <th>Subject Code D</th>
+                      <th>Marks D</th>
+                      <th>P Marks D</th>
+                      <th>Subject E</th>
+                      <th>Subject Code E</th>
+                      
+                    </tr>
+                    <tr id="td1">
+                        <td> <input type="number" name="prac3" ></td>
+                        <td><input type="text" name="subject4" ></td>
+                        <td><input type="number" name="subjectcode4"></td>
+                        <td> <input type="number" name="mark4"></td>
+                        <td> <input type="number" name="prac4"></td>
+                        <td><input type="text" name="subject5"></td>
+                        <td><input type="number" name="subjectcode5"></td>
+                        
+                        <tr>
+                        <td colspan="8" style="padding-bottom: 5px;"> </td>
+                      </tr>
+                      <tr>
+                        <td border="1px" id="td1" align="center" style="background-color:black; color:white;">Marks E</td>
+                        <td border="1px" id="td1" align="center" style="background-color:black; color:white;">P Marks E</td>
+                        <td border="1px" id="td1" align="center" style="background-color:black; color:white;">Staus</td>
+                        <td border="1px" id="td1" align="center" style="background-color:black; color:white;">Session</td>
+                        <td border="1px" id="td1" align="center" style="background-color:black; color:white;">Result Date</td>
+                        <td border="1px" id="td1" align="center" style="background-color:black; color:white;">School</td>
+                        <td rowspan="2" id="td1" align="center"><button class="btn btn-success btn-outline-warning">Upload</button></td>
+                        <td  colspan="6" rowspan="2"></td>
+                      </tr>
+                      <tr>
+                        <td> <input type="number" name="mark5"></td>
+                        <td> <input type="number" name="prac5"></td>
+                        <td id="td1"><input type="text" name="status"></td>
+                        <td id="td1"><input type="text" name="sessionyear"></td>
+                        <td id="td1"><input type="date" name="resultdate"></td>
+                        <td id="td1"><input type="text" name="school" value="Acropolis Institute Bypass Road,Manglia Square, Indore"></td>
+                     </tr>
+                       </form>  
+                    </table>    
+                        </div> 
+
+                      <p class="text-center h3 fw-bold mb-0 mx-0 mx-md-0 mt-0 pb-0" style="color:red;">Or</p>
+                <div class="d-flex flex-row align-items-center mb-0 p-1">
+                    <div class="form-outline flex-fill mb-1">
+                       <form name="f2" action="uploadmarks" method="post" enctype="multipart/form-data">
+                      {% csrf_token %}
+                      <label class="form-label" for="form3Example1c" style="color:green;">Select File</label><label class="form-label" for="form3Example1c"  style="color:red;">*</label>
+                    <input type="file" name="myfile" required accept="marksupload_sample_format.xlsx" class="form-control" style="width: 80%;">     
+                    </div>&#160 &#160
+                    <div class="form-outline flex-fill mb-1">
+                      <input class="btn bg-danger rounded rounded-4 mb-1" style="color:white; margin-top:25px; margin-right:50px; font-size:15px;" type="submit" value="Upload">
+                    </div>&#160 &#160
+                    <div class="form-outline flex-fill mb-1">
+                      <a  style="color:green; font-size:15px;" href = "{% static 'sample_format_excel/marksupload_sample_format.xlsx' %}" download = "file_name"> Sample<i class="fa fa-download" aria-hidden="true"></i> </a>
+                    </div>
+                    </div>
+                    </form>
+                    <br> 
+                    </table>    
+                        </div> 
+{% else %}
+<h1> You Do Not Have permission to access this page</h1>
+{% endif %}
+ {% else %}
+ <h1> You are not logged in</h1>
+    {% endif %} 
+               {% endblock %}
+               {% block mainbody %} {% endblock %}

@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% block title %} Update {% endblock %}
+ {% block menu1 %}
+        <li class="nav-item active">
+          <a class="nav-link active" aria-current="page" href="javascript:history.back()"><i class="fa fa-arrow-left" aria-hidden="true" style="color:red;"></i> Back</a>
+        </li>
+        {% endblock %}
+{% block content %} {% endblock %}
+{% block contact %} {% endblock %}
+{% block course %} {% endblock %}
+{% load static %}
+      <!-------FA Icon Link-->
+{% block modfac %}
+
+<script type="text/javascript">
+  function validationfac() 
+  {
+    var password1=document.f11.password1.value;
+    var password=document.f11.password.value; 
+    
+    if (password1=="")
+    {
+      alert("Please enter Password");
+      document.f11.password1.focus();
+      return false;
+    }
+
+    if (password=="")
+    {
+      alert("Please Re-enter Password");
+      document.f11.password.focus();
+      return false;
+    }
+
+    if(password1!=password)
+    {
+      alert("Password does not match");
+      document.f11.password1.value="";
+      document.f11.password.value="";
+      document.f11.password1.focus();
+      return false;
+    } 
+  }
+</script>
+  <div class="container-fluid w-50 pt-1">
+  {% for i in modfac %}
+  <form name="f11" action="/modfac?email={{i.email}}" method="POST" onsubmit="return validationfac();">
+    {% csrf_token %}              
+      <div class="row d-flex justify-content-center align-items-center">
+        <div class="card text-black" style="border-radius: 25px; background-color:#858755;">
+            <p class="text-center h1 fw-bold" style="color:white;">Update Profile</p>
+                  <table style="background-color:#465152; border-radius: 20px;">
+                    <tr>
+                      <td class="profile">Name</td>
+                      <td class="profile">:-</td>
+                      <td class="profiledata"> 
+                      <input type="text" name="name" style="color: green; font-size: 20px;" value="{{i.name}}" class="form-control">
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="profile">Mobile Number</td>
+                      <td class="profile">:-</td>
+                      <td class="profiledata"> 
+                      <input type="text" name="mobileno" style="color: green; font-size: 20px;" value="{{i.mobileno}}" class="form-control">
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="profile">Subject</td>
+                      <td class="profile">:-</td>
+                      <td class="profiledata"> 
+                      <input type="text" name="subject" style="color: green; font-size: 20px;" value="{{i.subject}}" class="form-control">
+                      </td>
+                    </tr>
+                    </tr>
+                    <tr>
+                      <td colspan="3" align="center">
+                      <input  class="btn btn-success btn-outline-warning mb-2"
+                       style="color:white;" type="submit" name="" Value="Update"></td>
+                    </tr> 
+                  </table>
+                    </div>
+                  </div>
+                  </form>
+                </div>
+{% endfor %}   
+{% endblock %}  
+

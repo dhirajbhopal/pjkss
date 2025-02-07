@@ -1,0 +1,290 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Password Reset{% endblock title %}
+{% block forgot %}  {% endblock %}
+{% block content %} 
+{% if request.user.is_authenticated %}
+<h1> You have already logged in</h1>
+  {% else %}
+<script type="text/javascript" src="{% static 'jquery.js' %}"></script>
+<script>
+    function send()
+        {
+            document.getElementById("otpresult").innerHTML = "Sending OTP... ";
+            var mail = document.getElementById("email").value;
+            
+            // Request Object
+            var request = new XMLHttpRequest();
+            //alert(req.readyState);
+
+            var url = "forgotsendotp?email="+mail;
+
+            // Object Initialize
+            request.open("GET",url);
+
+            //alert(req.readyState);
+
+            request.onreadystatechange = function()
+            {
+                if(request.readyState==4)
+                {
+                  var strrec=request.responseText;
+                  var mes = strrec.slice(0,23);
+                  document.getElementById("otpresult").innerHTML=mes;
+                  var recotp=strrec.slice(23,-1);
+                  document.getElementById("otprec").value =recotp;
+                }
+            }
+            request.send();
+        }    
+  </script>
+
+  <script type="text/javascript">
+    function validatePassword(password) {
+                
+                // Do not show anything when the length of password is zero.
+                if (password.length === 0) {
+                    document.getElementById("msg").innerHTML = "";
+                    return;
+                }
+                // Create an array and push all possible values that you want in password
+                var matchedCase = new Array();
+                matchedCase.push("[$@$!%*#?&]"); // Special Charector
+                matchedCase.push("[A-Z]");      // Uppercase Alpabates
+                matchedCase.push("[0-9]");      // Numbers
+                matchedCase.push("[a-z]");     // Lowercase Alphabates
+
+                // Check the conditions
+                var ctr = 0;
+                for (var i = 0; i < matchedCase.length; i++) {
+                    if (new RegExp(matchedCase[i]).test(password)) {
+                        ctr++;
+                    }
+                }
+                // Display it
+                var color = "";
+                var strength = "";
+                switch (ctr) {
+                    case 0:
+                    case 1:
+                    case 2:
+                        strength = "Very Weak Password";
+                        color = "red";
+                        break;
+                    case 3:
+                        strength = "Medium Password";
+                        color = "orange";
+                        break;
+                    case 4:
+                        strength = "Strong Password";
+                        color = "green";
+                        break;
+                }
+                document.getElementById("msg").innerHTML = strength;
+                document.getElementById("msg").style.color = color;
+            }
+
+  </script>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+     $("#otpbtn").click(function(){
+      $("#email").hide();
+      //$("#emailshow").show();
+     });
+    });
+  </script>
+
+<script>
+function displayInput() {
+  var userInput = document.getElementById("email").value;
+  document.getElementById("output").innerHTML = userInput;
+}
+</script>
+
+
+
+<script type="text/javascript">
+ function validation() 
+  { 
+    var emailid1=document.f1.emailid1.value;
+    var validmail=emailid1.endsWith("@gmail.com")
+    var password1=document.f1.password1.value;
+    var password=document.f1.password.value; 
+    var otp=document.f1.otp.value;
+    var otpcheck = document.getElementById('otprec').value;
+    var str1 = document.getElementById('txtCaptcha').value;  
+    var str2 = document.getElementById('txtCompare').value;
+ 
+
+      if(emailid1=="")
+    {
+      alert("Please enter Email-ID");
+      document.f1.emailid1.focus();
+      return false;
+    }
+  
+  if(validmail!=true)
+
+    {
+      alert("Please enter Valid Email-ID");
+      document.f1.emailid1.focus();
+      return false;
+    }
+
+
+  
+    if (password1=="")
+    {
+      alert("Please enter Password");
+      document.f1.password1.focus();
+      return false;
+    }
+
+    if(password1.length<=7)
+     {
+      alert("Password can not be leass than 8 charactor");
+      document.f1.password1.focus();
+       return false;
+     }
+     
+    if (password=="")
+    {
+      alert("Please Re-enter Password");
+      document.f1.password.focus();
+      return false;
+    }
+
+    if(password1!=password)
+    {
+      alert("Password does not match");
+      document.f1.password1.value="";
+      document.f1.password.value="";
+      document.f1.password1.focus();
+      return false;
+    }  
+  
+      if (otp=="")
+     {
+    alert("Please enter OTP");
+    document.f1.otp.focus();
+    return false;
+     }
+     if(otp!=otpcheck)
+     {
+      alert("Wrong OTP");
+      document.f1.otp.focus();
+      return false;
+    }
+     
+      if (str2=="")
+     {
+      alert("Please enter Captcha Code");
+      document.getElementById('txtCompare').focus();
+       return false;
+    }
+
+  if (str2!=str1)
+     {
+      alert("Captcha Code do not match");
+      document.getElementById('txtCompare').value="" 
+      document.getElementById('txtCompare').focus();
+    return false;
+  }
+
+   }
+</script>
+
+<script type="text/javascript">
+function Generate() {  
+            var chr1 = Math.ceil(Math.random() * 10) + '';  
+            var str = new Array(4).join().replace(/(.|$)/g, function () { return ((Math.random() * 36) | 0).toString(36)[Math.random() < .5 ? "toString" : "toUpperCase"](); });  
+            var captchaCode = str + chr1;
+            document.getElementById("txtCaptcha").value = captchaCode  
+        } 
+    </script>  
+<br>
+      <div class="container-fluid">
+<body onload="Generate();">
+  <div class="container p-1">
+    <div class="row d-flex justify-content-center align-items-center">
+      <div class="col-lg-12 col-xl-11">
+        <div class="card text-black" style="border-radius: 25px;">
+          <div class="card-body p-md-1">
+            <div class="row justify-content-center">
+              <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
+                <p class="text-center h1 fw-bold mb-1 mx-1 mx-md-1 mt-1 pb-2" style="color: red;">Reset Your Password</p>
+                <form name="f1" action="resetpass" method="POST" enctype="multipart/form-data" onsubmit="return validation();" class="mx-1 mx-md-4">
+                  {% csrf_token %}
+                  <div id="hidedivemail" class="d-flex flex-row align-items-center mb-0">
+                    <div class="form-outline flex-fill mb-2">
+                      <label class="form-label" id="hide1" for="form3Example1c" style="color:green;"> Email Id</label><label class="form-label" for="form3Example1c" id="hide2"  style="color:red;">*</label> <span id="output" style="color: brown;"></span>
+                        
+                      <input type="email" name="emailid1" id="email" oninput="displayInput()" class="form-control">
+                    </div>&#160 &#160
+                    </div>
+
+                    <div class="d-flex flex-row align-items-center mb-0">
+                    <div class="form-outline flex-fill mb-2">
+                      <label class="form-label" for="form3Example1c" style="color:green;">Password</label><label class="form-label" for="form3Example1c" style="color:red;">*</label>
+                      <input type="password" name="password1" id="pwd" onkeyup="validatePassword(this.value);" class="form-control">
+                    </div> &#160 &#160
+                    <div class="form-outline flex-fill mb-2">
+                      <label class="form-label" for="form3Example1c" style="color:green;">Confirm Password</label><label class="form-label" for="form3Example1c" style="color:red;">*</label>
+                      <input type="password" name="password" class="form-control">
+                    </div>
+                  </div>
+                  <div class="d-flex flex-row align-items-center mb-0">
+                    <div class="form-outline flex-fill mb-0">
+                      <spna class="form-label" for="form3Example1c" id="msg"></span>
+                    </div>
+                  </div>
+                  
+                   
+                    <div class="d-flex flex-row align-items-center mb-0">
+                    <div class="form-outline flex-fill mb-2">
+                       <label class="form-label" for="form3Example1c" id="otpresult" style="color:red;"> </label><label class="form-label" for="form3Example1c" style="color:red;">&#160</label>
+                     <input type="buton" class="btn btn-outline-danger rounded rounded-4 p-1" onclick="send(); displayInput();" style=" font-size:15px;" type="button" id="otpbtn" readonly="readonly" onclick="blockemail();" value="Generate OTP">                 
+                    </div> &#160 &#160
+                    <div class="form-outline flex-fill mb-2">
+                      <label class="form-label" for="form3Example1c"style="color:green;">Enter OTP</label><label class="form-label" for="form3Example1c" style="color:red;">*</label>
+                      <input type="text" name="otp" class="form-control">
+                    </div>
+                  </div>
+
+                  <!-----Captcha------>  
+                   <div class="d-flex flex-row align-items-center">
+                    <div class="form-outline flex-fill mb-2">
+                      <label class="form-label" for="form3Example1c"style="color:green;"></label><label class="form-label" for="form3Example1c" style="color:red;">&#160</label>
+                      <label class="form-label" for="form3Example1c"style="color:green;">CAPTCHA CODE</label>
+                      <a href="#"><input type="text" id="txtCaptcha" style="width:140px; font-size: 30px; font-weight:bolder; background:url('static/images/capback.png'); color:white;" class="form-control unselectable" readonly="readonly"> </a>                 
+                    </div> &#160 &#160
+                    <div class="form-outline flex-fill mb-2 mt-4">
+                      <imput tyle="button" class="btn btn-outline-success rounded rounded-4" id="btn" onclick="Generate();">Refresh
+                    </div>
+                    <div class="form-outline flex-fill mb-2">
+                      <label class="form-label" for="form3Example1c"style="color:green; margin-left: 20%;">Enter CAPTCHA</label><label class="form-label" for="form3Example1c" style="color:red;">*</label>
+                      <input type="text" id="txtCompare" style="width:80%; margin-left: 20%;" class="form-control">
+                    </div>
+                  </div>
+                      <div class="form-outline flex-fill mb-2">
+                      <input class="btn bg-danger rounded rounded-4 mb-2" type="submit" value="Submit" style="margin-top: 40px;">    
+                    </div>
+                  <p style="color:red"> {{msg}} </p>
+                </form>
+              </div>
+              <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
+                <img src="{% static 'images/signup.jpeg' %}" class="img-fluid" alt="Sample image">
+                <input type="text" id="otprec" value="12356" class="display-block" readonly="readonly" style="color:white; width: 1px; border: 0px solid white;">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{% endblock content %}
+{% block mainbody %} {% endblock %}

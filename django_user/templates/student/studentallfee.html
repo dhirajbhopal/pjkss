@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}All Fee View{% endblock title %}
+{% block forgot %}  {% endblock %}
+{% block content %} 
+{% if request.user.is_authenticated %}
+{% if user.role == "Student" %}
+<script type="text/javascript" src="{% static 'jquery.js' %}"></script>
+
+<div align="center">
+<form action='feedetail' method="POST" name="f1" onsubmit="return validation();">
+      {% csrf_token %}
+  <input type="hidden" name="rollno"  value="{{user.rollno}}">
+<select name="session" class="btn btn-success btn-outline-warning" style="margin:10px;">
+  <option style="margin:10px;" selected>Session</option>
+  <option>2023-2024</option>
+  <option>2022-2023</option>
+  </select>
+  <select name="month" class="btn btn-success btn-outline-warning" style="margin:10px;">
+  <option style="margin:10px;" selected>Month</option>
+  <option>January</option>
+  <option>February</option>
+  <option>March</option>
+  <option>April</option>
+  <option>May</option>
+  <option>June</option>
+  <option>July</option>
+  <option>August</option>
+  <option>September</option>
+  <option>October</option>
+  <option>November</option>
+  <option>December</option>
+  </select>
+  <span>
+<button id="demo" class="btn btn-info btn-outline-danger" style="color:black; font-size:15px;">Search</button>
+</form>
+<form action="studentshowallfee" method="POST">
+  {% csrf_token %}
+  <input type="hidden" name="roll" value="{{user.rollno}}">
+<button class="btn btn-info btn-outline-danger" style="color:black; font-size:15px;">Show All</button>
+</form>
+</span>
+</div>
+
+<script type="text/javascript">
+function validation() 
+  { 
+    var sem=document.f1.session.value;
+    var month=document.f1.month.value;
+
+    if(sem=="Session")
+    {
+      alert("Please select Session");
+      return false;
+    }
+    if(month=="Month")
+    {
+      alert("Please select Month");
+      return false;
+    }
+}
+  </script>
+
+<style type="text/css">
+	
+   #toprow
+	{
+		border: solid 1px black;
+		text-align:left;
+		padding-left: 10px;
+	}
+
+	#row
+	{
+		border: solid 1px black;
+		text-align: center;
+		padding-left: 5px;
+		padding-right: 5px;
+	}
+	#top
+	{
+		margin-top: 20px;
+	}
+</style>
+<br>
+    <table class="showmarks" id="myTable" class="table-bordered container-fluid" align="center">
+      <tr class="td1" style="border:solid 3px black;background-color:green; color:white;" align="center"> 
+      	
+                      <th style="border:solid 1px black">&#160Roll No&#160</th>
+                      <th style="border:solid 1px black">&#160Se&#160ssion&#160</th>
+                      <th style="border:solid 1px black">&#160Month&#160</th>
+                      <th style="border:solid 1px black">&#160Pending Amount&#160</th>
+                      <th style="border:solid 1px black">&#160Late Fine&#160</th>
+                      <th style="border:solid 1px black">&#160Paid Amount&#160</th>
+                      <th style="border:solid 1px black">&#160Paid Date&#160</th>
+                    </tr>
+                      {% for i in fees %}
+                      <tr style="border:solid 1px black" class="td1" border="2" align="center">
+                      <td style="border:solid 1px black">{{i.rollno}}</td>
+                      <td style="border:solid 1px black">{{i.sessionyear}}</td>  
+                      <td style="border:solid 1px black">{{i.month}}</td>
+                      <td style="border:solid 1px black">{{i.pendingamount}}</td>
+                      <td style="border:solid 1px black">{{i.latefine}}</td>
+                      <td style="border:solid 1px black">{{i.paidamount}}</td>
+                      <td style="border:solid 1px black">{{i.paiddate|date:'d-M-Y'}}</td>
+                      </tr>
+                      {% endfor %}
+                    </table> 
+                      <br><br>
+
+{% else %}
+<h1> You Do Not Have permission to access this page</h1>
+{% endif %}
+ {% else %}
+ <h1> You are not logged in</h1>
+    {% endif %} 
+{% endblock %}
+ {% block mainbody %} {% endblock %}
