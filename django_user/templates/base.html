@@ -4,7 +4,7 @@
 <html>
 <head>
   <title> {% block title %} PATEL JAN KALYAN SEVA SAMITI {% endblock %}</title>
-  <link rel="icon" href="{% static 'images/cybromlogo.webp' %}" type="image/icon type">
+  <link rel="icon" href="{% static 'images/PATEL_LOGO.png' %}" type="image/icon type">
    <script type="text/javascript" src="{% static 'jquery.js' %}"></script>
    <script type="text/javascript" src="{% static 'webcam.js' %}"></script>
    <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
@@ -28,8 +28,8 @@ body {
 
 .topnav {
   overflow: hidden;
-  background-color: #333;
-  margin-top: 2px;
+  background-color:#333;
+  margin-top: 1px;
 }
 
 .navbartop {
@@ -91,45 +91,27 @@ body {
 }
 </style>
 
-<style>
-.flex-container {
-  display: flex;
-  flex-wrap: nowrap;
-  background-color: orange;
-}
-
-.flex-container > div {
-  margin: 1px;
-  text-align: center;
-  line-height: 40px;
-  font-size: 30px;
-}
-</style>
 </head>
-  <body background="{% static 'images/bgs.jpg' %}" 
+  <body background="{% static 'images/bg.jpg' %}" 
   style="background-repeat:no-repeat;background-size:cover;">
-  <div id="page-container">
-   <div id="content-wrap">
-  <div class="container-fluid m-0 p-0" class="target">
+  <div style="overflow-x:auto;">
+  <table class="container-fluid bg-info" align="center">
+    <tr>
+      <td><a href="/"><img src="{% static 'images/PATEL_LOGO.png' %}" height="150px"></a></td>
+      <td style="color: white; font-size: 30px; font-weight: bolder; text-align: center; margin: 10px;">PATEL JAN KALYAN SEVA SAMITI <br> पटेल जन कल्याण सेवा समिति<br>
+        <a style="color: red; font-size: 15px; font-weight: bolder; text-align: center; margin:10px;"> Patel Asmarak, GT Road Bus Stand, Mohanbigha, Dehri On Sone, Rohtas Bihar (821307) </a></td>
+      <td><a><img src="{% static 'images/Azadi-Ka-Amrit-Mahotsav-Logo.png' %}" height="100px"></a></td>
+      <td><a><img src="{% static 'images/gandiji_logo.png' %}" height="100px"></a></td>
+      <td><a href="{% static 'images/MNS_Pramita.png' %}"><img src="{% static 'images/MNS_Pramita.png' %}" height="150px"></a></td>
+</table>
+  </div>
 
-     <!------header Part ----->
-     <div class="flex-container navbartop">
-  <div><a href="/"><img src=""><img src="{% static 'images/PATEL_LOGO.png' %}" height="150px"></a></div>
-  <div><span style="color: white; font-size: 30px; font-weight: bolder; text-align: center; margin: 20px;">PATEL JAN KALYAN SEVA SAMITI</span><br>
-    <span style="color: white; font-size: 30px; font-weight: bolder; text-align: center; margin: 20px;">पटेल जन कल्याण सेवा समिति</span><br>
-     <span style="color: white; font-size: 15px; font-weight: bolder; text-align: center;">Patel Asmarak, GT Road Bus Stand, Mohanbigha, Dehri On Sone, Rohtas Bihar (821307)</span><br>
-     <!---<span style="color: white; font-size: 15px; font-weight: bolder; text-align: center;">पटेल अस्मारक, जीटी रोड बस स्टैंड, मोहनबीघा, डेहरी ऑन सोन, रोहतास बिहार (821307)</span>---->
-     </div>
-   </div>
-{% endblock %}
-      <!---------End of Header Part----->
-
-<div class="topnav" id="myTopnav">
-  <a href="/" class="active"><i class="fa fa-home faicon" aria-hidden="true"></i> Home</a>
-  <a href="{% url 'contact' %}"><i class="fa fa-phone faicon" aria-hidden="true"></i> Contact</a>
-  <a href="{% url 'course' %}"><i class="fa fa-book" aria-hidden="true"></i> Courses</a>
+<div class="topnav navbartop" id="myTopnav">
+  <a href="/" class="active"><img src="{% static 'images/PATEL_LOGO.png' %}" height="23px"><i class="fa fa-home faicon" aria-hidden="true"></i> Home</a>
+  <a href="{% url 'contact' %}"><i class="fa fa-phone faicon" aria-hidden="true"></i> Contact Us</a>
+  <a href="{% url 'course' %}"><i class="fa fa-book" aria-hidden="true"></i> Vision</a>
   <a href="{% url 'about' %}"><i class="fa fa-info-circle faicon" aria-hidden="true"></i>About</a>
-  <a style="color: red; margin-left: 20px;"> {{msg}}</a>
+  
   <div class="topnav-right">
   </div>
   <!-------Start Admin Login---->
@@ -205,14 +187,16 @@ body {
       <!------- End Faculty Login---->
        </table>
        {% else %}
-    <span style="float: right;"> <a href="{% url 'login' %}">Login</a></span>
-    <span style="float: right;"> <a href="{% url 'signup' %}">Signup</a></span>
+    <a href="{% url 'signup' %}"> <i class="fa fa-plus" style="color:red"></i> Signup</a></span>
+    <a href="{% url 'login' %}"><i style="color:red" class="fa fa-sign-in" aria-hidden="true"></i> Member Login</a></span>
+    <span style="color: red; margin-left: 20px;"> {{msg}} </span>
   </a>
     {% endif %}
      <!-------End of all Login---->
+  {% endblock %}
 
 <a href="javascript:void(0);" class="icon" onclick="myFunction()">
-    <i class="fa fa-bars"></i>
+    <i class="fa fa-bars"> Option</i>
   </a>
 
 <script>
@@ -226,6 +210,9 @@ function myFunction() {
 }
 </script>
 </div>
+<!------header Part ----->
+    <!---------End of Header Part----->
+
 {% block about %} {% endblock %} 
 {% block course %} {% endblock %}
 {% block contact %} {% endblock %}
@@ -250,8 +237,9 @@ function myFunction() {
   <div class="row gy-5">
     <div class="col-6 p-2">
       <div class="p-1 rounded-2 text-center"> 
-        <h1 style="color: red;">News Update </h1>
-         <hr style="border-width:5px; size: 20px; color:yellow;">
+        <h1 style="color: green;"> <i style="color:darkred;" class="fa fa-bullhorn" aria-hidden="true"></i> News & Committee Updates </h1>
+         <hr style="border-width:5px; size: 20px; color:red;">
+         <!---
         <marquee direction="up" scrollamount="3" onmouseover="this.stop();"onmouseout="this.start();">
          <ol>
             <li style="color:green; font-size: 20px;">1st Semester Result will decler on 05-Oct-22 at 11:30AM <a href="viewresultweb" 
@@ -264,13 +252,14 @@ function myFunction() {
             <li style="color:green; font-size: 20px;">New Addimission is Going On</li>
     </ol>
   </marquee>  
+  --->
  </div>
         
         
           </div>
     <div class="col-6 p-2">
       <div class="p-1">
-        <h1 style="color:green;"> Founder’s Message </h1>
+        <h1 style="color:red;"> Founder’s Message </h1>
         <hr style="border-width:5px; size: 20px; color:red;">
         <img src="{% static 'images/modnarayanfounder.jpeg' %}" class="rounded-4 p-1" align="left" height="200px" style="padding:0px; margin-left:0px;">
         
@@ -280,38 +269,64 @@ Group Chairman
 </div>
 </div>
         </div>
-        <div class="p-1 text-center">
+        <div class="p-0 text-center">
         <h1 style="color: red;">Gallery</h1>
-        <hr style="border-width:5px; size: 20px; color:yellow;">
-        <a href="{% static 'images/31jan_BrahmanBhoj/1.jpg' %}" target="_blank"><img src="{% static 'images/31jan_BrahmanBhoj/1.jpg' %}" height="170px;" width="280px" class="rounded-4 p-1"></a>
-        <a href="{% static 'images/31jan_BrahmanBhoj/2.jpg' %}" target="_blank"><img src="{% static 'images/31jan_BrahmanBhoj/2.jpg' %}" height="170px;" width="280px" class="rounded-4 p-1"></a>
-        <a href="{% static 'images/31jan_BrahmanBhoj/3.jpg' %}" target="_blank"><img src="{% static 'images/31jan_BrahmanBhoj/3.jpg' %}" height="170px;" width="280px"class="rounded-4 p-1"></a>
-        <a href="{% static 'images/31jan_BrahmanBhoj/4.jpg' %}" target="_blank"><img src="{% static 'images/31jan_BrahmanBhoj/4.jpg' %}" height="170px;" width="280px"class="rounded-4 p-1"></a>
-        <a href="{% static 'images/31jan_BrahmanBhoj/5.jpg' %}" target="_blank"><img src="{% static 'images/31jan_BrahmanBhoj/5.jpg' %}" height="170px;" width="280px"class="rounded-4 p-1"></a>
-        <a href="{% static 'images/31jan_BrahmanBhoj/6.jpg' %}" target="_blank"><img src="{% static 'images/31jan_BrahmanBhoj/6.jpg' %}" height="170px;" width="280px"class="rounded-4 p-1"></a>
-        <a href="{% static 'images/31jan_BrahmanBhoj/7.jpg' %}" target="_blank"><img src="{% static 'images/31jan_BrahmanBhoj/7.jpg' %}" height="170px;" width="280px"class="rounded-4 p-1"></a>
-        <a href="{% static 'images/31jan_BrahmanBhoj/8.jpg' %}" target="_blank"><img src="{% static 'images/31jan_BrahmanBhoj/8.jpg' %}" height="170px;" width="280px"class="rounded-4 p-1"></a>
-        <a href="{% static 'images/31jan_BrahmanBhoj/9.jpg' %}" target="_blank"><img src="{% static 'images/31jan_BrahmanBhoj/9.jpg' %}" height="170px;" width="280px"class="rounded-4 p-1"></a>
-        <a href="{% static 'images/31jan_BrahmanBhoj/10.jpg' %}" target="_blank"><img src="{% static 'images/31jan_BrahmanBhoj/10.jpg' %}" height="170px;" width="280px"class="rounded-4 p-1"></a>
-        <a href="{% static 'images/31jan_BrahmanBhoj/11.jpg' %}" target="_blank"><img src="{% static 'images/31jan_BrahmanBhoj/11.jpg' %}" height="170px;" width="280px"class="rounded-4 p-1"></a>
-        <a href="{% static 'images/31jan_BrahmanBhoj/12.jpg' %}" target="_blank"><img src="{% static 'images/31jan_BrahmanBhoj/12.jpg' %}" height="170px;" width="280px"class="rounded-4 p-1"></a>
-        <a href="{% static 'images/31jan_BrahmanBhoj/13.jpg' %}" target="_blank"><img src="{% static 'images/31jan_BrahmanBhoj/13.jpg' %}" height="170px;" width="280px"class="rounded-4 p-1"></a>
-        <a href="{% static 'images/31jan_BrahmanBhoj/14.jpg' %}" target="_blank"><img src="{% static 'images/31jan_BrahmanBhoj/14.jpg' %}" height="170px;" width="280px"class="rounded-4 p-1"></a>
-        <a href="{% static 'images/31jan_BrahmanBhoj/15.jpg' %}" target="_blank"><img src="{% static 'images/31jan_BrahmanBhoj/15.jpg' %}" height="170px;" width="280px"class="rounded-4 p-1"></a>
-        <a href="{% static 'images/31jan_BrahmanBhoj/16.jpg' %}" target="_blank"><img src="{% static 'images/31jan_BrahmanBhoj/16.jpg' %}" height="170px;" width="280px"class="rounded-4 p-1"></a>
-        <a href="{% static 'images/31jan_BrahmanBhoj/17.jpg' %}" target="_blank"><img src="{% static 'images/31jan_BrahmanBhoj/17.jpg' %}" height="170px;" width="280px"class="rounded-4 p-1"></a>
-        <a href="{% static 'images/31jan_BrahmanBhoj/18.jpg' %}" target="_blank"><img src="{% static 'images/31jan_BrahmanBhoj/18.jpg' %}" height="170px;" width="280px"class="rounded-4 p-1"></a>
-        <a href="{% static 'images/31jan_BrahmanBhoj/19.jpg' %}" target="_blank"><img src="{% static 'images/31jan_BrahmanBhoj/19.jpg' %}" height="170px;" width="280px"class="rounded-4 p-1"></a>
-        <a href="{% static 'images/31jan_BrahmanBhoj/20.jpg' %}" target="_blank"><img src="{% static 'images/31jan_BrahmanBhoj/20.jpg' %}" height="170px;" width="280px"class="rounded-4 p-1"></a>
+        <hr style="border-width:10px; size: 20px; color:darkgreen;">
+        <div style="overflow-x:auto;">
+  <table class=" bg-warning" align="center">
+    <tr>
+      <td> <a href="{% static 'images/31jan_BrahmanBhoj/1.jpg' %}"><img src="{% static 'images/31jan_BrahmanBhoj/1.jpg' %}" height="150px;" width="245px"class="rounded-4"></a></td>
+      <td> <a href="{% static 'images/31jan_BrahmanBhoj/2.jpg' %}"><img src="{% static 'images/31jan_BrahmanBhoj/2.jpg' %}" height="150px;" width="245px"class="rounded-4"></a></td>
+      <td> <a href="{% static 'images/31jan_BrahmanBhoj/3.jpg' %}"><img src="{% static 'images/31jan_BrahmanBhoj/3.jpg' %}" height="150px;" width="280px"class="rounded-4"></a></td>
+      <td> <a href="{% static 'images/31jan_BrahmanBhoj/4.jpg' %}"><img src="{% static 'images/31jan_BrahmanBhoj/4.jpg' %}" height="150px;" width="245px"class="rounded-4"></a></td>
+      <td> <a href="{% static 'images/31jan_BrahmanBhoj/5.jpg' %}"><img src="{% static 'images/31jan_BrahmanBhoj/5.jpg' %}" height="150px;" width="245px"class="rounded-4"></a></td>
+      <td> <a href="{% static 'images/31jan_BrahmanBhoj/6.jpg' %}"><img src="{% static 'images/31jan_BrahmanBhoj/6.jpg' %}" height="150px;" width="245px"class="rounded-4"></a></td>
+      </tr>
+       <tr>
+      <td> <a href="{% static 'images/31jan_BrahmanBhoj/7.jpg' %}"><img src="{% static 'images/31jan_BrahmanBhoj/7.jpg' %}" height="150px;" width="245px"class="rounded-4"></a></td>
+      <td> <a href="{% static 'images/31jan_BrahmanBhoj/8.jpg' %}"><img src="{% static 'images/31jan_BrahmanBhoj/8.jpg' %}" height="150px;" width="245px"class="rounded-4"></a></td>
+      <td> <a href="{% static 'images/31jan_BrahmanBhoj/9.jpg' %}"><img src="{% static 'images/31jan_BrahmanBhoj/9.jpg' %}" height="150px;" width="280px"class="rounded-4"></a></td>
+      <td> <a href="{% static 'images/31jan_BrahmanBhoj/10.jpg' %}"><img src="{% static 'images/31jan_BrahmanBhoj/10.jpg' %}" height="150px;" width="245px"class="rounded-4"></a></td>
+      <td> <a href="{% static 'images/31jan_BrahmanBhoj/11.jpg' %}"><img src="{% static 'images/31jan_BrahmanBhoj/11.jpg' %}" height="150px;" width="245px"class="rounded-4"></a></td>
+      <td> <a href="{% static 'images/31jan_BrahmanBhoj/12.jpg' %}"><img src="{% static 'images/31jan_BrahmanBhoj/12.jpg' %}" height="150px;" width="245px"class="rounded-4"></a></td>
+      </tr>
+        <tr>
+      <td> <a href="{% static 'images/31jan_BrahmanBhoj/13.jpg' %}"><img src="{% static 'images/31jan_BrahmanBhoj/13.jpg' %}" height="150px;" width="245px"class="rounded-4"></a></td>
+      <td> <a href="{% static 'images/31jan_BrahmanBhoj/14.jpg' %}"><img src="{% static 'images/31jan_BrahmanBhoj/14.jpg' %}" height="150px;" width="245px"class="rounded-4"></a></td>
+      <td> <a href="{% static 'images/31jan_BrahmanBhoj/15.jpg' %}"><img src="{% static 'images/31jan_BrahmanBhoj/15.jpg' %}" height="150px;" width="280px"class="rounded-4"></a></td>
+      <td> <a href="{% static 'images/31jan_BrahmanBhoj/16.jpg' %}"><img src="{% static 'images/31jan_BrahmanBhoj/16.jpg' %}" height="150px;" width="245px"class="rounded-4"></a></td>
+      <td> <a href="{% static 'images/31jan_BrahmanBhoj/17.jpg' %}"><img src="{% static 'images/31jan_BrahmanBhoj/17.jpg' %}" height="150px;" width="245px"class="rounded-4"></a></td>
+      <td> <a href="{% static 'images/31jan_BrahmanBhoj/18.jpg' %}"><img src="{% static 'images/31jan_BrahmanBhoj/18.jpg' %}" height="150px;" width="245px"class="rounded-4"></a></td>
+      </tr>
+        <tr>
+      <td> <a href="{% static 'images/31jan_BrahmanBhoj/19.jpg' %}"><img src="{% static 'images/31jan_BrahmanBhoj/19.jpg' %}" height="150px;" width="245px"class="rounded-4"></a></td>
+      <td> <a href="{% static 'images/31jan_BrahmanBhoj/20.jpg' %}"><img src="{% static 'images/31jan_BrahmanBhoj/20.jpg' %}" height="150px;" width="245px"class="rounded-4"></a></td>
+      <td> <a href="{% static 'images/31jan_BrahmanBhoj/21.jpg' %}"><img src="{% static 'images/31jan_BrahmanBhoj/21.jpg' %}" height="150px;" width="280px"class="rounded-4"></a></td>
+      <td> <a href="{% static 'images/31jan_BrahmanBhoj/22.jpg' %}"><img src="{% static 'images/31jan_BrahmanBhoj/22.jpg' %}" height="150px;" width="245px"class="rounded-4"></a></td>
+      <td> <a href="{% static 'images/31jan_BrahmanBhoj/23.jpg' %}"><img src="{% static 'images/31jan_BrahmanBhoj/23.jpg' %}" height="150px;" width="245px"class="rounded-4"></a></td>
+      <td> <a href="{% static 'images/31jan_BrahmanBhoj/24.jpg' %}"><img src="{% static 'images/31jan_BrahmanBhoj/24.jpg' %}" height="150px;" width="245px"class="rounded-4"></a></td>
+      </tr>
+    </table>
         </div>
-          </div>
-</div>
   {% endblock %}
 
  {% block register %} {% endblock %}
 <!---------End of Content Part---->
 {% block footer %} 
-<div class=" footer container-fluid bg-warning text-center text-danger">  Designed by Dhiraj Patel &#169 COPYRIGHT RESERVED 2025 </div>
+
+<style>
+.footer {
+   position: fixed;
+   left: 0;
+   bottom: 0;
+   width: 100%;
+   color: white;
+   text-align: center;
+}
+</style>
+<div class=" footer bg-info">
+<span> Designed by Dhiraj Patel &#169 COPYRIGHT RESERVED 2025</span>
+</div>
  </body>
  </html>
 {% endblock %}

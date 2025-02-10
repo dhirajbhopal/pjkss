@@ -47,7 +47,7 @@ class CustomUserManager(BaseUserManager):
 class User(AbstractUser):
     username = models.CharField(max_length=50)
     email = models.EmailField(unique=True)
-    image=models.ImageField(upload_to=filepathadmin,null=True,blank=True,default='static/images/cybromlogo.webp')
+    image=models.ImageField(upload_to=filepathadmin,null=True,blank=True,default='static/images/PATEL_LOGO.png')
     role=models.CharField(max_length=15,null=True,blank=True)
     mobileno=models.CharField(max_length=15,null=True,blank=True)
     gender=models.CharField(max_length=15,null=True,blank=True)
