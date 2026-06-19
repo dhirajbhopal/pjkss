@@ -1,0 +1,234 @@
+style.css
+
+
+body {
+  overflow-x: hidden;
+  background: #f5f7fb;
+}
+
+.home-page {
+  width: 100%;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+.custom-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 25px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.section-title {
+  color: #dc3545;
+  font-weight: 700;
+}
+
+.news-box {
+  background: #fff5f5;
+  border-radius: 12px;
+  padding: 15px;
+}
+
+.news-item {
+  font-size: 18px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+  word-break: break-word;
+}
+
+.news-dot {
+  color: red;
+  font-size: 25px;
+  margin-right: 8px;
+}
+
+.photo-link {
+  color: red;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.member-card {
+  border: 1px solid #e5e5e5;
+  border-radius: 15px;
+  padding: 15px;
+  text-align: center;
+  transition: 0.3s;
+  background: white;
+}
+
+.member-card:hover {
+  transform: translateY(-5px);
+}
+
+.member-img {
+  width: 100%;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.member-role {
+  color: red;
+  font-weight: 700;
+}
+
+.member-name {
+  font-size: 15px;
+  margin-bottom: 0;
+}
+
+.senior-member {
+  margin-bottom: 15px;
+  font-size: 16px;
+}
+
+.founder-img {
+  width: 100%;
+  max-width: 320px;
+  border-radius: 18px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+}
+
+.bio-info p {
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.content-area p {
+  line-height: 1.9;
+  text-align: justify;
+  color: #333;
+}
+
+.content-heading {
+  color: green;
+  margin-top: 25px;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.goal-section {
+  background: linear-gradient(135deg, #dc3545, #ff7676);
+  color: white;
+  border-radius: 20px;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.goal-section h2 {
+  font-weight: 700;
+  line-height: 1.7;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.gallery-btn {
+  border: 2px solid #dc3545;
+  border-radius: 18px;
+  padding: 20px;
+  text-decoration: none;
+  color: black;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  transition: 0.3s;
+  background: white;
+}
+
+.gallery-btn:hover {
+  background: #fff1f1;
+  transform: translateY(-5px);
+}
+
+.gallery-images {
+  display: flex;
+  gap: 10px;
+}
+
+.gallery-images img {
+  width: 70px;
+  height: 70px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+@media (max-width: 992px) {
+  .custom-card {
+    padding: 20px;
+  }
+
+  .section-title {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 768px) {
+  .section-title {
+    font-size: 24px;
+  }
+
+  .goal-section h2 {
+    font-size: 24px;
+  }
+
+  .gallery-btn {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .gallery-images {
+    justify-content: center;
+  }
+
+  .content-area p {
+    font-size: 15px;
+  }
+
+  .bio-info p {
+    font-size: 15px;
+  }
+
+  .news-item {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 576px) {
+  .container-fluid {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  .custom-card {
+    border-radius: 15px;
+    padding: 16px;
+  }
+
+  .section-title {
+    font-size: 22px;
+  }
+
+  .goal-section {
+    padding: 25px 15px;
+  }
+
+  .goal-section h2 {
+    font-size: 20px;
+  }
+
+  .gallery-images img {
+    width: 55px;
+    height: 55px;
+  }
+}

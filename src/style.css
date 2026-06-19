@@ -1,0 +1,111 @@
+
+.collegelistdata
+/* Home.css */
+.member-card {
+  background-color: #f2eeed;
+  border-radius: 15px;
+  padding: 10px;
+  text-align: center;
+  height: 100%;
+  transition: transform 0.2s;
+}
+
+.member-card:hover {
+  transform: translateY(-5px);
+}
+
+.member-img {
+  height: 100px;
+  width: 75px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.member-role {
+  color: red;
+  font-size: 16px;
+  margin: 5px 0 0;
+  font-weight: bold;
+}
+
+.member-name {
+  color: green;
+  font-size: 16px;
+  margin: 0;
+}
+
+.founder-img {
+  border-radius: 1rem;
+  padding: 0.25rem;
+  float: left;
+  margin-right: 15px;
+  height: 200px;
+}
+
+.section-title {
+  color: red;
+  text-align: center;
+}
+
+.content-heading {
+  color: green;
+  text-align: center;
+}
+
+
+ hr {
+ border: 1px solid red;
+ height: 5px;
+ background-color: red;
+ width: 100%;
+ margin: 100px auto;
+}
+
+
+/* new update marquee*/
+
+.vertical-marquee {
+  height: 150px;
+  overflow: hidden;
+  position: relative;
+}
+
+.marquee-content {
+  display: flex;
+  flex-direction: column;
+  animation: scrollUp 7s linear infinite;
+}
+
+.marquee-content:hover {
+  animation-play-state: paused;
+}
+
+@keyframes scrollUp {
+  0% {
+    transform: translateY(100%);
+  }
+
+  100% {
+    transform: translateY(-100%);
+  }
+}
+
+
+.vertical-marquee {
+  height: 250px; /* adjust as needed */
+  overflow: hidden;
+  position: relative;
+}
+
+.marquee-content {
+  animation: scroll-up 10s linear infinite;
+}
+
+@keyframes scroll-up {
+  0% {
+    transform: translateY(0); /* Start from visible area */
+  }
+  100% {
+    transform: translateY(-100%); /* Move upward */
+  }
+}
