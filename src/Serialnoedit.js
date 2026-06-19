@@ -57,19 +57,19 @@ const EditSerialNo = () => {
   }, []);
 
   // LOAD SERIAL DATA
-  useEffect(() => {
+  // LOAD SERIAL DATA
+useEffect(() => {
 
-    if (serialno) {
+  if (serialno) {
 
-      fetchSerialData();
+    fetchSerialData();
 
-    }
-     fetchSerialData();
-  }, [serialno]);
+  }
+}, [serialno]);
 
-  // FETCH SERIAL DATA
-  const fetchSerialData =
-    async () => {
+// FETCH SERIAL DATA
+const fetchSerialData =
+  async () => {
 
     try {
 
@@ -102,13 +102,11 @@ const EditSerialNo = () => {
 
     } catch (error) {
 
-
       setMessage(
         "Unable to load data"
       );
     }
   };
-
   // HANDLE CHANGE
   const handleChange = (e) => {
 
