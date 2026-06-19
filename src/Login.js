@@ -27,7 +27,7 @@ const Login = () => {
       setUser(loggedInUser);
       window.location.href = "/";
     }
-  }, []);
+  },  [setUser]);
 
   // HANDLE CHANGE
   const handleChange = (e) => {

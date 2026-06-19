@@ -64,7 +64,7 @@ const EditSerialNo = () => {
       fetchSerialData();
 
     }
-
+     fetchSerialData();
   }, [serialno]);
 
   // FETCH SERIAL DATA
