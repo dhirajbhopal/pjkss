@@ -14,11 +14,11 @@ const AddSerialNo = () => {
     useState(null);
 
   // SERIAL DATA
-  const [serialData, setSerialData] =
+  const [ setSerialData] =
     useState([]);
 
   // SEARCH INPUT
-  const [serialno, setSerialno] =
+  const [serialno] =
     useState("");
 
   // MESSAGE

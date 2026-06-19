@@ -5,11 +5,11 @@ import axios from "axios";
 const Home = () => {
    // Updates State
   const [updates, setUpdates] = useState([]);
-
+    
   // Fetch Data Automatically on Page Load
   useEffect(() => {
     fetchUpdates();
-  }, []);
+  },[]);
 
   // API Function
   const fetchUpdates = async () => {
@@ -19,7 +19,6 @@ const Home = () => {
         "https://pjkss.pythonanywhere.com/HomeApi/"
       );
 
-
       if (response.data.success) {
         setUpdates(response.data.updates);
       }
@@ -27,7 +26,7 @@ const Home = () => {
     } catch (error) {
     }
   };
-
+   
   const mainMembers = [
     { name: "मान्ती देवी", role: "अध्यक्ष", img: "/images/maantidevi.jpeg" },
     { name: "राज पटेल उर्फ बंटी", role: "सचिव", img: "/images/bantipatel.jpeg" },

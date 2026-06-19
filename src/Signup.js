@@ -124,7 +124,7 @@ const Signup = () => {
   // ================= VALIDATION =================
   const validateForm = () => {
     
-    if (formData.gender =="") {
+    if (formData.gender ==="") {
       alert("Please select gender");
       return false;
     }

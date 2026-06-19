@@ -4,7 +4,7 @@ import "./style.css";
 
 const Login = () => {
   // USER STATE
-  const [user, setUser] = useState(null);
+  const [ setUser] = useState(null);
 
   // FORM DATA
   const [formData, setFormData] = useState({
