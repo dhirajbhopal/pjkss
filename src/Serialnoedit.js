@@ -57,56 +57,45 @@ const EditSerialNo = () => {
   }, []);
 
   // LOAD SERIAL DATA
-  // LOAD SERIAL DATA
-useEffect(() => {
+  useEffect(() => {
 
-  if (serialno) {
+  const fetchSerialData = async () => {
 
-    fetchSerialData();
-
-  }
-}, [serialno]);
-
-// FETCH SERIAL DATA
-const fetchSerialData =
-  async () => {
+    if (!serialno) return;
 
     try {
 
-      const response =
-        await axios.get(
-          `https://pjkss.pythonanywhere.com/search_serial_api?serialno=${serialno}`
-        );
+      const response = await axios.get(
+        `https://pjkss.pythonanywhere.com/search_serial_api?serialno=${serialno}`
+      );
 
       if (
         response.data.success &&
         response.data.data.length > 0
       ) {
 
-        const data =
-          response.data.data[0];
+        const data = response.data.data[0];
 
         setFormData({
           serialno: data.code,
-          issuername:
-            data.issuername || "",
-          issuedto:
-            data.issuedto || "",
-          subject:
-            data.subject || "",
-          issuedate:
-            data.issuedate || "",
+          issuername: data.issuername || "",
+          issuedto: data.issuedto || "",
+          subject: data.subject || "",
+          issuedate: data.issuedate || "",
         });
 
       }
 
     } catch (error) {
 
-      setMessage(
-        "Unable to load data"
-      );
+      setMessage("Unable to load data");
+
     }
   };
+
+  fetchSerialData();
+
+}, [serialno]);
   // HANDLE CHANGE
   const handleChange = (e) => {
 
