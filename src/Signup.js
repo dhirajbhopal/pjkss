@@ -238,8 +238,8 @@ const Signup = () => {
   }
 
   return (
-    <div className="container d-flex justify-content-center py-1">
-      <div className="card shadow-lg border-0 rounded-4 w-50">
+    <div className="container-fluid justify-content-center py-1">
+      <div className="card shadow-lg border-0 rounded-4 w-100">
         
         {/* HEADER */}
         <div
