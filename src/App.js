@@ -67,34 +67,7 @@ function App() {
 
   }, []);
 
-  useEffect(() => {
-    // 1. Disable Right-Click
-    const handleContextMenu = (e) => {
-      e.preventDefault();
-    };
-
-    // 2. Disable Keyboard Shortcuts for DevTools
-    const handleKeyDown = (e) => {
-      if (
-        e.key === "F12" || 
-        (e.ctrlKey && e.shiftKey && e.key === "I") || // Ctrl+Shift+I
-        (e.ctrlKey && e.shiftKey && e.key === "J") || // Ctrl+Shift+J
-        (e.ctrlKey && e.key === "U")                 // Ctrl+U (View Source)
-      ) {
-        e.preventDefault();
-        alert("Developer tools are disabled on this page.");
-      }
-    };
-
-    document.addEventListener("contextmenu", handleContextMenu);
-    document.addEventListener("keydown", handleKeyDown);
-
-    // Clean up event listeners
-    return () => {
-      document.removeEventListener("contextmenu", handleContextMenu);
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, []);
+ 
 
   return (
 

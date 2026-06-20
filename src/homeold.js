@@ -46,15 +46,17 @@ const Home = () => {
 
   return (  
     <>
-
+<table>
+<tr>
  {/* Left Column: News & Committee */}
+<td width="45%"> <h2 style={{ color: 'red' }}>
+           <i className="fa fa-bullhorn"></i>News & Updates</h2><hr /></td>
 
-      <div className="container-fluid text-left">
-  <div className="row">
-    <div className="col">
-     <h2 style={{ color: 'red' }}>
-           <i className="fa fa-bullhorn"></i>News & Updates</h2><hr />
-   
+          {/* Right Column: Founder Biography */}
+<td>  <h2 style={{ color: 'red' }}> Founder Mod Narayan Singh</h2> <hr />  </td>
+</tr>
+<tr>
+<td >
             {/* News Marquee */}
             <div className="vertical-marquee m-2" align="left">
               {updates.length > 0 ? (
@@ -114,11 +116,9 @@ const Home = () => {
                 </div>
               </div>
             </div>
-             </div>
-    <div className="col w-100" align="left">
-       {/* Right Column: Founder Biography */}
-  <h2 style={{ color: 'red' }}> Founder Mod Narayan Singh</h2> <hr />
-   
+            <br/> 
+</td>
+<td>
 {/* Right Column: Founder Biography */}
         <div className=" container-fluid m-0 p-0">
         <h2 style={{ color: 'blue' }}>मोद नारायण सिंह पटेल – जीवनी</h2>
@@ -164,9 +164,9 @@ const Home = () => {
             लेकिन उनके द्वारा किए गए कार्य और समाज सेवा की विरासत हमेशा लोगों को प्रेरित करती रहेगी।</p>
           </div>
       </div>
-       </div>
-  </div>
-</div>
+ </td>
+</tr>
+</table>
       {/* Goal Section */}
       <div className="container-fluid mt-5 text-center">
         <h2 style={{ color: 'red' }}>
@@ -324,29 +324,6 @@ const Home = () => {
             </a>
           </div>
         </div>
-
-
-        <div class="container text-center">
-  <div class="row">
-    <div class="col">
-     colm2
-    </div>
-    <div class="col">
-      Column
-    </div>
-  </div>
-</div>
-
-     <div class="container text-center">
-  <div class="row">
-    <div class="col">
-     colm2
-    </div>
-    <div class="col">
-      Column
-    </div>
-  </div>
-</div>
     </>
   );
 };
