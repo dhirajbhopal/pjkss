@@ -247,8 +247,31 @@ const Signup = () => {
           style={{ background: "linear-gradient(135deg,#0d6efd,#0dcaf0)" }}
         >
           <h3 className="fw-bold mb-1">Create Account</h3>
-          
         </div>
+
+         <div className="card-body p-3">
+            {/* TOP BUTTONS */}
+            <div className="d-flex justify-content-between mb-1">
+              <button
+                onClick={() => window.history.back()}
+                className="btn btn-light rounded-pill px-3"
+              >
+                <img
+                  src="/img/animated-icon-backward_2.gif"
+                  height="20px"
+                  alt="back"
+                />{" "}
+                Back
+              </button>
+              <a
+                href="/"
+                className="text-decoration-none"
+                style={{ fontSize: "32px" }}
+              >
+                🏠
+              </a>
+            </div>
+            </div>
 
         {/* BODY */}
         <div className="card-body p-1">
@@ -398,7 +421,7 @@ const Signup = () => {
 
           </div>
         </div>
-
+        <span align="center" className="text-success"> <a href="/login"> I have login credentials </a> </span>
       </div>
     </div>
   );

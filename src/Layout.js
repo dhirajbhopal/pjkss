@@ -284,15 +284,6 @@ const handleLogout = async () => {
                 </li>
                 <li className="nav-item">
                   <Link
-                    className="nav-link"
-                    to="https://webmail.pjkss.com/" target="blank"
-                  >
-                    Email
-                  </Link>
-                </li>
-
-                <li className="nav-item">
-                  <Link
                     className="nav-link text-success"
                     to="/donation"
                   >

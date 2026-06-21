@@ -51,7 +51,7 @@ const Home = () => {
 
       <div className="container-fluid text-left">
   <div className="row">
-    <div className="col">
+    <div className="col-5">
      <h2 style={{ color: 'red' }}>
            <i className="fa fa-bullhorn"></i>News & Updates</h2><hr />
    
@@ -324,29 +324,6 @@ const Home = () => {
             </a>
           </div>
         </div>
-
-
-        <div class="container text-center">
-  <div class="row">
-    <div class="col">
-     colm2
-    </div>
-    <div class="col">
-      Column
-    </div>
-  </div>
-</div>
-
-     <div class="container text-center">
-  <div class="row">
-    <div class="col">
-     colm2
-    </div>
-    <div class="col">
-      Column
-    </div>
-  </div>
-</div>
     </>
   );
 };
