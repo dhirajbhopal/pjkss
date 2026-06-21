@@ -51,7 +51,7 @@ const Home = () => {
 
       <div className="container-fluid text-left">
   <div className="row">
-    <div className="col-5">
+    <div className="col">
      <h2 style={{ color: 'red' }}>
            <i className="fa fa-bullhorn"></i>News & Updates</h2><hr />
    
