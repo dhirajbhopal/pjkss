@@ -214,7 +214,7 @@ const Updateimage = () => {
   return (
 
     <div
-      className="container w-50 mt-2"
+      className="container w-100 mt-2"
     >
 
       <div
