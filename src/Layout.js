@@ -484,8 +484,8 @@ const handleLogout = async () => {
                     <li className="nav-item">
                     
 
-                    <img
-  src={`https://pjkss.pythonanywhere.com/media/${user?.image}?v=${user?.updated_at}`}
+<img
+  src={`https://pjkss.pythonanywhere.com/media/${user?.image}?v=${Date.now()}`}
   alt="profile"
   height="40px"
   width="50px"

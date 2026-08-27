@@ -1,0 +1,305 @@
+Sub Excel_Report()
+
+Option Explicit
+
+Dim objExcelApp, objWorkbook, filePath, timestamp, savePath
+
+' 1. Define Paths & Create Timestamp
+filePath = "C:\Batch_Report\Batch_Report.xls" ' Path to your Excel Template
+timestamp = Year(Now) & "-" & Right("0" & Month(Now), 2) & "-" & Right("0" & Day(Now), 2) & "_" & _
+            Right("0" & Hour(Now), 2) & "-" & Right("0" & Minute(Now), 2)
+
+savePath = "C:\Batch_Report\Batch_Report_" & timestamp & ".xls"
+
+' 2. Instantiate Excel Application
+On Error Resume Next
+Set objExcelApp = CreateObject("Excel.Application")
+
+If Err.Number <> 0 Then
+    ShowSystemAlarm "Excel could not be started. Check if Excel is installed."
+    Exit Sub
+End If
+On Error GoTo 0
+
+objExcelApp.Visible = False
+objExcelApp.DisplayAlerts = False
+
+' 3. Open Template
+Set objWorkbook = objExcelApp.Workbooks.Open(filePath)
+
+' 4. Map HMI Recipe Tags to specific Excel Cells
+' (Update Row & Column indices and HMI Tag names to match your project)
+objWorkbook.Sheets(1).Cells(2, 1).Value = SmartTags("Customer_name").Read
+objWorkbook.Sheets(1).Cells(2, 2).Value = SmartTags("Site_Name").Read
+objWorkbook.Sheets(1).Cells(2, 3).Value = SmartTags("Address").Read
+objWorkbook.Sheets(1).Cells(2, 4).Value = timestamp
+objWorkbook.Sheets(1).Cells(2, 5).Value = SmartTags("Grade").Read
+objWorkbook.Sheets(1).Cells(2, 6).Value = SmartTags("Cement").Read
+objWorkbook.Sheets(1).Cells(4, 7).Value = SmartTags("Water").Read
+objWorkbook.Sheets(1).Cells(5, 8).Value = SmartTags("Aggrigate1").Read
+objWorkbook.Sheets(1).Cells(5, 9).Value = SmartTags("Aggrigate2").Read
+objWorkbook.Sheets(1).Cells(5, 10).Value = SmartTags("Aggrigate3").Read
+objWorkbook.Sheets(1).Cells(5, 11).Value = SmartTags("Aggrigate4").Read
+objWorkbook.Sheets(1).Cells(5, 12).Value = SmartTags("Admixer").Read
+objWorkbook.Sheets(1).Cells(5, 13).Value = SmartTags("Operator_name").Read
+
+' 5. Save the Excel File and Clean Up
+objWorkbook.SaveAs savePath
+objWorkbook.Close False
+objExcelApp.Quit
+
+Set objWorkbook = Nothing
+Set objExcelApp = Nothing
+
+ShowSystemAlarm "Recipe successfully exported to Excel!"
+
+End Sub
+
+
+
+
+
+////////////////////////////////////// working Code/////////////
+
+
+Sub Report_Script()
+    ' Declare internal variables
+    Dim objExcel, objWorkbook, objSheet
+    Dim filePath, fileName, fullPath
+    Dim timeStamp, folderPath
+    
+    On Error Resume Next
+    
+    ' 1. Define paths and file details
+    folderPath = "C:\Batch_Report\"
+    timeStamp = Year(Now) & Right("0" & Month(Now), 2) & Right("0" & Day(Now), 2) & "_" & Right("0" & Hour(Now), 2) & Right("0" & Minute(Now), 2)
+    fileName = "Production_Report_" & timeStamp & ".xlsx"
+    fullPath = folderPath & fileName
+
+    ' 2. Create the target directory if it does not exist
+    Dim fso
+    Set fso = CreateObject("Scripting.FileSystemObject")
+    If Not fso.FolderExists(folderPath) Then
+        fso.CreateFolder(folderPath)
+    End If
+    Set fso = Nothing
+
+    ' 3. Initialize Excel Application Instance
+    Set objExcel = CreateObject("Excel.Application")
+    objExcel.Visible = False ' Keep Excel invisible during processing
+    objExcel.DisplayAlerts = False ' Suppress overwrite alerts
+
+    ' 4. Create a new workbook and select active sheet
+    Set objWorkbook = objExcel.Workbooks.Add
+    Set objSheet = objWorkbook.Sheets(1)
+    objSheet.Name = "Report Data"
+
+    ' 5. Create Report Headers
+    objSheet.Cells(1, 1).Value = "Production Report"
+    objSheet.Cells(3, 1).Value = "Timestamp:"
+    objSheet.Cells(3, 2).Value = Now
+    
+    objSheet.Cells(5, 1).Value = "Parameter Name"
+    objSheet.Cells(5, 2).Value = "Value"
+
+    ' 6. Map TIA Portal HMI SmartTags to Excel Cells
+    ' Format: objSheet.Cells(Row, Column).Value = SmartTags("Your_HMI_Tag")
+    objSheet.Cells(6, 1).Value = "Customer_name"
+    objSheet.Cells(6, 2).Value = SmartTags("Customer_name")
+    
+    objSheet.Cells(7, 1).Value = "Site_Name"
+    objSheet.Cells(7, 2).Value = SmartTags("Site_Name")
+    
+    objSheet.Cells(8, 1).Value = "Address"
+    objSheet.Cells(8, 2).Value = SmartTags("Address")
+
+    ' 7. Save and Close the Excel file cleanly
+    objWorkbook.SaveAs fullPath
+    objWorkbook.Close True
+    objExcel.Quit
+
+    ' 8. Free up system memory resources
+    Set objSheet = Nothing
+    Set objWorkbook = Nothing
+    Set objExcel = Nothing
+    
+    ' Error check notification
+    If Err.Number <> 0 Then
+        ShowSystemAlarm "Report Error: " & Err.Description
+        Err.Clear
+    Else
+        ShowSystemAlarm "Excel Report saved successfully to " & fullPath
+    End If
+End Sub
+
+
+
+
+////seperate excel working code/////////
+
+Sub Seperate_Excel()
+' Declare internal variables
+    Dim objExcel, objWorkbook, objSheet
+    Dim filePath, fileName, fullPath
+    Dim timeStamp, folderPath
+    Dim mydate
+    Dim mytime
+    
+    On Error Resume Next
+    ' timeStamp = Year(Now) & Right("0" &"-"& Month(Now), 2) & "-"& Right("0" & Day(Now), 2) & "_" & Right("0" & Hour(Now), 2) & Right("0" & Minute(Now), 2)
+    ' 1. Define paths and file details
+    folderPath = "C:\Batch_Report\Seperate_Batch_Report\"
+    Customer_name= SmartTags("Customer_name")
+    timeStamp = Right("0" & Day(Now), 2) & "-"& Right("0" & Month(Now), 2) & "-"& Right("0" & Year(Now), 4) & "_" & Right("0" & Hour(Now), 2) & "_" & Right("0" & Minute(Now), 2)
+    mydate = Right("0" & Month(Now), 2) & "-" & Right("0" & Day(Now), 2) & "-" & Year(Now)
+    mytime = Right("0" & Hour(Now), 2) & ":" & Right("0" & Minute(Now), 2)
+    
+    fileName = Customer_name & "_" & timeStamp & ".xlsx"
+    fullPath = folderPath & fileName
+
+    ' 2. Create the target directory if it does not exist
+    Dim fso
+    Set fso = CreateObject("Scripting.FileSystemObject")
+    If Not fso.FolderExists(folderPath) Then
+        fso.CreateFolder(folderPath)
+    End If
+    Set fso = Nothing
+
+    ' 3. Initialize Excel Application Instance
+    Set objExcel = CreateObject("Excel.Application")
+    objExcel.Visible = False ' Keep Excel invisible during processing
+    objExcel.DisplayAlerts = False ' Suppress overwrite alerts
+
+    ' 4. Create a new workbook and select active sheet
+    Set objWorkbook = objExcel.Workbooks.Add
+    Set objSheet = objWorkbook.Sheets(1)
+    objSheet.Name = "Report Data"
+
+    ' 6. Map TIA Portal HMI SmartTags to Excel Cells
+    ' Format: objSheet.Cells(Row, Column).Value = SmartTags("Your_HMI_Tag")
+    objSheet.Cells(1, 1).Value = "Date"
+    objSheet.Cells(2, 1).Value = mydate
+    objSheet.Cells(1, 2).Value = "Time"
+    objSheet.Cells(2, 2).Value = mytime
+    
+    objSheet.Cells(1, 3).Value = "Customer_name"
+    objSheet.Cells(2, 3).Value = SmartTags("Customer_name")
+    
+    objSheet.Cells(1, 4).Value = "Site_Name"
+    objSheet.Cells(2, 4).Value = SmartTags("Site_Name")
+    
+    objSheet.Cells(1, 5).Value = "Address"
+    objSheet.Cells(2, 5).Value = SmartTags("Address")
+    
+    objSheet.Cells(1, 6).Value = "Grade"
+    objSheet.Cells(2, 6).Value = SmartTags("Grade")
+    
+    objSheet.Cells(1, 7).Value = "Cement"
+    objSheet.Cells(2, 7).Value = SmartTags("Cement_Target")
+    
+    objSheet.Cells(1, 8).Value = "Water"
+    objSheet.Cells(2, 8).Value = SmartTags("Water_Target")
+    
+    objSheet.Cells(1, 9).Value = "Aggrigate1"
+    objSheet.Cells(2, 9).Value = SmartTags("Aggrigate1_Target")
+    
+    objSheet.Cells(1, 10).Value = "Aggrigate2"
+    objSheet.Cells(2, 10).Value = SmartTags("Aggrigate2_Target")
+    
+    objSheet.Cells(1, 11).Value = "Aggrigate3"
+    objSheet.Cells(2, 11).Value = SmartTags("Aggrigate3_Target")
+    
+    objSheet.Cells(1, 12).Value = "Aggrigate4"
+    objSheet.Cells(2, 12).Value = SmartTags("Aggrigate4_Target")
+    
+    objSheet.Cells(1, 13).Value = "Admixer"
+    objSheet.Cells(2, 13).Value = SmartTags("Admixer_Target")
+    
+    objSheet.Cells(1, 14).Value = "Operator_name"
+    objSheet.Cells(2, 14).Value = SmartTags("Operator_name")
+
+    ' 7. Save and Close the Excel file cleanly
+    objWorkbook.SaveAs fullPath
+    objWorkbook.Close True
+    objExcel.Quit
+
+    ' 8. Free up system memory resources
+    Set objSheet = Nothing
+    Set objWorkbook = Nothing
+    Set objExcel = Nothing
+    
+    ' Error check notification
+    If Err.Number <> 0 Then
+        ShowSystemAlarm "Report Error: " & Err.Description
+        Err.Clear
+    Else
+        ShowSystemAlarm "Excel Report saved successfully to " & fullPath
+    End If
+
+End Sub
+
+
+//////working code in same excel////
+
+Sub Report_Script()
+
+    Dim objExcel
+    Dim objWorkbook
+    Dim objSheet
+    Dim filePath
+    Dim nextRow
+    Dim mydate
+    Dim mytime
+
+    On Error Resume Next
+
+    filePath = "C:\Batch_Report\Batch_Report.xlsx"
+    mydate = Right("0" & Month(Now), 2) & "-" & Right("0" & Day(Now), 2) & "-" & Year(Now)
+    mytime = Right("0" & Hour(Now), 2) & ":" & Right("0" & Minute(Now), 2)
+
+    Set objExcel = CreateObject("Excel.Application")
+    objExcel.Visible = False
+    objExcel.DisplayAlerts = False
+
+    Set objWorkbook = objExcel.Workbooks.Open(filePath)
+    Set objSheet = objWorkbook.Sheets(1)
+
+    'Find next empty row
+    nextRow = 2
+
+    Do While objSheet.Cells(nextRow,1).Value <> ""
+        nextRow = nextRow + 1
+    Loop
+
+    objSheet.Cells(nextRow,1).Value = mydate
+    objSheet.Cells(nextRow,2).Value = mytime
+    objSheet.Cells(nextRow,3).Value = SmartTags("Customer_name")
+    objSheet.Cells(nextRow,4).Value = SmartTags("Site_Name")
+    objSheet.Cells(nextRow,5).Value = SmartTags("Address")
+    objSheet.Cells(nextRow,6).Value = SmartTags("Grade")
+    objSheet.Cells(nextRow,7).Value = SmartTags("Cement_Target")
+    objSheet.Cells(nextRow,8).Value = SmartTags("Water_Target")
+    objSheet.Cells(nextRow,9).Value = SmartTags("Aggrigate1_Target")
+    objSheet.Cells(nextRow,10).Value = SmartTags("Aggrigate2_Target")
+    objSheet.Cells(nextRow,11).Value = SmartTags("Aggrigate3_Target")
+    objSheet.Cells(nextRow,12).Value = SmartTags("Aggrigate4_Target")
+    objSheet.Cells(nextRow,13).Value = SmartTags("Admixer_Target")
+    objSheet.Cells(nextRow,14).Value = SmartTags("Operator_name")
+
+    objWorkbook.Save
+
+    objWorkbook.Close
+    objExcel.Quit
+
+    Set objSheet = Nothing
+    Set objWorkbook = Nothing
+    Set objExcel = Nothing
+
+    If Err.Number <> 0 Then
+        ShowSystemAlarm Err.Description
+        Err.Clear
+    Else
+        ShowSystemAlarm "Report Saved Successfully"
+    End If
+
+End Sub
