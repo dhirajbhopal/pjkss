@@ -106,7 +106,7 @@ const Gallery5 = () => {
 
           <p className="mb-0">
 
-            Independence Day Celebration
+            मनीष वर्मा जी का स्वागत
 
           </p>
 
