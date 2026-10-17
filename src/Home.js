@@ -323,13 +323,23 @@ const Home = () => {
               </button>
             </a>
 
-            <a href="/gallery4">
+            <a href="/gallery4">s
               <button className="btn btn-outline-danger rounded-4 m-2">
                 15-August-2026 Images <br/>
                 <span className="m-2">
                 <img src="/images/15-August-26/1.jpeg" height="50px" width="80px" className="rounded-4" alt="event" />
                 </span>
                 <img src="/images/15-August-26/2.jpeg" height="50px" width="80px" className="rounded-4" alt="event" />
+              </button>
+            </a>
+
+            <a href="/gallery5">
+              <button className="btn btn-outline-danger rounded-4 m-2">
+                JDU Manish Verma Ji <br/>
+                <span className="m-2">
+                <img src="/images/Manish_Verma_Ji_ka_Swagat_05-10-2026/49.jpeg" height="50px" width="80px" className="rounded-4" alt="event" />
+                </span>
+                <img src="/images/Manish_Verma_Ji_ka_Swagat_05-10-2026/41.jpeg" height="50px" width="80px" className="rounded-4" alt="event" />
               </button>
             </a>
           </div>
