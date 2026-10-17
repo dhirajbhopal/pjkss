@@ -62,6 +62,7 @@ const Home = () => {
                 className="marquee-content"
                 style={{ animationDuration: "20s" }}
               >
+              <br/> <br/>
                 {updates.map((item) => (
                   <li
                     key={item.id}
