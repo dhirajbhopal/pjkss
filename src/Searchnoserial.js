@@ -379,7 +379,7 @@ const SearchSerialNo = () => {
                 {/* LETTER HEAD IMAGE */}
                 <img
                   className="letter-head"
-                  src="/images/Letter_Head.jpg"
+                  src="/images/Letter_Head.JPG"
                   alt="Letter Head"
                   style={{
                     display: "block",
