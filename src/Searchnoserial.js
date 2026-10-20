@@ -72,7 +72,7 @@ const SearchSerialNo = () => {
         format: "CODE128",
         displayValue: true,
         height: 25,
-        width: 1.5,
+        width: 1.3,
         margin: 0,
         fontSize: 15,
         textMargin: 2,
@@ -379,7 +379,7 @@ const SearchSerialNo = () => {
                 {/* LETTER HEAD IMAGE */}
                 <img
                   className="letter-head"
-                  src="/images/Letter_Head.JPG"
+                  src="/images/Letter_Head.png"
                   alt="Letter Head"
                   style={{
                     display: "block",
@@ -434,10 +434,10 @@ const SearchSerialNo = () => {
                     style={{
                       whiteSpace: "nowrap",
                       fontSize: "12px",
-                      margin:"10px"
+                      margin:"5px"
                     }}
                   >
-                    तारीख:………/………/……………
+                    तारीख:………/………/………
                   </div>
                 </div>
               </div>
