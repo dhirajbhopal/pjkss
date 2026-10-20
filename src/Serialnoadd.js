@@ -1,4 +1,5 @@
-// AddSerialNo.js
+
+// Serialnoadd.js
 
 import React, { useState, useEffect } from "react";
 import axios from "axios";
@@ -10,12 +11,6 @@ const AddSerialNo = () => {
   // USER STATE
   const [user, setUser] = useState(null);
   const [userLoaded, setUserLoaded] = useState(false);
-
-  // SERIAL DATA
-  //const [serialData, setSerialData] = useState([]);
-
-  // SEARCH INPUT
-  //const [serialno, setSerialno] = useState("");
 
   // MESSAGE
   const [message, setMessage] = useState("");
@@ -61,52 +56,6 @@ const AddSerialNo = () => {
     }));
   };
 
-  // SEARCH SERIAL NUMBER
-  const handleSearch = async (e) => {
-    e.preventDefault();
-
-    setMessage("");
-    setGeneratedCode("");
-
-    if (!serialno.trim()) {
-      setMessageType("warning");
-      setMessage("Please enter a serial number.");
-      return;
-    }
-
-    try {
-      const response = await axios.post(
-        "https://pjkss.pythonanywhere.com/searchserialno",
-        {
-          serialno: serialno.trim(),
-        },
-        {
-          withCredentials: true,
-        }
-      );
-
-      if (response.data.success) {
-        setSerialData(response.data.serialdata || []);
-        setMessageType("success");
-        setMessage("Serial number found.");
-      } else {
-        setSerialData([]);
-        setMessageType("warning");
-        setMessage(
-          response.data.message || "Serial number not found."
-        );
-      }
-    } catch (error) {
-      console.error("Search API error:", error);
-      setMessageType("danger");
-      setMessage(
-        error.response?.data?.message ||
-          error.message ||
-          "Unable to search serial number."
-      );
-    }
-  };
-
   // GENERATE SERIAL NUMBER AND SAVE DATA
   const handleGenerateCode = async (e) => {
     e.preventDefault();
@@ -114,13 +63,14 @@ const AddSerialNo = () => {
     setMessage("");
     setGeneratedCode("");
 
-    // Validate required field
+    // VALIDATE ISSUER NAME
     if (!formData.issuername.trim()) {
       setMessageType("warning");
       setMessage("Please enter Issuer Name.");
       return;
     }
 
+    // CONFIRM GENERATION
     const proceed = window.confirm(
       "Do you want to generate and save this serial number?"
     );
@@ -148,20 +98,22 @@ const AddSerialNo = () => {
         }
       );
 
-      // Inspect the actual backend response
       console.log("Generate API response:", response.data);
 
       const data = response.data;
 
-      // Accept only an explicit successful response
-      if (data && data.success === true) {
-        setGeneratedCode(data.code || "");
+      // HANDLE SUCCESSFUL RESPONSE
+      if (data && (data.success === true || data.code)) {
+        if (data.code) {
+          setGeneratedCode(data.code);
+        }
+
         setMessageType("success");
         setMessage(
-          data.message || "Serial number saved successfully."
+          data.message || "Serial number generated successfully."
         );
 
-        // Clear form only after successful save
+        // RESET FORM AFTER SUCCESS
         setFormData({
           issuername: "",
           issuedto: "",
@@ -172,11 +124,10 @@ const AddSerialNo = () => {
         setMessageType("warning");
         setMessage(
           data?.message ||
-            "The server responded, but did not confirm success. Check the API response."
+            "The server did not confirm that the serial number was saved."
         );
       }
     } catch (error) {
-      // Log details for debugging
       console.error("Generate API error:", error);
       console.error("HTTP status:", error.response?.status);
       console.error("Backend response:", error.response?.data);
@@ -198,7 +149,7 @@ const AddSerialNo = () => {
       } else if (status === 401 || status === 403) {
         setMessage(
           backendMessage ||
-            "Access denied. Check Admin authentication, permissions, and CSRF settings."
+            "Access denied. Check authentication and permissions."
         );
       } else if (status === 404) {
         setMessage("API endpoint not found. Check the Django URL.");
@@ -209,7 +160,7 @@ const AddSerialNo = () => {
       } else if (status >= 500) {
         setMessage(
           backendMessage ||
-            "Django returned a server error. Check the PythonAnywhere error log."
+            "Django server error. Check the PythonAnywhere error log."
         );
       } else {
         setMessage(
@@ -224,7 +175,11 @@ const AddSerialNo = () => {
 
   // USER LOADING
   if (!userLoaded) {
-    return <div className="container mt-4">Loading user...</div>;
+    return (
+      <div className="container mt-4">
+        Loading user...
+      </div>
+    );
   }
 
   // NOT LOGGED IN
@@ -234,7 +189,9 @@ const AddSerialNo = () => {
 
   // NO PERMISSION
   if (user.role !== "Admin") {
-    return <h1>You Do Not Have permission to access this page</h1>;
+    return (
+      <h1>You Do Not Have permission to access this page</h1>
+    );
   }
 
   return (
@@ -246,7 +203,10 @@ const AddSerialNo = () => {
         <button
           type="button"
           className="btn btn-info btn-outline-danger"
-          style={{ color: "black", fontSize: "15px" }}
+          style={{
+            color: "black",
+            fontSize: "15px",
+          }}
           onClick={() => {
             window.location.href = "/searchserialno";
           }}
@@ -257,7 +217,10 @@ const AddSerialNo = () => {
         <button
           type="button"
           className="btn btn-outline-danger m-3"
-          style={{ color: "black", fontSize: "15px" }}
+          style={{
+            color: "black",
+            fontSize: "15px",
+          }}
           onClick={() => {
             window.location.href = "/searchserialnoall";
           }}
@@ -270,7 +233,10 @@ const AddSerialNo = () => {
       <form onSubmit={handleGenerateCode}>
         {/* ISSUER NAME */}
         <div className="mb-3">
-          <label htmlFor="issuername" className="form-label">
+          <label
+            htmlFor="issuername"
+            className="form-label"
+          >
             Issuer Name *
           </label>
 
@@ -289,7 +255,10 @@ const AddSerialNo = () => {
 
         {/* ISSUED TO */}
         <div className="mb-3">
-          <label htmlFor="issuedto" className="form-label">
+          <label
+            htmlFor="issuedto"
+            className="form-label"
+          >
             Issued To
           </label>
 
@@ -307,7 +276,10 @@ const AddSerialNo = () => {
 
         {/* SUBJECT */}
         <div className="mb-3">
-          <label htmlFor="subject" className="form-label">
+          <label
+            htmlFor="subject"
+            className="form-label"
+          >
             Subject
           </label>
 
@@ -325,7 +297,10 @@ const AddSerialNo = () => {
 
         {/* ISSUE DATE */}
         <div className="mb-3">
-          <label htmlFor="issuedate" className="form-label">
+          <label
+            htmlFor="issuedate"
+            className="form-label"
+          >
             Issue Date
           </label>
 
@@ -344,7 +319,10 @@ const AddSerialNo = () => {
           type="submit"
           disabled={loading}
           className="btn btn-outline-danger"
-          style={{ color: "black", fontSize: "15px" }}
+          style={{
+            color: "black",
+            fontSize: "15px",
+          }}
         >
           {loading
             ? "Saving..."
@@ -363,17 +341,24 @@ const AddSerialNo = () => {
           <button
             type="button"
             className="btn btn-sm btn-outline-success ms-3"
-            onClick={() => {
-              navigator.clipboard
-                .writeText(generatedCode)
-                .then(() => {
-                  setMessageType("success");
-                  setMessage("Serial number copied to clipboard.");
-                })
-                .catch(() => {
-                  setMessageType("warning");
-                  setMessage("Unable to copy. Please copy the code manually.");
-                });
+            onClick={async () => {
+              try {
+                await navigator.clipboard.writeText(
+                  generatedCode
+                );
+
+                setMessageType("success");
+                setMessage(
+                  "Serial number copied to clipboard."
+                );
+              } catch (error) {
+                console.error("Clipboard error:", error);
+
+                setMessageType("warning");
+                setMessage(
+                  "Unable to copy. Please copy the code manually."
+                );
+              }
             }}
           >
             Copy Code
