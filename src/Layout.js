@@ -1,563 +1,419 @@
+
 import React, { useEffect, useState } from "react";
-import { Outlet, Link } from "react-router-dom";
+import { Outlet, Link, useLocation } from "react-router-dom";
 import "./style.css";
 import Footer from "./Footer";
-//import logo from "/images/PATEL_LOGO.png";
-//import founderImg from "/images/modnarayanfounder.png";
-//import arrowGif from "/img/Arrows_down_animated.gif";
 
 const Layout = ({ user, isAuthenticated, msg }) => {
+  const [today, setToday] = useState(new Date());
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [accountMenuOpen, setAccountMenuOpen] = useState(false);
 
+  const location = useLocation();
 
-const handleLogout = async () => {
+  const isAdmin = user?.role === "Admin";
+  const isCoremember = user?.role === "Coremember";
+  const isMember = user?.role === "Member";
 
-  try {
-
-    // LOCAL STORAGE
-    localStorage.clear();
-
-    // SESSION STORAGE
-    sessionStorage.clear();
-
-    // CLEAR COOKIES
-    document.cookie.split(";").forEach((cookie) => {
-
-      const eqPos = cookie.indexOf("=");
-
-      const name =
-        eqPos > -1
-          ? cookie.substr(0, eqPos)
-          : cookie;
-
-      document.cookie =
-        name +
-        "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
-
-    });
-
-    // CLEAR CACHE STORAGE
-    if ("caches" in window) {
-
-      const cacheNames =
-        await caches.keys();
-
-      await Promise.all(
-        cacheNames.map((cacheName) =>
-          caches.delete(cacheName)
-        )
-      );
-
-    }
-
-    // REMOVE SERVICE WORKERS
-    if ("serviceWorker" in navigator) {
-
-      const registrations =
-        await navigator.serviceWorker.getRegistrations();
-
-      for (let registration of registrations) {
-
-        await registration.unregister();
-
-      }
-
-    }
-
-    // FORCE HARD RELOAD
-    window.location.replace("/login");
-
-  } catch (error) {
-
-  }
-
-};
-
-///////////////////
-
- // LIVE DATE TIME
-  const [today, setToday] = useState(
-    new Date()
-  );
-
-  // LIVE CLOCK
+  // LIVE DATE AND TIME
   useEffect(() => {
-
     const interval = setInterval(() => {
-
       setToday(new Date());
-
     }, 1000);
 
     return () => clearInterval(interval);
-
   }, []);
 
+  // CLOSE MENUS AFTER NAVIGATION
+  useEffect(() => {
+    setMobileMenuOpen(false);
+    setAccountMenuOpen(false);
+  }, [location.pathname]);
 
-  // ROLE CHECK
-  const isAdmin =
-    user?.role === "Admin";
+  // LOGOUT
+  const handleLogout = async () => {
+    try {
+      localStorage.clear();
+      sessionStorage.clear();
 
-  const isCoremember =
-    user?.role === "Coremember";
+      // Clear cookies accessible to JavaScript
+      document.cookie.split(";").forEach((cookie) => {
+        const eqPos = cookie.indexOf("=");
+        const name =
+          eqPos > -1 ? cookie.substring(0, eqPos) : cookie;
 
-  const isMember =
-    user?.role === "Member";
+        document.cookie =
+          `${name.trim()}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+      });
 
+      // Clear Cache Storage
+      if ("caches" in window) {
+        const cacheNames = await caches.keys();
+        await Promise.all(
+          cacheNames.map((cacheName) => caches.delete(cacheName))
+        );
+      }
+
+      // Unregister service workers
+      if ("serviceWorker" in navigator) {
+        const registrations =
+          await navigator.serviceWorker.getRegistrations();
+
+        await Promise.all(
+          registrations.map((registration) =>
+            registration.unregister()
+          )
+        );
+      }
+    } catch (error) {
+      console.error("Logout cleanup error:", error);
+    } finally {
+      window.location.replace("/login");
+    }
+  };
+
+  // NAVIGATION LINK
+  const navLinkClass = ({ isActive }) =>
+    `pjk-nav-link${isActive ? " active" : ""}`;
 
   return (
     <>
-      <div>
+      {/* WEBSITE HEADER */}
+      <header className="pjk-header">
+        <div className="pjk-header-main">
 
-        {/* TOP HEADER */}
-        <div
-          className="d-flex"
-          style={{ backgroundColor: "#f6f7c1" }}
-        >
-
-          <div
-            className="flex-fill"
-            style={{ marginLeft: "1%" }}
+          {/* LOGO */}
+          <Link
+            to="/"
+            className="pjk-logo-link"
+            aria-label="Patel Jan Kalyan Seva Samiti home"
           >
+            <img
+              className="pjk-logo"
+              src="/images/PATEL_LOGO.png"
+              alt="Patel Jan Kalyan Seva Samiti Logo"
+            />
+          </Link>
 
-            <Link to="/">
-              <img className="mt-1"
-                src="/images/PATEL_LOGO.png"
-                height="100px"
-                alt="Logo"
-
-              />
-            </Link>
-
-          </div>
-
-          <div className="flex-fill text-center">
-
-            <span
-              style={{
-                fontSize: "30px",
-                color: "green",
-                fontFamily: "serif",
-                fontWeight: "bolder",
-              }}
-            >
+          {/* ORGANIZATION NAME */}
+          <div className="pjk-title-block">
+            <div className="pjk-title-en">
               PATEL JAN KALYAN SEVA SAMITI
-              <br />
+            </div>
+
+            <div className="pjk-title-hi">
               पटेल जन कल्याण सेवा समिति
-            </span>
+            </div>
 
+            <div className="pjk-title-tagline">
+              सेवा • सहयोग • समाज कल्याण
+            </div>
           </div>
 
-          <div
-            className="flex-fill text-end"
-            style={{ marginRight: "1%" }}
+          {/* FOUNDER IMAGE */}
+          <a
+            href="/images/modnarayanfounder.png"
+            target="_blank"
+            rel="noreferrer"
+            className="pjk-founder-link"
+            aria-label="View founder photograph"
           >
-
-            <a
-              href="/images/modnarayanfounder.png"
-              target="_blank"
-              rel="noreferrer"
-            >
-
-              <img
-                src="/images/modnarayanfounder.png"
-                height="105px"
-                alt="Founder"
-              />
-
-            </a>
-
-          </div>
-
+            <img
+              className=""
+              src="/images/modnarayanfounder.png"
+              alt="Founder Mod Narayan Singh Patel"
+              height="120x"
+            />
+          </a>
         </div>
 
-        {/* ADDRESS */}
-        <div
-          className="text-center"
-          style={{ backgroundColor: "#f6f7c1" }}
-        >
+        {/* ADDRESS AND LIVE CLOCK */}
+        <div className="pjk-info-bar">
+          <div className="pjk-address">
+            <span className="pjk-info-icon" aria-hidden="true">
+              📍
+            </span>
 
-          <span
-            style={{
-              fontSize: "15px",
-              color: "blue",
-            }}
-          >
-
-            Add:- AT Patel Asmarak, GT Road Bus Stand Dehri,
-            Ward No-26 Dist-Rohtas, Bihar (821307)
+            <span>
+              Patel Smarak, GT Road Bus Stand, Dehri,
+              Ward No. 26, Rohtas, Bihar - 821307
+            </span>
 
             <a
               href="https://maps.app.goo.gl/kPbw4MSsSZuvGFfh7?g_st=awb"
               target="_blank"
               rel="noreferrer"
-              style={{
-                color: "red",
-                marginLeft: "5px",
-              }}
+              className="pjk-direction-link"
             >
-              Direction
+              Get Directions ↗
             </a>
-
-          </span>
-          {/* DATE TIME */}
-        <span
-          style={{
-            fontSize: "15px",
-            fontWeight: "bold",
-            color: "red",
-          }}>
-
-        &nbsp;&nbsp;
-       {today.toDateString()}
-
-      &nbsp;&nbsp;&nbsp;
-
-       {today.toLocaleTimeString([], {hour: "2-digit",minute: "2-digit",second: "2-digit",hour12: true,})}
-
-    </span>
-
-
-        </div>
-
-        {/* NAVBAR */}
-        <nav
-          className="navbar navbar-expand-sm navbar-light bg-light"
-        >
-
-          <div className="container-fluid">
-
-            <Link
-              to="/" style={{fontSize:"15px", marginBottom:"0"}}
-              className="navbar-brand"
-            >
-              🏠 Home
-            </Link>
-
-            <button
-              className="navbar-toggler"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#navbarSupportedContent"
-            >
-
-              <img
-                src={"/img/Arrows_down_animated.gif"}
-                height="20px"
-                alt="menu"
-              />
-
-            </button>
-
-            <div
-              className="collapse navbar-collapse"
-              id="navbarSupportedContent"
-            >
-
-              <ul className="navbar-nav me-auto">
-
-                {/* PUBLIC MENU */}
-
-                <li className="nav-item">
-                  <Link
-                    className="nav-link"
-                    to="/contact" >
-                    Contact
-                  </Link>
-                </li>
-
-                <li className="nav-item">
-                  <Link
-                    className="nav-link"
-                    to="/vision"
-                  >
-                    Vision
-                  </Link>
-                </li>
-
-                <li className="nav-item">
-                  <Link
-                    className="nav-link"
-                    to="/about"
-                  >
-                    About
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link
-                    className="nav-link text-success"
-                    to="/donation"
-                  >
-                  Donate
-                  </Link>
-                </li>
-
-                {/* AUTH USER */}
-
-                {isAuthenticated ? (
-                  <>
-
-                    {/* USER INFO */}
-
-                    <li className="nav-item">
-
-                      <span
-                        className="nav-link"
-                        style={{
-                          color: "green",
-                          fontWeight: "bold",
-                        }}
-                      >
-
-                        Welcome :
-                        {" "}
-                        {user?.first_name}
-                        {" "}
-                        {user?.last_name}
-
-                      </span>
-
-                    </li>
-
-                    <li className="nav-item">
-
-                      <span
-                        className="nav-link"
-                        style={{
-                          color: "blue",
-                          fontWeight: "bold",
-                        }}
-                      >
-
-                        Role :
-                        {" "}
-                        {user?.role}
-
-                      </span>
-
-                    </li>
-
-                    {/* DROPDOWN */}
-
-                    <li className="nav-item dropdown">
-
-                      <a
-                        href="/#"
-                        className="nav-link dropdown-toggle"
-                        role="button"
-                        data-bs-toggle="dropdown"
-                      >
-                        Menu
-                      </a>
-
-                      <ul className="dropdown-menu">
-
-                        {/* COMMON MENU */}
-
-                      {/*  <li>
-                          <Link
-                            className="dropdown-item"
-                            to="/profile/:id"
-                          >
-                            Update Profile
-                          </Link>
-                        </li>  */}
-
-                        <li>
-                          <Link
-                            className="dropdown-item"
-                            to="/Updateimage"
-                          >
-                            Update Image
-                          </Link>
-                        </li>
-
-                        <li>
-                          <Link
-                            className="dropdown-item"
-                            to="/changepassword"
-                          >
-                            Change Password
-                          </Link>
-                        </li>
-
-                        <li>
-                          <Link
-                            className="dropdown-item"
-                            to="/donationlist"
-                          >
-                            Donation List
-                          </Link>
-                        </li>
-
-                        {/* ADMIN MENU */}
-
-                        {isAdmin && (
-                          <>
-
-                            <li>
-                              <hr className="dropdown-divider" />
-                            </li>
-
-                            <li>
-                              <Link
-                                className="dropdown-item"
-                                to="/addserialno"
-                              >
-                                Serial No
-                              </Link>
-                            </li>
-
-                            <li>
-                            </li>
-
-                            <li>
-                              <a
-                                className="dropdown-item text-danger"
-                                href="https://pjkss.pythonanywhere.com/admin/"
-                                target="_blank"
-                                rel="noreferrer"
-                              >
-                                Admin Console
-                              </a>
-                            </li>
-
-                          </>
-                        )}
-
-                        {/* MANAGER MENU */}
-
-                        {isCoremember && (
-                          <>
-                            <li>
-                              <hr className="dropdown-divider" />
-                            </li>
-
-                            <li>
-                              <Link
-                                className="dropdown-item"
-                                to="/searchserialno"
-                              >
-                                Search Serial
-                              </Link>
-                            </li>
-                          </>
-                        )}
-
-                        {/* MEMBER MENU */}
-
-                        {isMember && (
-                          <>
-                            <li>
-                              <hr className="dropdown-divider" />
-                            </li>
-
-                            <li>
-                              <Link
-                                className="dropdown-item"
-                                to="/member-dashboard"
-                              >
-                                Member Dashboard
-                              </Link>
-                            </li>
-                          </>
-                        )}
-
-                        {/* LOGOUT */}
-
-                        <li>
-                          <hr className="dropdown-divider" />
-                        </li>
-
-                        <li>
-                    <Link className="dropdown-item text-danger" to="/logout" 
-                    onClick={(e) => {e.preventDefault();handleLogout();}} >
-                  Logout
-                  </Link>
-                  </li>
-
-                      </ul>
-
-                    </li>
-
-                    {/* PROFILE IMAGE */}
-
-                    <li className="nav-item">
-                    
-
-<img
-  src={`https://pjkss.pythonanywhere.com/media/${user?.image}?v=${Date.now()}`}
-  alt="profile"
-  height="40px"
-  width="50px"
-  className="rounded rounded-3"
-  style={{
-    objectFit: "cover",
-    marginTop: "0",
-  }}
-/>
-
-          
-
-                    </li>
-
-                  </>
-                ) : (
-                  <>
-
-                    {/* GUEST MENU */}
-
-                    <li className="nav-item">
-
-                      <Link
-                        className="nav-link"
-                        to="/signup"
-                      >
-                        Signup
-                      </Link>
-
-                    </li>
-
-                    <li className="nav-item">
-
-                      <Link
-                        className="nav-link"
-                        to="/login"
-                      >
-                        Member Login
-                      </Link>
-
-                    </li>
-
-                    <li className="nav-item">
-
-                      <span
-                        style={{
-                          color: "red",
-                          marginLeft: "10px",
-                        }}
-                      >
-                        {msg}
-                      </span>
-
-                    </li>
-
-                  </>
-                )}
-
-              </ul>
-
-            </div>
-
           </div>
 
-        </nav>
+          <div className="pjk-clock" aria-label="Current date and time">
+            <span className="pjk-clock-date">
+              {today.toLocaleDateString("en-IN", {
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+              })}
+            </span>
 
-      </div>
+            <span className="pjk-clock-divider">|</span>
 
-      <Outlet />
+            <span className="pjk-clock-time">
+              {today.toLocaleTimeString("en-IN", {
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+                hour12: true,
+              })}
+            </span>
+          </div>
+        </div>
+      </header>
 
-      <Footer/>
+      {/* NAVIGATION */}
+      <nav className="pjk-navbar">
+        <div className="pjk-navbar-inner">
 
+          {/* HOME */}
+          <Link
+            to="/"
+            className="pjk-home-link"
+            onClick={() => setMobileMenuOpen(false)}
+          >
+            <span aria-hidden="true">⌂</span>
+            Home
+          </Link>
+
+          {/* MOBILE MENU BUTTON */}
+          <button
+            type="button"
+            className="pjk-mobile-toggle"
+            aria-label={
+              mobileMenuOpen ? "Close navigation" : "Open navigation"
+            }
+            aria-expanded={mobileMenuOpen}
+            onClick={() => setMobileMenuOpen((open) => !open)}
+          >
+            <span>{mobileMenuOpen ? "✕" : "☰"}</span>
+            <span>{mobileMenuOpen ? "Close" : "Menu"}</span>
+          </button>
+
+          {/* NAVIGATION CONTENT */}
+          <div
+            className={`pjk-nav-content${
+              mobileMenuOpen ? " pjk-nav-content-open" : ""
+            }`}
+          >
+            {/* PUBLIC LINKS */}
+            <div className="pjk-public-links">
+              <Link className="pjk-nav-link pjk-public-link" to="/contact">
+              Contact
+              </Link>
+
+              <Link className="pjk-nav-link pjk-public-link" to="/vision">
+                Vision
+              </Link>
+
+              <Link className="pjk-nav-link pjk-public-link" to="/about">
+                About
+              </Link>
+
+              <Link
+                className="pjk-nav-link pjk-donate-link"
+                to="/donation"
+              >
+                ♥ Donate
+              </Link>
+            </div>
+
+            {/* AUTHENTICATED USER */}
+            {isAuthenticated ? (
+              <div className="pjk-account-area">
+
+                {/* USER SUMMARY */}
+                <div className="pjk-user-summary">
+                  <div className="pjk-user-avatar">
+                    {user?.image ? (
+                      <img
+                        src={
+                          user.image.startsWith("http")
+                            ? user.image
+                            : `https://pjkss.pythonanywhere.com/media/${user.image}`
+                        }
+                        alt="Profile"
+                        onError={(e) => {
+                          e.currentTarget.style.display = "none";
+                        }}
+                      />
+                    ) : (
+                      <span>
+                        {(user?.first_name || "U")
+                          .charAt(0)
+                          .toUpperCase()}
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="pjk-user-details">
+                    <span className="pjk-welcome">
+                      Welcome
+                    </span>
+
+                    <strong>
+                      {[user?.first_name, user?.last_name]
+                        .filter(Boolean)
+                        .join(" ") || "Member"}
+                    </strong>
+
+                    <span className="pjk-role">
+                      {user?.role}
+                    </span>
+                  </div>
+                </div>
+
+                {/* ACCOUNT MENU */}
+                <div className="pjk-account-dropdown">
+                  <button
+                    type="button"
+                    className="pjk-account-toggle"
+                    aria-expanded={accountMenuOpen}
+                    onClick={() =>
+                      setAccountMenuOpen((open) => !open)
+                    }
+                  >
+                    Account
+                    <span aria-hidden="true">
+                      {accountMenuOpen ? "▴" : "▾"}
+                    </span>
+                  </button>
+
+                  {accountMenuOpen && (
+                    <div className="pjk-dropdown-menu">
+
+                      <div className="pjk-dropdown-heading">
+                        Account Services
+                      </div>
+
+                      <Link
+                        className="pjk-dropdown-item"
+                        to="/Updateimage"
+                      >
+                        <span>▣</span> Update Image
+                      </Link>
+
+                      <Link
+                        className="pjk-dropdown-item"
+                        to="/changepassword"
+                      >
+                        <span>🔒</span> Change Password
+                      </Link>
+
+                      <Link
+                        className="pjk-dropdown-item"
+                        to="/donationlist"
+                      >
+                        <span>☷</span> Donation List
+                      </Link>
+
+                      {/* ADMIN MENU */}
+                      {isAdmin && (
+                        <>
+                          <div className="pjk-dropdown-separator" />
+
+                          <div className="pjk-dropdown-heading">
+                            Administration
+                          </div>
+
+                          <Link
+                            className="pjk-dropdown-item"
+                            to="/addserialno"
+                          >
+                            <span>№</span> Serial Number
+                          </Link>
+
+                          <a
+                            className="pjk-dropdown-item pjk-admin-console"
+                            href="https://pjkss.pythonanywhere.com/admin/"
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            <span>⚙</span> Admin Console ↗
+                          </a>
+                        </>
+                      )}
+
+                      {/* CORE MEMBER MENU */}
+                      {isCoremember && (
+                        <>
+                          <div className="pjk-dropdown-separator" />
+
+                          <Link
+                            className="pjk-dropdown-item"
+                            to="/searchserialno"
+                          >
+                            <span>⌕</span> Search Serial
+                          </Link>
+                        </>
+                      )}
+
+                      {/* MEMBER MENU */}
+                      {isMember && (
+                        <>
+                          <div className="pjk-dropdown-separator" />
+
+                          <Link
+                            className="pjk-dropdown-item"
+                            to="/member-dashboard"
+                          >
+                            <span>▦</span> Member Dashboard
+                          </Link>
+                        </>
+                      )}
+
+                      <div className="pjk-dropdown-separator" />
+
+                      <button
+                        type="button"
+                        className="pjk-dropdown-item pjk-logout-button"
+                        onClick={handleLogout}
+                      >
+                        <span>↪</span> Logout
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ) : (
+              /* GUEST MENU */
+              <div className="pjk-guest-links">
+                {msg && (
+                  <span className="pjk-login-message">
+                    {msg}
+                  </span>
+                )}
+
+                <Link className="pjk-signup-link" to="/signup">
+                  Sign Up
+                </Link>
+
+                <Link className="pjk-login-link" to="/login">
+                  Member Login
+                </Link>
+              </div>
+            )}
+          </div>
+        </div>
+      </nav>
+
+      {/* PAGE CONTENT */}
+      <main className="pjk-main-content">
+        <Outlet />
+      </main>
+
+      {/* FOOTER */}
+      <Footer />
     </>
   );
 };
