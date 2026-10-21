@@ -236,11 +236,11 @@ const Layout = ({ user, isAuthenticated, msg }) => {
                   <div className="pjk-user-avatar">
                     {user?.image ? (
                       <img
-                        src={
-                          user.image.startsWith("http")
-                            ? user.image
-                            : `https://pjkss.pythonanywhere.com/media/${user.image}`
-                        }
+                        src={`${
+                       user.image.startsWith("http")
+                    ? user.image
+                     : `https://pjkss.pythonanywhere.com/media/${user.image}`
+                    }?t=${Date.now()}`}
                         alt="Profile"
                         onError={(e) => {
                           e.currentTarget.style.display = "none";
