@@ -73,8 +73,7 @@ const Layout = ({ user, isAuthenticated, msg }) => {
   };
 
   // NAVIGATION LINK
-  const navLinkClass = ({ isActive }) =>
-    `pjk-nav-link${isActive ? " active" : ""}`;
+  
 
   return (
     <>

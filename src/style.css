@@ -354,7 +354,8 @@
 }
 
 .pjk-donate-link {
-  color: red;
+  color: yellow;
+  font-size: 15px;
 }
 
 .pjk-donate-link:hover {
