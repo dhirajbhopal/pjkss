@@ -1,297 +1,234 @@
 // SearchSerialNoAll.js
 
-import React, {
-  useState,
-  useEffect,
-} from "react";
-
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 const SearchSerialNoAll = () => {
-
   // USER STATE
-  const [user, setUser] =
-    useState(null);
+  const [user, setUser] = useState(null);
 
   // SERIAL DATA
-  const [serialData, setSerialData] =
-    useState([]);
+  const [serialData, setSerialData] = useState([]);
 
   // MESSAGE
-  const [message, setMessage] =
-    useState("");
+  const [message, setMessage] = useState("");
 
   // LOAD USER
   useEffect(() => {
-
-    const loggedInUser =
-      JSON.parse(
+    try {
+      const loggedInUser = JSON.parse(
         localStorage.getItem("user")
       );
 
-    if (loggedInUser) {
-
-      setUser(loggedInUser);
-
+      if (loggedInUser) {
+        setUser(loggedInUser);
+      }
+    } catch (error) {
+      setMessage("Unable to read user information");
     }
-
   }, []);
 
-  // LOAD SERIAL DATA
+  // FETCH SERIAL DATA
   useEffect(() => {
-
-    fetchSerialData();
-
-  }, []);
-
-  // FETCH DATA
-  const fetchSerialData =
-    async () => {
-
-    try {
-
-      const response =
-        await axios.get(
+    const fetchSerialData = async () => {
+      try {
+        const response = await axios.get(
           "https://pjkss.pythonanywhere.com/serial_list_api/",
           {
             withCredentials: true,
           }
         );
 
-      if (response.data.success) {
-
-        setSerialData(
-          response.data.data
-        );
-
-      } else {
-
-        setMessage(
-          "No Data Found"
-        );
+        if (response.data.success) {
+          setSerialData(response.data.data || []);
+          setMessage("");
+        } else {
+          setSerialData([]);
+          setMessage("No Data Found");
+        }
+      } catch (error) {
+        setMessage("Something went wrong");
       }
+    };
 
-    } catch (error) {
-
-
-      setMessage(
-        "Something went wrong"
-      );
-    }
-  };
+    fetchSerialData();
+  }, []);
 
   // NOT LOGGED IN
   if (!user) {
-
-    return (
-      <h1>
-        You are not logged in
-      </h1>
-    );
+    return <h1>You are not logged in</h1>;
   }
 
   // NO PERMISSION
   if (user.role !== "Admin") {
-
     return (
       <h1>
-        You Do Not Have permission
-        to access this page
+        You Do Not Have permission to access this page
       </h1>
     );
   }
 
   return (
-
-    <div className="container-fluid">
+    <div className="container-fluid p-2 p-md-3">
 
       {/* GO BACK BUTTON */}
-      <button
-        className="btn btn-outline-danger m-3"
-        onClick={() =>
-          window.history.back()
-        }
-      >
-        Go Back
-      </button>
+      <div className="text-center mb-3">
+        <button
+          className="btn btn-outline-danger"
+          onClick={() => window.history.back()}
+        >
+          Go Back
+        </button>
+      </div>
 
       {/* MESSAGE */}
       {message && (
-
-        <div className="alert alert-danger">
-
+        <div className="alert alert-danger text-center">
           {message}
-
         </div>
       )}
 
-      {/* TABLE */}
-      <table
-        className="table table-bordered"
+      {/* TABLE RESPONSIVE WRAPPER */}
+      <div
+        className="table-responsive"
         style={{
-          border:
-            "3px solid green",
-          borderCollapse:
-            "collapse",
           width: "100%",
+          overflowX: "auto",
+          WebkitOverflowScrolling: "touch",
+          border: "3px solid green",
         }}
       >
-
-        <thead
+        <table
+          className="table table-bordered mb-0"
           style={{
-            backgroundColor:
-              "black",
-            color: "white",
-            textAlign:
-              "center",
+            width: "100%",
+            minWidth: "1000px",
+            tableLayout: "fixed",
+            borderCollapse: "collapse",
+            margin: 0,
           }}
         >
+          {/* COLUMN WIDTHS */}
+          <colgroup>
+            <col style={{ width: "140px" }} />
+            <col style={{ width: "220px" }} />
+            <col style={{ width: "180px" }} />
+            <col style={{ width: "250px" }} />
+            <col style={{ width: "120px" }} />
+            <col style={{ width: "100px" }} />
+          </colgroup>
 
-          <tr>
-
-            <th
-              style={{
-                border:
-                  "1px solid red",
-              }}
-            >
-              Serial No
-            </th>
-
-            <th
-              style={{
-                border:
-                  "1px solid red",
-              }}
-            >
-              Letter Head Person Name
-            </th>
-
-            <th
-              style={{
-                border:
-                  "1px solid red",
-              }}
-            >
-              Issue To
-            </th>
-
-            <th
-              style={{
-                border:
-                  "1px solid red",
-              }}
-            >
-              Subject
-            </th>
-
-            <th
-              style={{
-                border:
-                  "1px solid red",
-              }}
-            >
-              Date
-            </th>
-
-            <th
-              style={{
-                border:
-                  "1px solid red",
-              }}
-            >
-              Update
-            </th>
-
-          </tr>
-
-        </thead>
-
-        <tbody>
-
-          {serialData.map(
-            (i, index) => (
-
-            <tr
-              key={index}
-              align="center"
-
-            >
-
-              <td
-                style={{
-                  border:
-                    "1px solid red",
-                }}
-              >
-                {i.code}
-              </td>
-
-              <td
-                style={{
-                  border:
-                    "1px solid red",
-                }}
-              >
-                {i.issuername}
-              </td>
-
-              <td
-                style={{
-                  border:
-                    "1px solid red",
-                }}
-              >
-                {i.issuedto}
-              </td>
-
-              <td
-                style={{
-                  border:
-                    "1px solid red",
-                }}
-              >
-                {i.subject}
-              </td>
-
-              <td
-                style={{
-                  border:
-                    "1px solid red",
-                }}
-              >
-                {i.issuedate}
-              </td>
-
-              <td
-                style={{
-                  border:
-                    "1px solid red",
-                }}
-              >
-
-                <button
-                  className="btn btn-success btn-outline-warning"
-                  onClick={() =>
-                    window.location.href =
-                    `/editserialno?serialno=${i.code}`
-                  }
+          {/* TABLE HEADER */}
+          <thead
+            style={{
+              backgroundColor: "black",
+              color: "white",
+              textAlign: "center",
+            }}
+          >
+            <tr>
+              {[
+                "Serial No",
+                "Letter Head Person Name",
+                "Issue To",
+                "Subject",
+                "Date",
+                "Update",
+              ].map((heading) => (
+                <th
+                  key={heading}
+                  scope="col"
+                  style={{
+                    backgroundColor: "black",
+                    color: "white",
+                    border: "1px solid red",
+                    padding: "12px 8px",
+                    verticalAlign: "middle",
+                    textAlign: "center",
+                    whiteSpace: "normal",
+                    overflowWrap: "anywhere",
+                  }}
                 >
-                  Edit
-                </button>
-
-              </td>
-
+                  {heading}
+                </th>
+              ))}
             </tr>
+          </thead>
 
-          ))}
+          {/* TABLE BODY */}
+          <tbody>
+            {serialData.length > 0 ? (
+              serialData.map((i, index) => (
+                <tr key={i.code || index}>
+                  <td
+                    style={cellStyle}
+                  >
+                    {i.code || "-"}
+                  </td>
 
-        </tbody>
+                  <td style={cellStyle}>
+                    {i.issuername || "-"}
+                  </td>
 
-      </table>
+                  <td style={cellStyle}>
+                    {i.issuedto || "-"}
+                  </td>
+
+                  <td style={cellStyle}>
+                    {i.subject || "-"}
+                  </td>
+
+                  <td style={cellStyle}>
+                    {i.issuedate || "-"}
+                  </td>
+
+                  <td style={cellStyle}>
+                    <button
+                      type="button"
+                      className="btn btn-success btn-outline-warning"
+                      onClick={() => {
+                        window.location.href =
+                          `/editserialno?serialno=${encodeURIComponent(
+                            i.code
+                          )}`;
+                      }}
+                    >
+                      Edit
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td
+                  colSpan="6"
+                  style={{
+                    textAlign: "center",
+                    padding: "20px",
+                    border: "1px solid red",
+                  }}
+                >
+                  {message || "No serial numbers available"}
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
 
     </div>
   );
+};
+
+// COMMON CELL STYLE
+const cellStyle = {
+  border: "1px solid red",
+  padding: "10px 8px",
+  textAlign: "center",
+  verticalAlign: "middle",
+  whiteSpace: "normal",
+  overflowWrap: "anywhere",
+  wordBreak: "normal",
 };
 
 export default SearchSerialNoAll;
