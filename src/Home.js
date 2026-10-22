@@ -324,7 +324,7 @@ const Home = () => {
               </button>
             </a>
 
-            <a href="/gallery4">s
+            <a href="/gallery4">
               <button className="btn btn-outline-danger rounded-4 m-2">
                 15-August-2026 Images <br/>
                 <span className="m-2">
