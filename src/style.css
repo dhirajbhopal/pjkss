@@ -241,7 +241,7 @@
 }
 
 .pjk-direction-link:hover {
-  color: #781b14;
+  color: green;
   text-decoration: underline;
 }
 
@@ -915,4 +915,3 @@
     transition: none !important;
   }
 }
-

@@ -137,7 +137,6 @@ const Layout = ({ user, isAuthenticated, msg }) => {
               Patel Smarak, GT Road Bus Stand, Dehri,
               Ward No. 26, Rohtas, Bihar - 821307
             </span>
-
             <a
               href="https://maps.app.goo.gl/kPbw4MSsSZuvGFfh7?g_st=awb"
               target="_blank"
@@ -146,7 +145,7 @@ const Layout = ({ user, isAuthenticated, msg }) => {
             >
               Get Directions ↗
             </a>
-          </div>
+          
 
           <div className="pjk-clock" aria-label="Current date and time">
             <span className="pjk-clock-date">
@@ -167,6 +166,7 @@ const Layout = ({ user, isAuthenticated, msg }) => {
                 hour12: true,
               })}
             </span>
+            </div>
           </div>
         </div>
       </header>
@@ -179,7 +179,7 @@ const Layout = ({ user, isAuthenticated, msg }) => {
           <Link
             to="/"
             className="pjk-home-link"
-            onClick={() => setMobileMenuOpen(false)}
+           onClick={() => setMobileMenuOpen(false)}
           >
             <span aria-hidden="true">⌂</span>
             Home
