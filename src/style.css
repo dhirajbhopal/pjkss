@@ -899,43 +899,19 @@
 }
 
 /* Address and Time Clock */
-
-.pjk-info-bar {
-  width: 100%;
-  overflow-x: auto;
-  white-space: nowrap;
-}
-
 .pjk-address {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  gap: 8px;
+  font-size: 12px; 
+}
+
+.pjk-address-text {
+  margin-right: 2px;
+}
+
+.pjk-address > br {
+  display: block;
+  content: "";
   width: 100%;
-  min-width: max-content;
-  white-space: nowrap;
-}
-
-.pjk-info-icon,
-.pjk-address-text,
-.pjk-direction-link,
-.pjk-clock {
-  flex-shrink: 0;
-}
-
-.pjk-info-icon {
-  display: inline-flex;
-  align-items: center;
-}
-
-.pjk-direction-link {
-  text-decoration: none;
-}
-
-.pjk-clock {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  margin-left: auto;
-  white-space: nowrap;
 }
