@@ -118,57 +118,58 @@ const Layout = ({ user, isAuthenticated, msg }) => {
             aria-label="View founder photograph"
           >
             <img
-              className=""
+              className="pjk-founder-img"
               src="/images/modnarayanfounder.png"
               alt="Founder Mod Narayan Singh Patel"
               height="120x"
             />
           </a>
         </div>
+        
+{/* ADDRESS AND LIVE CLOCK */}
+<div className="pjk-info-bar">
+  <div className="pjk-address">
+    <span className="pjk-info-icon" aria-hidden="true">
+      📍
+    </span>
 
-        {/* ADDRESS AND LIVE CLOCK */}
-        <div className="pjk-info-bar">
-          <div className="pjk-address">
-            <span className="pjk-info-icon" aria-hidden="true">
-              📍
-            </span>
+    <span className="pjk-address-text">
+      Patel Smarak, GT Road Bus Stand, Dehri,
+      Ward No. 26, Rohtas, Bihar - 821307
+    </span>
 
-            <span>
-              Patel Smarak, GT Road Bus Stand, Dehri,
-              Ward No. 26, Rohtas, Bihar - 821307
-            </span>
-            <a
-              href="https://maps.app.goo.gl/kPbw4MSsSZuvGFfh7?g_st=awb"
-              target="_blank"
-              rel="noreferrer"
-              className="pjk-direction-link"
-            >
-              Get Directions ↗
-            </a>
-          
+    <a
+      href="https://maps.app.goo.gl/kPbw4MSsSZuvGFfh7?g_st=awb"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="pjk-direction-link"
+    >
+      Get Directions ↗
+    </a>
 
-          <div className="pjk-clock" aria-label="Current date and time">
-            <span className="pjk-clock-date">
-              {today.toLocaleDateString("en-IN", {
-                day: "2-digit",
-                month: "short",
-                year: "numeric",
-              })}
-            </span>
+    <div className="pjk-clock" aria-label="Current date and time">
+      <span className="pjk-clock-date">
+        {today.toLocaleDateString("en-IN", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        })}
+      </span>
 
-            <span className="pjk-clock-divider">|</span>
+      <span className="pjk-clock-divider">|</span>
 
-            <span className="pjk-clock-time">
-              {today.toLocaleTimeString("en-IN", {
-                hour: "2-digit",
-                minute: "2-digit",
-                second: "2-digit",
-                hour12: true,
-              })}
-            </span>
-            </div>
-          </div>
-        </div>
+      <span className="pjk-clock-time">
+        {today.toLocaleTimeString("en-IN", {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: true,
+        })}
+      </span>
+    </div>
+  </div>
+</div>
+
       </header>
 
       {/* NAVIGATION */}
