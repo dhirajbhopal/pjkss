@@ -915,3 +915,402 @@
   content: "";
   width: 100%;
 }
+
+/*  Bijay CSS //////////////////////// */
+
+
+.tax-invoice-page {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    color: #222;
+}
+
+.tax-invoice-header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.tax-invoice-header h2 {
+    margin-bottom: 5px;
+}
+
+.tax-invoice-header p {
+    color: #777;
+}
+
+.invoice-section {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    background: #fff;
+}
+
+.invoice-section h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.invoice-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.invoice-grid > div {
+    min-width: 0;
+}
+
+.invoice-grid label {
+    display: block;
+    font-weight: 600;
+    font-size: 13px;
+    margin-bottom: 7px;
+}
+
+.invoice-grid input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 11px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.invoice-full {
+    grid-column: 1 / -1;
+}
+
+.invoice-item-heading,
+.invoice-item-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.invoice-item-card {
+    border: 1px solid #ddd;
+    border-radius: 7px;
+    padding: 16px;
+    margin-bottom: 15px;
+    background: #fafafa;
+}
+
+.invoice-item-title {
+    margin-bottom: 18px;
+}
+
+.add-item-btn,
+.remove-item-btn,
+.save-invoice-btn {
+    border: none;
+    border-radius: 5px;
+    padding: 11px 16px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.add-item-btn {
+    background: #2563eb;
+    color: white;
+}
+
+.remove-item-btn {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.remove-item-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.item-calculation {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 18px;
+    padding-top: 12px;
+    border-top: 1px solid #ddd;
+    font-size: 13px;
+}
+
+.invoice-summary {
+    background: #f5f5f5;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    text-align: right;
+}
+
+.invoice-summary p {
+    margin: 10px 0;
+}
+
+.invoice-summary h2 {
+    color: #15803d;
+}
+
+.save-invoice-btn {
+    display: block;
+    width: 100%;
+    background: #15803d;
+    color: white;
+    padding: 15px;
+    font-size: 16px;
+}
+
+.save-invoice-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.invoice-success {
+    margin-top: 20px;
+    padding: 15px;
+    background: #dcfce7;
+    color: #166534;
+    border-radius: 6px;
+}
+
+.invoice-error {
+    margin-top: 20px;
+    padding: 15px;
+    background: #fee2e2;
+    color: #991b1b;
+    border-radius: 6px;
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 650px) {
+    .tax-invoice-page {
+        padding: 10px;
+    }
+
+    .invoice-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .invoice-full {
+        grid-column: auto;
+    }
+
+    .item-calculation {
+        flex-direction: column;
+        gap: 8px;
+    }
+}
+
+
+.party-page {
+  padding: 24px;
+  background: #f5f6fa;
+  min-height: 100vh;
+  color: #252525;
+  box-sizing: border-box;
+}
+
+.party-header,
+.party-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.party-header {
+  margin-bottom: 22px;
+}
+
+.party-header h2 {
+  margin: 0;
+  font-size: 25px;
+}
+
+.party-header p {
+  margin: 6px 0 0;
+  color: #777;
+}
+
+.party-count {
+  background: #e8efff;
+  color: #2456a6;
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.party-form,
+.party-list-section {
+  background: white;
+  padding: 22px;
+  border-radius: 9px;
+  margin-bottom: 22px;
+  box-shadow: 0 2px 9px rgba(0, 0, 0, 0.06);
+}
+
+.party-form h3,
+.party-list-header h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+.party-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 17px;
+}
+
+.party-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.party-field label {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.party-field input,
+.party-field textarea,
+.party-search {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #d5d9e0;
+  border-radius: 5px;
+  padding: 11px 12px;
+  font-size: 14px;
+  outline: none;
+}
+
+.party-field input:focus,
+.party-field textarea:focus,
+.party-search:focus {
+  border-color: #3478d4;
+}
+
+.party-field textarea {
+  resize: vertical;
+}
+
+.party-full {
+  grid-column: 1 / -1;
+}
+
+.party-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.party-actions button,
+.party-row-actions button {
+  border: none;
+  border-radius: 5px;
+  padding: 10px 17px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.party-save {
+  background: #1769c2;
+  color: white;
+}
+
+.party-reset {
+  background: #e5e7eb;
+  color: #333;
+}
+
+.party-save:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.party-search {
+  max-width: 320px;
+}
+
+.party-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.party-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 900px;
+}
+
+.party-table th,
+.party-table td {
+  border-bottom: 1px solid #e8e8e8;
+  padding: 12px 10px;
+  text-align: left;
+  font-size: 13px;
+}
+
+.party-table th {
+  background: #f1f4f8;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.party-row-actions {
+  white-space: nowrap;
+}
+
+.party-edit {
+  background: #e6f0ff;
+  color: #1759a7;
+  margin-right: 6px;
+}
+
+.party-delete {
+  background: #ffe8e8;
+  color: #c62828;
+}
+
+.party-empty {
+  text-align: center !important;
+  padding: 25px !important;
+  color: #777;
+}
+
+.party-message {
+  background: #fff5d9;
+  border: 1px solid #f0d98e;
+  color: #725500;
+  padding: 12px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 650px) {
+  .party-page {
+    padding: 12px;
+  }
+
+  .party-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .party-full {
+    grid-column: auto;
+  }
+
+  .party-form,
+  .party-list-section {
+    padding: 15px;
+  }
+
+  .party-search {
+    max-width: 100%;
+  }
+}

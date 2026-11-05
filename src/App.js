@@ -28,6 +28,7 @@ import GalleryD from "./GalleryD";
 import GalleryE from "./GalleryE";
 import Vision from "./Vision";
 import Nopage from "./Nopage";
+import PartyMaster from "./PartyMaster";
 axios.defaults.withCredentials = true;
 
 function App() {
@@ -225,13 +226,17 @@ function App() {
             element={<Vision />}
           />
 
-
+           <Route path="/bijay" 
+           element={<PartyMaster />} 
+           />
 
           {/* 404 PAGE */}
           <Route
             path="*"
             element={<Nopage />}
           />
+
+
 
         </Route>
 
