@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-// Replace with your Django API base URL
-const API_BASE_URL = 'http://pjkss.com/api';
+// Corrected: Removed '/api' to match your Django urls.py root paths
+const API_BASE_URL = 'http://pjkss.com';
 
 const PartyMaster = () => {
   const [activeTab, setActiveTab] = useState('create-invoice'); // 'parties', 'create-invoice', 'invoices'
@@ -42,7 +42,7 @@ const PartyMaster = () => {
 
   const fetchInvoices = async () => {
     try {
-      const res = await axios.get(`${API_BASE_URL}/tax-invoices/`);
+      const res = await axios.get(`${API_BASE_URL}/abewinvoice/`);
       setInvoices(res.data);
     } catch (err) {
       console.error('Error fetching invoices:', err);
@@ -112,7 +112,7 @@ const PartyMaster = () => {
     };
 
     try {
-      const res = await axios.post(`${API_BASE_URL}/tax-invoices/`, payload);
+      const res = await axios.post(`${API_BASE_URL}/abewinvoice/`, payload);
       alert(res.data.message || 'Invoice created successfully');
       // Reset form
       setInvoiceHeader({
