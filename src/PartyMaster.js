@@ -1,3 +1,4 @@
+```jsx
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import "./style.css";
@@ -85,7 +86,7 @@ const errorMessage = (error) => {
 
 // =========================================
 // ITEM CALCULATION
-// Discount is a fixed amount per item row
+// DISCOUNT DEDUCTED AFTER GST
 // =========================================
 
 const itemCalculation = (item) => {
@@ -95,21 +96,27 @@ const itemCalculation = (item) => {
 
     const subtotal = quantity * rate;
 
-    const taxable = Math.max(0, subtotal - discount);
-
+    // GST calculated on full subtotal
     const cgst =
-        taxable * (Number(item.cgst_rate) || 0) / 100;
+        subtotal * (Number(item.cgst_rate) || 0) / 100;
 
     const sgst =
-        taxable * (Number(item.sgst_rate) || 0) / 100;
+        subtotal * (Number(item.sgst_rate) || 0) / 100;
+
+    // Total including GST
+    const totalBeforeDiscount = subtotal + cgst + sgst;
+
+    // Discount deducted after GST
+    const total = Math.max(0, totalBeforeDiscount - discount);
 
     return {
         subtotal: subtotal,
         discount: discount,
-        taxable: taxable,
+        taxable: subtotal,
         cgst: cgst,
         sgst: sgst,
-        total: taxable + cgst + sgst
+        totalBeforeDiscount: totalBeforeDiscount,
+        total: total
     };
 };
 
@@ -321,7 +328,7 @@ export default function PartyMaster() {
     };
 
     // =====================================
-    // DELETE PARTY - CORRECTED
+    // DELETE PARTY
     // =====================================
 
     const handleDeleteParty = async (id) => {
@@ -727,9 +734,7 @@ export default function PartyMaster() {
 
                 </div>
 
-                {/* =====================================
-                    CREATE INVOICE TAB
-                ===================================== */}
+                {/* CREATE INVOICE TAB */}
 
                 {activeTab === "create-invoice" && (
 
@@ -1074,9 +1079,7 @@ export default function PartyMaster() {
                     </form>
                 )}
 
-                {/* =====================================
-                    MANAGE PARTIES TAB
-                ===================================== */}
+                {/* MANAGE PARTIES TAB */}
 
                 {activeTab === "parties" && (
 
@@ -1226,9 +1229,7 @@ export default function PartyMaster() {
                     </div>
                 )}
 
-                {/* =====================================
-                    INVOICE HISTORY TAB
-                ===================================== */}
+                {/* INVOICE HISTORY TAB */}
 
                 {activeTab === "invoices" && (
 
@@ -1289,7 +1290,7 @@ export default function PartyMaster() {
                                                 handleDirectPrint(inv.serial_no)
                                             }
                                         >
-                                            <i class="fa-solid fa-eye"></i> View
+                                            <i className="fa-solid fa-eye"></i> View
                                         </button>
 
                                     </div>
@@ -1383,7 +1384,6 @@ export default function PartyMaster() {
                                     </div>
 
                                 </div>
-
                             ))
                         )}
 
@@ -1394,3 +1394,4 @@ export default function PartyMaster() {
         </div>
     );
 }
+```
