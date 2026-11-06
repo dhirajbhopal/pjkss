@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./style.css";
@@ -109,12 +108,18 @@ const dateFormat = (date) => {
 // =========================================
 
 const calculateItem = (item) => {
+
     const qty = Number(item.quantity || 0);
     const rate = Number(item.rate || 0);
     const discount = Number(item.discount || 0);
 
-    const taxable = Math.max(0, qty * rate - discount);
+    // Amount before discount
+    const subtotal = qty * rate;
 
+    // Amount after discount
+    const taxable = Math.max(0, subtotal - discount);
+
+    // GST calculation after discount
     const cgstRate = Number(item.cgst_rate || 0);
     const sgstRate = Number(item.sgst_rate || 0);
 
@@ -122,6 +127,8 @@ const calculateItem = (item) => {
     const sgst = taxable * sgstRate / 100;
 
     return {
+        subtotal,
+        discount,
         taxable,
         cgst,
         sgst,
@@ -145,7 +152,9 @@ export default function InvoicePrint() {
     const [authChecked, setAuthChecked] = useState(false);
 
     useEffect(() => {
+
         try {
+
             const loggedInUser = JSON.parse(
                 localStorage.getItem("user")
             );
@@ -153,12 +162,18 @@ export default function InvoicePrint() {
             if (loggedInUser) {
                 setUser(loggedInUser);
             }
+
         } catch (error) {
+
             console.error("Authentication Error:", error);
             setUser(null);
+
         } finally {
+
             setAuthChecked(true);
+
         }
+
     }, []);
 
     // =====================================
@@ -234,7 +249,9 @@ export default function InvoicePrint() {
                 );
 
             } finally {
+
                 setLoading(false);
+
             }
         };
 
@@ -247,11 +264,13 @@ export default function InvoicePrint() {
     // =====================================
 
     if (!authChecked) {
+
         return (
             <div style={authStyle}>
                 <h2>Checking Authentication...</h2>
             </div>
         );
+
     }
 
     // =====================================
@@ -259,8 +278,10 @@ export default function InvoicePrint() {
     // =====================================
 
     if (!user) {
+
         return (
             <div style={authStyle}>
+
                 <h2>Login Required</h2>
 
                 <p>Please login to access Invoice Print.</p>
@@ -272,8 +293,10 @@ export default function InvoicePrint() {
                 >
                     Go to Login
                 </button>
+
             </div>
         );
+
     }
 
     // =====================================
@@ -281,8 +304,10 @@ export default function InvoicePrint() {
     // =====================================
 
     if (!isABEWStaff) {
+
         return (
             <div style={authStyle}>
+
                 <h2 style={{ color: "red" }}>
                     Access Denied
                 </h2>
@@ -296,8 +321,10 @@ export default function InvoicePrint() {
                 >
                     Go Back
                 </button>
+
             </div>
         );
+
     }
 
     // =====================================
@@ -305,14 +332,17 @@ export default function InvoicePrint() {
     // =====================================
 
     if (loading) {
+
         return (
             <h3 style={{ textAlign: "center" }}>
                 Loading Invoice...
             </h3>
         );
+
     }
 
     if (error) {
+
         return (
             <h3 style={{
                 textAlign: "center",
@@ -321,6 +351,7 @@ export default function InvoicePrint() {
                 {error}
             </h3>
         );
+
     }
 
     if (!invoice) return null;
@@ -336,6 +367,8 @@ export default function InvoicePrint() {
 
             const calc = calculateItem(item);
 
+            acc.subtotal += calc.subtotal;
+            acc.discount += calc.discount;
             acc.taxable += calc.taxable;
             acc.cgst += calc.cgst;
             acc.sgst += calc.sgst;
@@ -344,6 +377,8 @@ export default function InvoicePrint() {
             return acc;
         },
         {
+            subtotal: 0,
+            discount: 0,
             taxable: 0,
             cgst: 0,
             sgst: 0,
@@ -390,7 +425,7 @@ export default function InvoicePrint() {
             <div className="print-actions">
 
                 <button onClick={() => window.print()}>
-                    Print Invoice
+                    🖨 Print Invoice
                 </button>
 
                 <button onClick={() => window.close()}>
@@ -526,6 +561,7 @@ export default function InvoicePrint() {
                 <table className="items-table">
 
                     <thead>
+
                         <tr>
                             <th>Sl. No.</th>
                             <th>Description</th>
@@ -534,6 +570,7 @@ export default function InvoicePrint() {
                             <th>Rate Per Unit (Rs.)</th>
                             <th>Amount (Rs.)</th>
                         </tr>
+
                     </thead>
 
                     <tbody>
@@ -603,12 +640,6 @@ export default function InvoicePrint() {
 
                 </table>
 
-                {/* AMOUNT IN WORDS */}
-
-                <div className="words">
-
-                </div>
-
                 {/* BANK DETAILS AND TAX SUMMARY */}
 
                 <div className="bottom-section">
@@ -638,6 +669,16 @@ export default function InvoicePrint() {
 
                             <tr>
                                 <td>Subtotal</td>
+                                <td>{money(totals.subtotal)}</td>
+                            </tr>
+
+                            <tr>
+                                <td>Discount</td>
+                                <td>- {money(totals.discount)}</td>
+                            </tr>
+
+                            <tr>
+                                <td>Taxable Amount</td>
                                 <td>{money(totals.taxable)}</td>
                             </tr>
 
@@ -652,8 +693,13 @@ export default function InvoicePrint() {
                             </tr>
 
                             <tr className="grand-total">
+
                                 <td>Grand Total Amount</td>
-                                <td>{money(totals.total)}</td>
+
+                                <td>
+                                    {money(totals.total)}
+                                </td>
+
                             </tr>
 
                         </tbody>
@@ -661,6 +707,9 @@ export default function InvoicePrint() {
                     </table>
 
                 </div>
+
+                {/* AMOUNT IN WORDS */}
+
                 <div className="words">
 
                     Total Amount In Words :

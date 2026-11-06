@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import "./style.css";
@@ -41,12 +40,12 @@ const emptyItem = {
     discount: 0
 };
 
-const today = () => {
-    const d = new Date();
-    const local = new Date(
-        d.getTime() - d.getTimezoneOffset() * 60000
+const getToday = () => {
+    const date = new Date();
+    const localDate = new Date(
+        date.getTime() - date.getTimezoneOffset() * 60000
     );
-    return local.toISOString().split("T")[0];
+    return localDate.toISOString().split("T")[0];
 };
 
 const emptyInvoice = () => ({
@@ -56,25 +55,46 @@ const emptyInvoice = () => ({
     address: "",
     shipping_add: "",
     gstin_uin: "",
-    invoice_date: today()
+    invoice_date: getToday()
 });
 
 // =========================================
 // HELPER FUNCTIONS
 // =========================================
 
-const money = (value) =>
-    Number(value || 0).toLocaleString("en-IN", {
+const money = (value) => {
+    return Number(value || 0).toLocaleString("en-IN", {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
     });
+};
+
+const errorMessage = (error) => {
+    const data = error.response && error.response.data;
+
+    if (!data) {
+        return error.message || "Something went wrong";
+    }
+
+    if (typeof data === "string") {
+        return data;
+    }
+
+    return JSON.stringify(data);
+};
+
+// =========================================
+// ITEM CALCULATION
+// Discount is a fixed amount per item row
+// =========================================
 
 const itemCalculation = (item) => {
-    const qty = Number(item.quantity) || 0;
+    const quantity = Number(item.quantity) || 0;
     const rate = Number(item.rate) || 0;
     const discount = Number(item.discount) || 0;
 
-    const subtotal = qty * rate;
+    const subtotal = quantity * rate;
+
     const taxable = Math.max(0, subtotal - discount);
 
     const cgst =
@@ -84,49 +104,39 @@ const itemCalculation = (item) => {
         taxable * (Number(item.sgst_rate) || 0) / 100;
 
     return {
-        subtotal,
-        taxable,
-        cgst,
-        sgst,
+        subtotal: subtotal,
+        discount: discount,
+        taxable: taxable,
+        cgst: cgst,
+        sgst: sgst,
         total: taxable + cgst + sgst
     };
 };
 
+// =========================================
+// INVOICE CALCULATION
+// =========================================
+
 const invoiceCalculation = (items) => {
-    return items.reduce(
-        (total, item) => {
-            const calc = itemCalculation(item);
+    return items.reduce((total, item) => {
+        const calc = itemCalculation(item);
 
-            total.subtotal += calc.subtotal;
-            total.discount += Number(item.discount) || 0;
-            total.taxable += calc.taxable;
-            total.cgst += calc.cgst;
-            total.sgst += calc.sgst;
-            total.grandTotal += calc.total;
+        total.subtotal += calc.subtotal;
+        total.discount += calc.discount;
+        total.taxable += calc.taxable;
+        total.cgst += calc.cgst;
+        total.sgst += calc.sgst;
+        total.grandTotal += calc.total;
 
-            return total;
-        },
-        {
-            subtotal: 0,
-            discount: 0,
-            taxable: 0,
-            cgst: 0,
-            sgst: 0,
-            grandTotal: 0
-        }
-    );
-};
-
-const errorMessage = (error) => {
-    const data = error.response?.data;
-
-    if (!data) {
-        return error.message || "Something went wrong";
-    }
-
-    if (typeof data === "string") return data;
-
-    return JSON.stringify(data, null, 2);
+        return total;
+    }, {
+        subtotal: 0,
+        discount: 0,
+        taxable: 0,
+        cgst: 0,
+        sgst: 0,
+        grandTotal: 0
+    });
 };
 
 // =========================================
@@ -136,37 +146,26 @@ const errorMessage = (error) => {
 export default function PartyMaster() {
 
     // =====================================
-    // USER AUTHENTICATION
+    // AUTHENTICATION
     // =====================================
 
     const [user, setUser] = useState(null);
     const [authChecked, setAuthChecked] = useState(false);
 
-    // Read logged-in user from localStorage
     useEffect(() => {
         try {
-            const loggedInUser = JSON.parse(
-                localStorage.getItem("user")
-            );
+            const savedUser = localStorage.getItem("user");
 
-            if (loggedInUser) {
-                setUser(loggedInUser);
+            if (savedUser) {
+                setUser(JSON.parse(savedUser));
             }
         } catch (error) {
-            console.error(
-                "User Authentication Error:",
-                error
-            );
-
+            console.error("Authentication Error:", error);
             setUser(null);
         } finally {
             setAuthChecked(true);
         }
     }, []);
-
-    // =====================================
-    // ABEW STAFF VERIFICATION
-    // =====================================
 
     const isABEWStaff =
         user?.is_abewstaff === true ||
@@ -174,61 +173,49 @@ export default function PartyMaster() {
         String(user?.user_type || "").toLowerCase() === "abewstaff";
 
     // =====================================
-    // APPLICATION STATES
+    // STATES
     // =====================================
 
-    const [activeTab, setActiveTab] =
-        useState("create-invoice");
+    const [activeTab, setActiveTab] = useState("create-invoice");
 
-    // Party states
     const [parties, setParties] = useState([]);
-    const [partyForm, setPartyForm] =
-        useState({ ...emptyParty });
+    const [partyForm, setPartyForm] = useState({ ...emptyParty });
+    const [partyLoading, setPartyLoading] = useState(false);
 
-    const [partyLoading, setPartyLoading] =
-        useState(false);
+    const [invoiceHeader, setInvoiceHeader] = useState(emptyInvoice());
+    const [selectedPartyId, setSelectedPartyId] = useState("");
+    const [items, setItems] = useState([{ ...emptyItem }]);
+    const [invoiceLoading, setInvoiceLoading] = useState(false);
 
-    // Invoice states
-    const [invoiceHeader, setInvoiceHeader] =
-        useState(emptyInvoice());
-
-    const [selectedPartyId, setSelectedPartyId] =
-        useState("");
-
-    const [items, setItems] = useState([
-        { ...emptyItem }
-    ]);
-
-    const [invoiceLoading, setInvoiceLoading] =
-        useState(false);
-
-    // Invoice list states
     const [invoices, setInvoices] = useState([]);
-
-    const [invoiceListLoading, setInvoiceListLoading] =
-        useState(false);
+    const [invoiceListLoading, setInvoiceListLoading] = useState(false);
 
     // =====================================
     // FETCH PARTIES
     // =====================================
 
     const fetchParties = useCallback(async () => {
-
         if (!isABEWStaff) return;
 
         try {
             const response = await api.get("/parties/");
 
-            setParties(
-                Array.isArray(response.data)
-                    ? response.data
-                    : []
-            );
+            const data = response.data;
+
+            if (Array.isArray(data)) {
+                setParties(data);
+            } else if (Array.isArray(data.results)) {
+                setParties(data.results);
+            } else if (Array.isArray(data.parties)) {
+                setParties(data.parties);
+            } else {
+                setParties([]);
+            }
 
         } catch (error) {
-            console.error("Party Fetch Error:", error);
+            console.error("Fetch Parties Error:", error);
+            alert("Unable to load parties: " + errorMessage(error));
         }
-
     }, [isABEWStaff]);
 
     // =====================================
@@ -236,7 +223,6 @@ export default function PartyMaster() {
     // =====================================
 
     const fetchInvoices = useCallback(async () => {
-
         if (!isABEWStaff) return;
 
         setInvoiceListLoading(true);
@@ -244,33 +230,35 @@ export default function PartyMaster() {
         try {
             const response = await api.get("/abewinvoice/");
 
-            setInvoices(
-                Array.isArray(response.data)
-                    ? response.data
-                    : Array.isArray(response.data.results)
-                        ? response.data.results
-                        : Array.isArray(response.data.invoices)
-                            ? response.data.invoices
-                            : []
-            );
+            const data = response.data;
+
+            if (Array.isArray(data)) {
+                setInvoices(data);
+            } else if (Array.isArray(data.results)) {
+                setInvoices(data.results);
+            } else if (Array.isArray(data.invoices)) {
+                setInvoices(data.invoices);
+            } else {
+                setInvoices([]);
+            }
 
         } catch (error) {
-            console.error("Invoice Fetch Error:", error);
-
+            console.error("Fetch Invoices Error:", error);
+            alert("Unable to load invoices: " + errorMessage(error));
         } finally {
             setInvoiceListLoading(false);
         }
-
     }, [isABEWStaff]);
 
-    // Fetch only after ABEWStaff authentication
-    useEffect(() => {
+    // =====================================
+    // INITIAL DATA LOAD
+    // =====================================
 
+    useEffect(() => {
         if (authChecked && isABEWStaff) {
             fetchParties();
             fetchInvoices();
         }
-
     }, [
         authChecked,
         isABEWStaff,
@@ -283,7 +271,8 @@ export default function PartyMaster() {
     // =====================================
 
     const handlePartyChange = (e) => {
-        const { name, value } = e.target;
+        const name = e.target.name;
+        const value = e.target.value;
 
         setPartyForm((prev) => ({
             ...prev,
@@ -292,7 +281,7 @@ export default function PartyMaster() {
     };
 
     // =====================================
-    // SAVE NEW PARTY
+    // SAVE PARTY
     // =====================================
 
     const handlePartySubmit = async (e) => {
@@ -308,10 +297,7 @@ export default function PartyMaster() {
         setPartyLoading(true);
 
         try {
-            const response = await api.post(
-                "/parties/",
-                partyForm
-            );
+            const response = await api.post("/parties/", partyForm);
 
             alert(
                 response.data.message ||
@@ -323,25 +309,32 @@ export default function PartyMaster() {
             await fetchParties();
 
         } catch (error) {
-            console.error("Party Save Error:", error);
+            console.error("Save Party Error:", error);
 
             alert(
                 "Party Save Failed:\n" +
                 errorMessage(error)
             );
-
         } finally {
             setPartyLoading(false);
         }
     };
 
     // =====================================
-    // DELETE PARTY
+    // DELETE PARTY - CORRECTED
     // =====================================
 
     const handleDeleteParty = async (id) => {
 
-        if (!isABEWStaff) return;
+        if (!isABEWStaff) {
+            alert("Access denied");
+            return;
+        }
+
+        if (!id) {
+            alert("Party ID is missing");
+            return;
+        }
 
         if (!window.confirm(
             "Are you sure you want to delete this party?"
@@ -350,11 +343,18 @@ export default function PartyMaster() {
         }
 
         try {
-            await api.delete(`/parties/${id}/`);
+
+            console.log("Deleting Party ID:", id);
+
+            const response = await api.delete(
+                "/parties/" + id + "/"
+            );
+
+            console.log("Delete Response:", response.data);
 
             alert("Party deleted successfully");
 
-            if (Number(selectedPartyId) === Number(id)) {
+            if (String(selectedPartyId) === String(id)) {
                 setSelectedPartyId("");
                 setInvoiceHeader(emptyInvoice());
             }
@@ -362,10 +362,19 @@ export default function PartyMaster() {
             await fetchParties();
 
         } catch (error) {
-            console.error("Party Delete Error:", error);
+
+            console.error(
+                "Delete Party Error:",
+                error.response || error
+            );
+
+            const status =
+                error.response?.status || "Network Error";
 
             alert(
-                "Party Delete Failed:\n" +
+                "Delete Failed!\nHTTP Status: " +
+                status +
+                "\nError: " +
                 errorMessage(error)
             );
         }
@@ -376,17 +385,15 @@ export default function PartyMaster() {
     // =====================================
 
     const handlePartySelect = (e) => {
-
         const partyId = e.target.value;
 
         setSelectedPartyId(partyId);
 
         const party = parties.find(
-            (p) => String(p.id) === partyId
+            (p) => String(p.id) === String(partyId)
         );
 
         if (party) {
-
             setInvoiceHeader((prev) => ({
                 ...prev,
                 name: party.name || "",
@@ -396,13 +403,8 @@ export default function PartyMaster() {
                 shipping_add: party.shipping_add || "",
                 gstin_uin: party.gstin_uin || ""
             }));
-
         } else {
-
-            setInvoiceHeader((prev) => ({
-                ...emptyInvoice(),
-                invoice_date: prev.invoice_date
-            }));
+            setInvoiceHeader(emptyInvoice());
         }
     };
 
@@ -411,8 +413,8 @@ export default function PartyMaster() {
     // =====================================
 
     const handleInvoiceHeaderChange = (e) => {
-
-        const { name, value } = e.target;
+        const name = e.target.name;
+        const value = e.target.value;
 
         setInvoiceHeader((prev) => ({
             ...prev,
@@ -425,13 +427,16 @@ export default function PartyMaster() {
     // =====================================
 
     const handleItemChange = (index, field, value) => {
-
         setItems((prev) =>
-            prev.map((item, i) =>
-                i === index
-                    ? { ...item, [field]: value }
-                    : item
-            )
+            prev.map((item, i) => {
+                if (i === index) {
+                    return {
+                        ...item,
+                        [field]: value
+                    };
+                }
+                return item;
+            })
         );
     };
 
@@ -440,7 +445,6 @@ export default function PartyMaster() {
     // =====================================
 
     const addItemRow = () => {
-
         setItems((prev) => [
             ...prev,
             { ...emptyItem }
@@ -452,23 +456,21 @@ export default function PartyMaster() {
     // =====================================
 
     const removeItemRow = (index) => {
-
         if (items.length === 1) {
             alert("At least one item is required");
             return;
         }
 
         setItems((prev) =>
-            prev.filter((_, i) => i !== index)
+            prev.filter((item, i) => i !== index)
         );
     };
 
     // =====================================
-    // CREATE TAX INVOICE
+    // CREATE INVOICE
     // =====================================
 
     const handleInvoiceSubmit = async (e) => {
-
         e.preventDefault();
 
         if (!isABEWStaff) return;
@@ -486,54 +488,44 @@ export default function PartyMaster() {
         for (let i = 0; i < items.length; i++) {
 
             if (!items[i].item_name.trim()) {
-                alert(
-                    `Please enter item name in row ${i + 1}`
-                );
+                alert("Please enter item name in row " + (i + 1));
                 return;
             }
 
             if (Number(items[i].quantity) <= 0) {
-                alert(
-                    `Quantity must be greater than zero in row ${i + 1}`
-                );
+                alert("Quantity must be greater than zero in row " + (i + 1));
+                return;
+            }
+
+            const itemAmount =
+                Number(items[i].quantity) * Number(items[i].rate);
+
+            if (Number(items[i].discount) > itemAmount) {
+                alert("Discount cannot exceed item amount in row " + (i + 1));
                 return;
             }
         }
 
         const payload = {
-
             name: invoiceHeader.name,
-
             email: invoiceHeader.email || null,
-
             mobile_no: invoiceHeader.mobile_no || null,
-
             address: invoiceHeader.address || null,
-
             shipping_add: invoiceHeader.shipping_add || null,
-
             gstin_uin: invoiceHeader.gstin_uin || null,
 
             invoice_date: new Date(
-                `${invoiceHeader.invoice_date}T00:00:00`
+                invoiceHeader.invoice_date + "T00:00:00"
             ).toISOString(),
 
             items: items.map((item) => ({
-
                 item_name: item.item_name,
-
                 hsn_code: item.hsn_code || null,
-
                 quantity: Number(item.quantity),
-
                 unit: item.unit || null,
-
                 rate: Number(item.rate),
-
                 cgst_rate: Number(item.cgst_rate),
-
                 sgst_rate: Number(item.sgst_rate),
-
                 discount: Number(item.discount)
             }))
         };
@@ -551,15 +543,12 @@ export default function PartyMaster() {
                 response.data.invoice || response.data;
 
             alert(
-                `Invoice created successfully!\nInvoice No: ${
-                    invoice.serial_no || "Created"
-                }`
+                "Invoice created successfully!\nInvoice No: " +
+                (invoice.serial_no || "Created")
             );
 
             setSelectedPartyId("");
-
             setInvoiceHeader(emptyInvoice());
-
             setItems([{ ...emptyItem }]);
 
             await fetchInvoices();
@@ -569,7 +558,7 @@ export default function PartyMaster() {
         } catch (error) {
 
             console.error(
-                "Invoice Create Error:",
+                "Invoice Creation Error:",
                 error.response?.data || error
             );
 
@@ -584,19 +573,34 @@ export default function PartyMaster() {
     };
 
     // =====================================
-    // TOTAL CALCULATION
+    // DIRECT PRINT
+    // =====================================
+
+    const handleDirectPrint = (serialNo) => {
+
+        if (!serialNo) {
+            alert("Invoice serial number is missing");
+            return;
+        }
+
+        const printUrl =
+            "/invoice-print?serial_no=" +
+            encodeURIComponent(serialNo);
+
+        window.open(printUrl, "_blank");
+    };
+
+    // =====================================
+    // TOTALS
     // =====================================
 
     const totals = invoiceCalculation(items);
 
     // =====================================
-    // REFRESH ALL
+    // REFRESH
     // =====================================
 
     const refreshAll = async () => {
-
-        if (!isABEWStaff) return;
-
         await Promise.all([
             fetchParties(),
             fetchInvoices()
@@ -604,11 +608,10 @@ export default function PartyMaster() {
     };
 
     // =====================================
-    // AUTHENTICATION UI
+    // AUTHENTICATION CHECK
     // =====================================
 
     if (!authChecked) {
-
         return (
             <div className="invoice-app">
                 <div className="invoice-container">
@@ -618,19 +621,12 @@ export default function PartyMaster() {
         );
     }
 
-    // No logged-in user
     if (!user) {
-
         return (
             <div className="invoice-app">
                 <div className="invoice-container">
-
                     <h2>Login Required</h2>
-
-                    <p>
-                        Please login to access
-                        ABEW Tax Invoice Management.
-                    </p>
+                    <p>Please login to access Ajay Bijay Electrical Works Invoice Management.</p>
 
                     <button
                         className="btn btn-primary"
@@ -640,48 +636,33 @@ export default function PartyMaster() {
                     >
                         Go to Login
                     </button>
-
                 </div>
             </div>
         );
     }
 
-    // Logged-in but not ABEWStaff
     if (!isABEWStaff) {
-
         return (
             <div className="invoice-app">
                 <div className="invoice-container">
-
                     <h2>Access Denied</h2>
-
-                    <p>
-                        Only ABEWStaff can access
-                        ABEW Tax Invoice Management.
-                    </p>
-
-                    <p>
-                        Logged in as:{" "}
-                        {user.username || user.email || "User"}
-                    </p>
-
+                    <p>Only ABEWStaff can access this application.</p>
                 </div>
             </div>
         );
     }
 
     // =====================================
-    // ABEWSTAFF APPLICATION UI
+    // MAIN UI
     // =====================================
 
     return (
-
         <div className="invoice-app">
 
             <div className="invoice-container">
 
                 <h2 className="page-title">
-                    ABEW Tax Invoice Management
+                    Ajay Bijay Electrical Works Tax Invoice Management
                 </h2>
 
                 <p>
@@ -689,46 +670,43 @@ export default function PartyMaster() {
                     <strong>
                         {user.username || user.email || "ABEWStaff"}
                     </strong>
-                    {" "}(ABEWStaff)
                 </p>
 
-                {/* NAVIGATION TABS */}
+                {/* NAVIGATION */}
 
                 <div className="tabs">
 
                     <button
-                        className={`tab-btn ${
+                        className={
                             activeTab === "create-invoice"
-                                ? "active"
-                                : ""
-                        }`}
-                        onClick={() =>
-                            setActiveTab("create-invoice")
+                                ? "tab-btn active"
+                                : "tab-btn"
                         }
+                        onClick={() => setActiveTab("create-invoice")}
                     >
                         Create Invoice
                     </button>
 
                     <button
-                        className={`tab-btn ${
+                        className={
                             activeTab === "parties"
-                                ? "active"
-                                : ""
-                        }`}
+                                ? "tab-btn active"
+                                : "tab-btn"
+                        }
                         onClick={() => setActiveTab("parties")}
                     >
                         Manage Parties ({parties.length})
                     </button>
 
                     <button
-                        className={`tab-btn ${
+                        className={
                             activeTab === "invoices"
-                                ? "active"
-                                : ""
-                        }`}
+                                ? "tab-btn active"
+                                : "tab-btn"
+                        }
                         onClick={() => setActiveTab("invoices")}
                     >
-                        Invoice History ({invoices.length})
+                        Show All Invoice ({invoices.length})
                     </button>
 
                     <button
@@ -737,20 +715,20 @@ export default function PartyMaster() {
                             window.location.href = "/invoice-search";
                         }}
                     >
-                        Search Invoice
+                        Search Invoice No.
                     </button>
 
                     <button
                         className="tab-btn"
                         onClick={refreshAll}
                     >
-                        ↻ Refresh
+                        Refresh
                     </button>
 
                 </div>
 
                 {/* =====================================
-                    TAB 1: CREATE INVOICE
+                    CREATE INVOICE TAB
                 ===================================== */}
 
                 {activeTab === "create-invoice" && (
@@ -764,7 +742,6 @@ export default function PartyMaster() {
                             <div className="form-grid">
 
                                 <div className="form-group">
-
                                     <label>Select Party *</label>
 
                                     <select
@@ -772,31 +749,22 @@ export default function PartyMaster() {
                                         onChange={handlePartySelect}
                                         required
                                     >
-
                                         <option value="">
                                             -- Select Party --
                                         </option>
 
                                         {parties.map((party) => (
-
                                             <option
                                                 key={party.id}
                                                 value={party.id}
                                             >
-                                                {party.name}{" "}
-                                                {party.gstin_uin
-                                                    ? `(${party.gstin_uin})`
-                                                    : ""}
+                                                {party.name}
                                             </option>
-
                                         ))}
-
                                     </select>
-
                                 </div>
 
                                 <div className="form-group">
-
                                     <label>Invoice Date *</label>
 
                                     <input
@@ -806,80 +774,60 @@ export default function PartyMaster() {
                                         onChange={handleInvoiceHeaderChange}
                                         required
                                     />
-
                                 </div>
 
                                 <div className="form-group">
-
                                     <label>Party Name</label>
-
                                     <input
                                         value={invoiceHeader.name}
                                         readOnly
                                     />
-
                                 </div>
 
                                 <div className="form-group">
-
                                     <label>Email</label>
-
                                     <input
                                         value={invoiceHeader.email}
                                         readOnly
                                     />
-
                                 </div>
 
                                 <div className="form-group">
-
                                     <label>Mobile Number</label>
-
                                     <input
                                         value={invoiceHeader.mobile_no}
                                         readOnly
                                     />
-
                                 </div>
 
                                 <div className="form-group">
-
                                     <label>GSTIN / UIN</label>
-
                                     <input
                                         value={invoiceHeader.gstin_uin}
                                         readOnly
                                     />
-
                                 </div>
 
                                 <div className="form-group">
-
                                     <label>Billing Address</label>
-
                                     <textarea
                                         value={invoiceHeader.address}
                                         readOnly
                                     />
-
                                 </div>
 
                                 <div className="form-group">
-
                                     <label>Shipping Address</label>
-
                                     <textarea
                                         value={invoiceHeader.shipping_add}
                                         readOnly
                                     />
-
                                 </div>
 
                             </div>
-
                         </div>
 
-                        {/* INVOICE ITEMS */}
+                        {/* ITEMS TABLE */}
 
                         <div className="panel">
 
@@ -908,11 +856,9 @@ export default function PartyMaster() {
 
                                         {items.map((item, index) => {
 
-                                            const calc =
-                                                itemCalculation(item);
+                                            const calc = itemCalculation(item);
 
                                             return (
-
                                                 <tr key={index}>
 
                                                     <td>
@@ -1059,27 +1005,23 @@ export default function PartyMaster() {
                                                     </td>
 
                                                 </tr>
-
                                             );
-
                                         })}
 
                                     </tbody>
 
                                 </table>
-
                             </div>
 
                             <button
                                 type="button"
                                 className="btn btn-secondary"
                                 onClick={addItemRow}
-                                style={{ marginTop: "12px" }}
                             >
                                 + Add Item
                             </button>
 
-                            {/* TOTALS */}
+                            {/* TOTAL SUMMARY */}
 
                             <div className="total-box">
 
@@ -1115,13 +1057,7 @@ export default function PartyMaster() {
 
                             </div>
 
-                            <div
-                                style={{
-                                    marginTop: "20px",
-                                    textAlign: "right"
-                                }}
-                            >
-
+                            <div style={{ marginTop: "20px", textAlign: "right" }}>
                                 <button
                                     type="submit"
                                     className="btn btn-primary"
@@ -1131,17 +1067,15 @@ export default function PartyMaster() {
                                         ? "Saving Invoice..."
                                         : "Save & Generate Invoice"}
                                 </button>
-
                             </div>
 
                         </div>
 
                     </form>
-
                 )}
 
                 {/* =====================================
-                    TAB 2: MANAGE PARTIES
+                    MANAGE PARTIES TAB
                 ===================================== */}
 
                 {activeTab === "parties" && (
@@ -1158,7 +1092,6 @@ export default function PartyMaster() {
 
                                     <div className="form-group">
                                         <label>Party Name *</label>
-
                                         <input
                                             type="text"
                                             name="name"
@@ -1170,7 +1103,6 @@ export default function PartyMaster() {
 
                                     <div className="form-group">
                                         <label>Email</label>
-
                                         <input
                                             type="email"
                                             name="email"
@@ -1181,7 +1113,6 @@ export default function PartyMaster() {
 
                                     <div className="form-group">
                                         <label>Mobile Number</label>
-
                                         <input
                                             type="text"
                                             name="mobilno"
@@ -1193,7 +1124,6 @@ export default function PartyMaster() {
 
                                     <div className="form-group">
                                         <label>GSTIN / UIN</label>
-
                                         <input
                                             type="text"
                                             name="gstin_uin"
@@ -1204,7 +1134,6 @@ export default function PartyMaster() {
 
                                     <div className="form-group">
                                         <label>Billing Address</label>
-
                                         <textarea
                                             name="address"
                                             value={partyForm.address}
@@ -1214,7 +1143,6 @@ export default function PartyMaster() {
 
                                     <div className="form-group">
                                         <label>Shipping Address</label>
-
                                         <textarea
                                             name="shipping_add"
                                             value={partyForm.shipping_add}
@@ -1224,36 +1152,25 @@ export default function PartyMaster() {
 
                                 </div>
 
-                                <div style={{ marginTop: "15px" }}>
-
-                                    <button
-                                        type="submit"
-                                        className="btn btn-success"
-                                        disabled={partyLoading}
-                                    >
-                                        {partyLoading
-                                            ? "Saving..."
-                                            : "Save Party"}
-                                    </button>
-
-                                </div>
+                                <button
+                                    type="submit"
+                                    className="btn btn-success"
+                                    disabled={partyLoading}
+                                >
+                                    {partyLoading ? "Saving..." : "Save Party"}
+                                </button>
 
                             </form>
-
                         </div>
 
-                        {/* SAVED PARTIES */}
+                        {/* PARTY LIST */}
 
                         <div className="panel">
 
                             <h3>Saved Parties List</h3>
 
                             {parties.length === 0 ? (
-
-                                <p className="muted">
-                                    No parties found.
-                                </p>
-
+                                <p>No parties found.</p>
                             ) : (
 
                                 <div className="table-wrap">
@@ -1273,31 +1190,21 @@ export default function PartyMaster() {
 
                                         <tbody>
 
-                                            {parties.map((p) => (
+                                            {parties.map((party) => (
+                                                <tr key={party.id}>
 
-                                                <tr key={p.id}>
-
-                                                    <td>{p.id}</td>
-
-                                                    <td>{p.name}</td>
-
-                                                    <td>
-                                                        {p.mobilno || "-"}
-                                                    </td>
-
-                                                    <td>
-                                                        {p.gstin_uin || "-"}
-                                                    </td>
-
-                                                    <td>
-                                                        {p.address || "-"}
-                                                    </td>
+                                                    <td>{party.id}</td>
+                                                    <td>{party.name}</td>
+                                                    <td>{party.mobilno || "-"}</td>
+                                                    <td>{party.gstin_uin || "-"}</td>
+                                                    <td>{party.address || "-"}</td>
 
                                                     <td>
                                                         <button
+                                                            type="button"
                                                             className="btn btn-danger"
                                                             onClick={() =>
-                                                                handleDeleteParty(p.id)
+                                                                handleDeleteParty(party.id)
                                                             }
                                                         >
                                                             Delete
@@ -1305,7 +1212,6 @@ export default function PartyMaster() {
                                                     </td>
 
                                                 </tr>
-
                                             ))}
 
                                         </tbody>
@@ -1313,35 +1219,46 @@ export default function PartyMaster() {
                                     </table>
 
                                 </div>
-
                             )}
 
                         </div>
 
                     </div>
-
                 )}
 
                 {/* =====================================
-                    TAB 3: INVOICE HISTORY
+                    INVOICE HISTORY TAB
                 ===================================== */}
 
                 {activeTab === "invoices" && (
 
                     <div className="panel">
 
-                        <h3>Invoice History</h3>
+                        <div style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            flexWrap: "wrap",
+                            gap: "10px"
+                        }}>
+
+                            <h3>Invoice History</h3>
+
+                            <button
+                                type="button"
+                                className="btn btn-secondary"
+                                onClick={fetchInvoices}
+                                disabled={invoiceListLoading}
+                            >
+                                {invoiceListLoading ? "Loading..." : "Refresh"}
+                            </button>
+
+                        </div>
 
                         {invoiceListLoading ? (
-
                             <p>Loading invoices...</p>
-
                         ) : invoices.length === 0 ? (
-
-                            <p className="muted">
-                                No invoices generated yet.
-                            </p>
-
+                            <p>No invoices generated yet.</p>
                         ) : (
 
                             invoices.map((inv) => (
@@ -1351,98 +1268,129 @@ export default function PartyMaster() {
                                     className="invoice-card"
                                 >
 
-                                    <h4>
-                                        Invoice No:{" "}
-                                        {inv.serial_no || inv.id}
-                                    </h4>
+                                    <div style={{
+                                        display: "flex",
+                                        justifyContent: "space-between",
+                                        alignItems: "center",
+                                        flexWrap: "wrap",
+                                        gap: "10px"
+                                    }}>
+
+                                        <h4>
+                                            Invoice No:{" "}
+                                            {inv.serial_no || inv.id}
+                                        </h4>
+
+                                        <button
+                                            type="button"
+                                            className="btn btn-danger"
+                                            disabled={!inv.serial_no}
+                                            onClick={() =>
+                                                handleDirectPrint(inv.serial_no)
+                                            }
+                                        >
+                                            <i class="fa-solid fa-eye"></i> View
+                                        </button>
+
+                                    </div>
 
                                     <p>
                                         <strong>Party:</strong>{" "}
-                                        {inv.name || inv.customer_name}
-                                        {" | "}
+                                        {inv.name || inv.customer_name || "-"}
+                                    </p>
+
+                                    <p>
                                         <strong>Mobile:</strong>{" "}
                                         {inv.mobile_no || "-"}
-                                        {" | "}
+                                    </p>
+
+                                    <p>
                                         <strong>GSTIN:</strong>{" "}
                                         {inv.gstin_uin || "-"}
                                     </p>
 
                                     <p>
                                         <strong>Date:</strong>{" "}
-                                        {new Date(
-                                            inv.invoice_date
-                                        ).toLocaleDateString()}
+                                        {inv.invoice_date
+                                            ? new Date(
+                                                inv.invoice_date
+                                            ).toLocaleDateString("en-IN")
+                                            : "-"}
                                     </p>
 
-                                    <table className="invoice-items">
+                                    <div className="table-wrap">
 
-                                        <thead>
-                                            <tr>
-                                                <th>#</th>
-                                                <th>Item Name</th>
-                                                <th>HSN</th>
-                                                <th>Qty</th>
-                                                <th>Rate</th>
-                                                <th>Total</th>
-                                            </tr>
-                                        </thead>
+                                        <table className="invoice-items">
 
-                                        <tbody>
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Item Name</th>
+                                                    <th>HSN</th>
+                                                    <th>Qty</th>
+                                                    <th>Rate</th>
+                                                    <th>Discount</th>
+                                                    <th>Total</th>
+                                                </tr>
+                                            </thead>
 
-                                            {inv.items &&
-                                                inv.items.map((item) => (
+                                            <tbody>
 
-                                                    <tr key={item.id}>
+                                                {(inv.items || []).map(
+                                                    (item, index) => (
+                                                        <tr key={item.id || index}>
 
-                                                        <td>
-                                                            {item.item_no}
-                                                        </td>
+                                                            <td>
+                                                                {item.item_no || index + 1}
+                                                            </td>
 
-                                                        <td>
-                                                            {item.item_name}
-                                                        </td>
+                                                            <td>
+                                                                {item.item_name}
+                                                            </td>
 
-                                                        <td>
-                                                            {item.hsn_code || "-"}
-                                                        </td>
+                                                            <td>
+                                                                {item.hsn_code || "-"}
+                                                            </td>
 
-                                                        <td>
-                                                            {item.quantity}{" "}
-                                                            {item.unit}
-                                                        </td>
+                                                            <td>
+                                                                {item.quantity}{" "}
+                                                                {item.unit || ""}
+                                                            </td>
 
-                                                        <td>
-                                                            ₹ {money(item.rate)}
-                                                        </td>
+                                                            <td>
+                                                                ₹ {money(item.rate)}
+                                                            </td>
 
-                                                        <td>
-                                                            ₹ {money(
-                                                                item.total_amount ??
-                                                                item.total_amunt
-                                                            )}
-                                                        </td>
+                                                            <td>
+                                                                ₹ {money(item.discount)}
+                                                            </td>
 
-                                                    </tr>
+                                                            <td>
+                                                                ₹ {money(
+                                                                    item.total_amount ??
+                                                                    item.total_amunt
+                                                                )}
+                                                            </td>
 
-                                                ))}
+                                                        </tr>
+                                                    )
+                                                )}
 
-                                        </tbody>
+                                            </tbody>
 
-                                    </table>
+                                        </table>
+
+                                    </div>
 
                                 </div>
 
                             ))
-
                         )}
 
                     </div>
-
                 )}
 
             </div>
-
         </div>
-
     );
 }
