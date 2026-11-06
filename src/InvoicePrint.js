@@ -665,11 +665,7 @@ export default function InvoicePrint() {
 
                         <tbody>
 
-                            <tr>
-                                <td>Subtotal</td>
-                                <td>{money(totals.subtotal)}</td>
-                            </tr>
-
+                            
                             <tr>
                                 <td>Taxable Amount</td>
                                 <td>{money(totals.taxable)}</td>
@@ -748,7 +744,7 @@ export default function InvoicePrint() {
 
                         For AB Electrical Works
 
-                        <br /><br /><br /><br />
+                        <br />
 
                         Authorised Signatory
 
