@@ -1,4 +1,3 @@
-```jsx
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import "./style.css";
@@ -1394,4 +1393,3 @@ export default function PartyMaster() {
         </div>
     );
 }
-```
