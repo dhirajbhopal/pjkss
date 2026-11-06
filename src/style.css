@@ -1120,3 +1120,363 @@
     max-width: 100%;
   }
 }
+
+                * { box-sizing: border-box; }
+                .invoice-app { width: 100%; padding: 20px; font-family: Arial, sans-serif; color: #222; background: #f5f6fa; min-height: 100vh; }
+                .invoice-container { max-width: 1250px; margin: auto; }
+                .page-title { margin-bottom: 20px; color: #17365d; }
+                .tabs { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+                .tab-btn { padding: 11px 20px; border: 1px solid #ccc; background: white; border-radius: 5px; cursor: pointer; font-weight: 600; }
+                .tab-btn.active { background: #17365d; color: white; }
+                .panel { background: white; padding: 22px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,.06); }
+                .panel h3 { color: #17365d; margin-top: 0; }
+                .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 15px; }
+                .form-group { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+                .form-group label { font-size: 14px; font-weight: 600; }
+                .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; min-width: 0; }
+                .form-group textarea { min-height: 65px; resize: vertical; }
+                .table-wrap { width: 100%; overflow-x: auto; }
+                .data-table { width: 100%; border-collapse: collapse; min-width: 750px; }
+                .data-table th, .data-table td { border: 1px solid #ddd; padding: 9px; text-align: left; font-size: 13px; }
+                .data-table th { background: #eaf0f8; white-space: nowrap; }
+                .data-table input, .data-table select { width: 100%; min-width: 75px; padding: 7px; border: 1px solid #ccc; border-radius: 3px; }
+                .btn { padding: 10px 17px; border: none; border-radius: 4px; cursor: pointer; color: white; font-weight: 600; margin: 3px; }
+                .btn:disabled { opacity: .6; cursor: not-allowed; }
+                .btn-primary { background: #17365d; }
+                .btn-success { background: #198754; }
+                .btn-danger { background: #dc3545; }
+                .btn-secondary { background: #6c757d; }
+                .total-box { max-width: 400px; margin-left: auto; margin-top: 20px; padding: 15px; background: #f4f7fb; border-radius: 5px; }
+                .total-row { display: flex; justify-content: space-between; padding: 6px 0; }
+                .grand-total { border-top: 2px solid #17365d; margin-top: 8px; padding-top: 12px; font-size: 19px; font-weight: bold; color: #17365d; }
+                .invoice-card { border: 1px solid #ddd; border-radius: 6px; padding: 18px; margin-bottom: 18px; background: white; }
+                .invoice-card h4 { color: #17365d; margin-top: 0; }
+                .invoice-items { width: 100%; border-collapse: collapse; margin-top: 12px; }
+                .invoice-items th, .invoice-items td { border: 1px solid #ddd; padding: 8px; font-size: 13px; text-align: left; }
+                .invoice-items th { background: #eaf0f8; }
+                .muted { color: #777; }
+                @media(max-width: 700px) {
+                    .invoice-app { padding: 10px; }
+                    .form-grid { grid-template-columns: 1fr; }
+                }
+
+/* print CSS  */
+
+
+
+                * {
+                    box-sizing: border-box;
+                }
+
+                .print-page {
+                    font-family: Arial, sans-serif;
+                    color: #111;
+                    background: #eee;
+                    padding: 20px;
+                    min-height: 100vh;
+                }
+
+                .print-actions {
+                    max-width: 210mm;
+                    margin: 0 auto 15px;
+                    text-align: right;
+                }
+
+                .print-actions button {
+                    padding: 10px 25px;
+                    background: #17365d;
+                    color: white;
+                    border: none;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    margin-left: 8px;
+                    font-weight: bold;
+                }
+
+                .invoice-paper {
+                    background: white;
+                    width: 210mm;
+                    min-height: 297mm;
+                    margin: auto;
+                    padding: 12mm;
+                    box-shadow: 0 0 8px #aaa;
+                    font-size: 12px;
+                }
+
+                .invoice-title {
+                    text-align: center;
+                    font-size: 19px;
+                    font-weight: bold;
+                    margin-bottom: 12px;
+                }
+
+                .top-row {
+                    display: flex;
+                    justify-content: space-between;
+                    gap: 15px;
+                }
+
+                .seller {
+                    font-size: 13px;
+                    line-height: 1.65;
+                }
+
+                .seller strong {
+                    font-size: 17px;
+                }
+
+                .copies {
+                    text-align: right;
+                    line-height: 1.8;
+                    white-space: nowrap;
+                }
+
+                .invoice-meta {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 8px;
+                    margin: 15px 0;
+                    border-top: 1px solid #333;
+                    border-bottom: 1px solid #333;
+                    padding: 9px 0;
+                }
+
+                .parties {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 12px;
+                    margin: 12px 0;
+                }
+
+                .party {
+                    border: 1px solid #777;
+                    padding: 8px;
+                    line-height: 1.6;
+                    min-height: 100px;
+                    overflow-wrap: anywhere;
+                }
+
+                .party-title {
+                    text-align: center;
+                    font-weight: bold;
+                    margin-bottom: 7px;
+                    border-bottom: 1px solid #777;
+                    padding-bottom: 5px;
+                }
+
+                .items-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin-top: 12px;
+                }
+
+                .items-table th,
+                .items-table td {
+                    border: 1px solid #555;
+                    padding: 7px 5px;
+                    text-align: center;
+                    vertical-align: top;
+                }
+
+                .items-table th {
+                    font-weight: bold;
+                }
+
+                .items-table .description {
+                    text-align: left;
+                    width: 36%;
+                }
+
+                .description small {
+                    display: block;
+                    margin-top: 8px;
+                    white-space: pre-wrap;
+                }
+
+                .bottom-section {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 20px;
+                    margin-top: 20px;
+                }
+
+                .bank-details {
+                    line-height: 1.9;
+                }
+
+                .amount-box {
+                    width: 100%;
+                    border-collapse: collapse;
+                }
+
+                .amount-box td {
+                    padding: 5px;
+                    border-bottom: 1px solid #ddd;
+                }
+
+                .amount-box td:last-child {
+                    text-align: right;
+                }
+
+                .grand-total {
+                    font-weight: bold;
+                    border-top: 2px solid #333;
+                    font-size: 14px;
+                }
+
+                .words {
+                    margin-top: 15px;
+                    font-weight: bold;
+                    border-top: 1px solid #555;
+                    padding-top: 10px;
+                }
+
+                .footer {
+                    display: flex;
+                    justify-content: space-between;
+                    gap: 15px;
+                    margin-top: 35px;
+                    line-height: 1.6;
+                }
+
+                .declaration {
+                    max-width: 65%;
+                    text-align: justify;
+                }
+
+                .signature {
+                    text-align: right;
+                    min-width: 30%;
+                    font-weight: bold;
+                }
+
+                /* =================================
+                   PRINT SETTINGS - A4
+                ================================= */
+
+                @page {
+                    size: A4;
+                    margin: 0;
+                }
+
+                @media print {
+
+                    /*
+                       Hide every website element.
+                       Only invoice will be visible.
+                    */
+
+                    html,
+                    body {
+                        margin: 0 !important;
+                        padding: 0 !important;
+                        width: 210mm !important;
+                        min-height: 0 !important;
+                        background: white !important;
+                    }
+
+                    body * {
+                        visibility: hidden !important;
+                    }
+
+                    /*
+                       Show invoice and all its children.
+                    */
+
+                    .invoice-paper,
+                    .invoice-paper * {
+                        visibility: visible !important;
+                    }
+
+                    /*
+                       Fix invoice position for printing.
+                    */
+
+                    .invoice-paper {
+                        position: absolute !important;
+                        left: 0 !important;
+                        top: 0 !important;
+
+                        width: 210mm !important;
+                        min-height: 297mm !important;
+
+                        margin: 0 !important;
+                        padding: 12mm !important;
+
+                        background: white !important;
+                        box-shadow: none !important;
+
+                        font-family: Arial, sans-serif !important;
+                        font-size: 12px !important;
+                    }
+
+                    /*
+                       Hide Print and Close buttons.
+                    */
+
+                    .print-actions {
+                        display: none !important;
+                        visibility: hidden !important;
+                    }
+
+                    /*
+                       Remove application wrapper spacing.
+                    */
+
+                    .print-page {
+                        margin: 0 !important;
+                        padding: 0 !important;
+                        min-height: 0 !important;
+                        background: white !important;
+                    }
+
+                    /*
+                       Keep table rows together.
+                    */
+
+                    .items-table tr {
+                        page-break-inside: avoid !important;
+                        break-inside: avoid !important;
+                    }
+
+                    .party,
+                    .bottom-section,
+                    .footer {
+                        page-break-inside: avoid;
+                        break-inside: avoid;
+                    }
+
+                    /*
+                       Print background and text correctly.
+                    */
+
+                    .invoice-paper {
+                        -webkit-print-color-adjust: exact;
+                        print-color-adjust: exact;
+                    }
+                }
+
+                /* =================================
+                   MOBILE SCREEN
+                ================================= */
+
+                @media screen and (max-width: 800px) {
+
+                    .invoice-paper {
+                        width: 100%;
+                        min-height: auto;
+                        overflow-x: auto;
+                    }
+
+                    .top-row,
+                    .parties,
+                    .bottom-section {
+                        gap: 8px;
+                    }
+
+                    .items-table {
+                        min-width: 650px;
+                    }
+                }
+
+            

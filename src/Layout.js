@@ -14,6 +14,7 @@ const Layout = ({ user, isAuthenticated, msg }) => {
   const isAdmin = user?.role === "Admin";
   const isCoremember = user?.role === "Coremember";
   const isMember = user?.role === "Member";
+  const isABEWStaff = user?.role === "ABEWStaff";
 
   // LIVE DATE AND TIME
   useEffect(() => {
@@ -335,6 +336,13 @@ const Layout = ({ user, isAuthenticated, msg }) => {
                             <span>№</span> Serial Number
                           </Link>
 
+                          <Link
+                            className="pjk-dropdown-item"
+                            to="/bijay"
+                          >
+                            <span>AB </span> Invoice
+                          </Link>
+
                           <a
                             className="pjk-dropdown-item pjk-admin-console"
                             href="https://pjkss.pythonanywhere.com/admin/"
@@ -371,6 +379,21 @@ const Layout = ({ user, isAuthenticated, msg }) => {
                           >
                             <span>▦</span> Member Dashboard
                           </Link>
+                        </>
+                      )}
+
+                      {/* ADMIN MENU */}
+                      {isABEWStaff && (
+                        <>
+                          <div className="pjk-dropdown-separator" />
+
+                          <Link
+                            className="pjk-dropdown-item"
+                            to="/bijay"
+                          >
+                            <span>AB </span> Invoice
+                          </Link>
+
                         </>
                       )}
 

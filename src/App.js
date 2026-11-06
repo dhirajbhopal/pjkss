@@ -29,6 +29,9 @@ import GalleryE from "./GalleryE";
 import Vision from "./Vision";
 import Nopage from "./Nopage";
 import PartyMaster from "./PartyMaster";
+import InvoiceSearch from "./InvoiceSearch";
+import InvoicePrint from "./InvoicePrint";
+
 axios.defaults.withCredentials = true;
 
 function App() {
@@ -229,6 +232,18 @@ function App() {
            <Route path="/bijay" 
            element={<PartyMaster />} 
            />
+
+            <Route path="/" element={<PartyMaster />} />
+
+                <Route
+                    path="/invoice-search"
+                    element={<InvoiceSearch />}
+                />
+
+                <Route
+                    path="/invoice-print"
+                    element={<InvoicePrint />}
+                />
 
           {/* 404 PAGE */}
           <Route
