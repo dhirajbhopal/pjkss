@@ -607,9 +607,6 @@ export default function InvoicePrint() {
 
                 <div className="words">
 
-                    Total Invoice :
-                    {" "}{amountInWords(totals.total)} /-
-
                 </div>
 
                 {/* BANK DETAILS AND TAX SUMMARY */}
@@ -640,7 +637,7 @@ export default function InvoicePrint() {
                         <tbody>
 
                             <tr>
-                                <td>Total Amount</td>
+                                <td>Subtotal</td>
                                 <td>{money(totals.taxable)}</td>
                             </tr>
 
@@ -655,13 +652,19 @@ export default function InvoicePrint() {
                             </tr>
 
                             <tr className="grand-total">
-                                <td>Total Amount</td>
+                                <td>Grand Total Amount</td>
                                 <td>{money(totals.total)}</td>
                             </tr>
 
                         </tbody>
 
                     </table>
+
+                </div>
+                <div className="words">
+
+                    Total Amount In Words :
+                    {" "}{amountInWords(totals.total)} /-
 
                 </div>
 
