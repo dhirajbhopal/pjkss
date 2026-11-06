@@ -632,22 +632,7 @@ export default function InvoicePrint() {
 
                         })}
 
-                        <tr>
-
-                            <td
-                                colSpan="5"
-                                style={{ textAlign: "right" }}
-                            >
-                                <strong>Subtotal</strong>
-                            </td>
-
-                            <td>
-                                <strong>
-                                    {money(totals.subtotal)}
-                                </strong>
-                            </td>
-
-                        </tr>
+                        
 
                     </tbody>
 
