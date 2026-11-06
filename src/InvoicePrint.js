@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./style.css";
@@ -105,6 +106,7 @@ const dateFormat = (date) => {
 
 // =========================================
 // ITEM CALCULATION
+// GST FIRST, DISCOUNT AFTER GST
 // =========================================
 
 const calculateItem = (item) => {
@@ -113,28 +115,32 @@ const calculateItem = (item) => {
     const rate = Number(item.rate || 0);
     const discount = Number(item.discount || 0);
 
-    // Amount before discount
+    // Amount before GST
     const subtotal = qty * rate;
 
-    // Amount after discount
-    const taxable = Math.max(0, subtotal - discount);
-
-    // GST calculation after discount
+    // GST calculated on full subtotal
     const cgstRate = Number(item.cgst_rate || 0);
     const sgstRate = Number(item.sgst_rate || 0);
 
-    const cgst = taxable * cgstRate / 100;
-    const sgst = taxable * sgstRate / 100;
+    const cgst = subtotal * cgstRate / 100;
+    const sgst = subtotal * sgstRate / 100;
+
+    // Amount including GST
+    const grossTotal = subtotal + cgst + sgst;
+
+    // Discount deducted after GST
+    const total = grossTotal - discount;
 
     return {
         subtotal,
         discount,
-        taxable,
+        taxable: subtotal,
         cgst,
         sgst,
         cgstRate,
         sgstRate,
-        total: taxable + cgst + sgst
+        grossTotal,
+        total
     };
 };
 
@@ -357,10 +363,14 @@ export default function InvoicePrint() {
     if (!invoice) return null;
 
     // =====================================
-    // INVOICE ITEMS & TOTALS
+    // INVOICE ITEMS
     // =====================================
 
     const items = invoice.items || [];
+
+    // =====================================
+    // INVOICE TOTAL CALCULATION
+    // =====================================
 
     const totals = items.reduce(
         (acc, item) => {
@@ -372,9 +382,11 @@ export default function InvoicePrint() {
             acc.taxable += calc.taxable;
             acc.cgst += calc.cgst;
             acc.sgst += calc.sgst;
+            acc.grossTotal += calc.grossTotal;
             acc.total += calc.total;
 
             return acc;
+
         },
         {
             subtotal: 0,
@@ -382,6 +394,7 @@ export default function InvoicePrint() {
             taxable: 0,
             cgst: 0,
             sgst: 0,
+            grossTotal: 0,
             total: 0
         }
     );
@@ -610,7 +623,7 @@ export default function InvoicePrint() {
                                     </td>
 
                                     <td>
-                                        {money(calc.taxable)}
+                                        {money(calc.subtotal)}
                                     </td>
 
                                 </tr>
@@ -625,12 +638,12 @@ export default function InvoicePrint() {
                                 colSpan="5"
                                 style={{ textAlign: "right" }}
                             >
-                                <strong>Total Amount</strong>
+                                <strong>Subtotal</strong>
                             </td>
 
                             <td>
                                 <strong>
-                                    {money(totals.taxable)}
+                                    {money(totals.subtotal)}
                                 </strong>
                             </td>
 
@@ -673,11 +686,6 @@ export default function InvoicePrint() {
                             </tr>
 
                             <tr>
-                                <td>Discount</td>
-                                <td>- {money(totals.discount)}</td>
-                            </tr>
-
-                            <tr>
                                 <td>Taxable Amount</td>
                                 <td>{money(totals.taxable)}</td>
                             </tr>
@@ -692,9 +700,27 @@ export default function InvoicePrint() {
                                 <td>{money(totals.sgst)}</td>
                             </tr>
 
+                            <tr>
+                                <td><strong>Gross Total</strong></td>
+                                <td>
+                                    <strong>
+                                        {money(totals.grossTotal)}
+                                    </strong>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>Less: Discount</td>
+                                <td>
+                                    - {money(totals.discount)}
+                                </td>
+                            </tr>
+
                             <tr className="grand-total">
 
-                                <td>Grand Total Amount</td>
+                                <td>
+                                    Net Grand Total Amount
+                                </td>
 
                                 <td>
                                     {money(totals.total)}
